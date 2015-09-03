@@ -21,7 +21,10 @@ GAME.Preload.prototype = {
 
 	    this.load.image('goal', 'assets/home.png');
 
+	    this.load.image('obstalce1', 'assets/blackHole.png');
 
+	    this.load.text('level1JSON', 'data/level1.json');
+	    this.load.text('level2JSON', 'data/level2.json');
 
 	},
 	create: function() {

@@ -5,9 +5,14 @@ GAME.LevelCreatorJump = function() {};
 GAME.LevelCreatorJump.prototype = {
 
 	init: function(levelSelector) { // add a custom variable to tell which level to load. 
-		//var customParam1 = 'level1JSON';
-		this.currentLevel = levelSelector;
-		console.log("current level " + levelSelector); 
+		var levelName = "level" + levelSelector + "JSON";
+
+		this.currentLevel = levelSelector; 
+
+		// load the leveldata for this particular level. 
+		this.levelData = JSON.parse(this.game.cache.getText(levelName)); 
+
+		availableMoves = 0;
 	}, 
 
 	create: function() {
@@ -18,37 +23,33 @@ GAME.LevelCreatorJump.prototype = {
 	    //this.game.stage.backgroundColor = '#73FF8F';
 	    this.add.sprite(0, 0, 'background');
 
+	    goal = this.add.sprite(this.levelData.goalInfo[0].x, this.levelData.goalInfo[0].y, 'goal');
+	    this.physics.arcade.enable(goal);
 
-	    var arrows = [
-	    	{"x": 40, "y": 40, "dir": "right", "selected": false},
-	    	{"x": 200, "y": 40, "dir": "down", "selected": true}
-	    ];
-
-	    var goal = [
-	    	{"x": 200, "y": 200}
-	    ];
+	    obstacleGroup = this.add.group();
+	    obstacleGroup.enableBody = true;
+	    if (this.levelData.obstacleInfo != undefined) {
+	    	this.levelData.obstacleInfo.forEach(function(elements){
+	    		obstacleGroup.create(elements.x, elements.y, 'obstalce1');
+	    	}, this);
+		}
 
 	    arrowGroup = this.add.group();
 	    arrowGroup.enableBody = true;
 
-	    arrows.forEach(function(elements){
+	    this.levelData.arrows.forEach(function(elements){
 	    	var spriteName = elements.dir + (elements.selected ? "Selected" : ""  );
-
 	    	var arrow = arrowGroup.create(elements.x, elements.y, spriteName);
-
-	    	if(elements.selected) {
-	    		arrow.inputEnabled = true;
-	    		arrow.events.onInputDown.add(this.clickedArrow, this);
-	    	}
-
+	    	arrow.inputEnabled = true;
+	    	arrow.events.onInputDown.add(this.clickedArrow, this);
 	    	arrow.direction = elements.dir;
 	    	arrow.canMove = elements.selected;
-	    	//this.physics.arcade.enable(arrow);
-	    	
+
+	    	availableMoves += elements.selected;
+
+	    	this.physics.arcade.enable(arrow);
 	    }, this);
 
-	    goal = this.add.sprite(goal[0].x, goal[0].y, 'goal');
-	    this.physics.arcade.enable(goal);
 
 	    // debugmodes
 	    qKey = this.input.keyboard.addKey(Phaser.Keyboard.Q);
@@ -57,7 +58,17 @@ GAME.LevelCreatorJump.prototype = {
 	},
 	update: function() {
 
-		this.physics.arcade.overlap(arrowGroup, goal, this.nextLevel, null, this);
+		// own collision detection
+		var lenArrows = arrowGroup.children.length;
+		for (var i = 0; i < lenArrows; i++) {
+			for (var j=i+1; j<lenArrows; j++){
+				this.physics.arcade.overlap(arrowGroup.children[i], arrowGroup.children[j], this.overLap, null, this);
+			}
+		}
+
+		this.physics.arcade.overlap(goal, arrowGroup, this.reachedGoal, null, this);
+
+		this.physics.arcade.overlap(obstacleGroup, arrowGroup, this.blackHole, null, this);
 
 	    // quit to the menu
 	    if (qKey.isDown) {
@@ -67,33 +78,49 @@ GAME.LevelCreatorJump.prototype = {
 	    	this.nextLevel();
 	    }
 
+	    /*if(availableMoves==0) { // TODO this better, does not work correctly..
+	    	console.log("NO moves avalible");
+	    }*/
+
+
+	    // must check if there are no avalible moves to do..
+
+	},
+	blackHole: function(obstacle, arrow) {
+		arrow.kill();
+		console.log("NOO, you reached a black hole..");
+
+	},
+	resetArrows: function() {
+		arrowGroup.forEach(function(elements){
+			this.resetOneArrow(elements, false); // set all the arrow elements to false again.. 
+		}, this);
 
 	},
 
+	resetOneArrow: function(arrow, moving) {
+		arrow.canMove = moving;
+		var spriteName = arrow.direction + (moving ? "Selected" : ""  );
+		arrow.loadTexture(spriteName , 0);
+	},
 
-	checkOverlap: function(spriteA, spriteB) {
-		// not the same object? 
+	overLap: function(arrow1, arrow2) {
+		console.log("overlaped!");
+		// change to true to both
+		this.resetOneArrow(arrow1, true);
+		this.resetOneArrow(arrow2, true);
+	},
 
-		if (spriteA == spriteB) {
-			console.log("SAME sprite");
-		} 
-
-		var spriteAx = spriteA.x;
-		var spriteAy = spriteA.y;
-
-		var spriteBx = spriteB.x;
-		var spriteBy = spriteB.y;
-
-
-    	console.log("A: " + spriteAx + " B : " + spriteBx);
-
-    	return spriteAx == spriteBx && spriteAy == spriteBy;
+	reachedGoal: function(goal, arrows) {
+		console.log("REACHED the goal");
+		arrows.kill();
+		this.nextLevel();
 	},
 
 	clickedArrow : function(arrow) {
 		console.log("clicked on arrow : " + arrow.direction);
-
 		if(arrow.canMove) {
+			this.resetArrows(); 
 			// target x and y
 			var targetX, targetY;
 			if(arrow.direction == "right" || arrow.direction == "left"){
@@ -110,8 +137,8 @@ GAME.LevelCreatorJump.prototype = {
 			    arrow, 
 			    targetX, 
 			    targetY, 
-			    300, // speed, 
-			    500 // maxTimeToFinish(ms)
+			    900, // speed, 
+			    1000 // maxTimeToFinish(ms)
 			);
 		}
 

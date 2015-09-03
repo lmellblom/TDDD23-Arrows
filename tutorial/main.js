@@ -26,8 +26,10 @@ var qKey;
 var nKey;
 var cursors;
 var arrowGroup;
-var arrowsSelected;
 var goal;
+var arrow;
+var obstacleGroup;
+var availableMoves;
 
 
 // add all the states that the game has
