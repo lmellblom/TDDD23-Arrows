@@ -6,12 +6,8 @@ GAME.LevelCreatorJump.prototype = {
 
 	init: function(levelSelector) { // add a custom variable to tell which level to load. 
 		//var customParam1 = 'level1JSON';
-		var levelName = "level" + levelSelector + "JSON";
-
-		this.currentLevel = levelSelector; 
-
-		// load the leveldata for this particular level. 
-		this.levelData = JSON.parse(this.game.cache.getText(levelName)); 
+		this.currentLevel = levelSelector;
+		console.log("current level " + levelSelector); 
 	}, 
 
 	create: function() {
@@ -20,140 +16,115 @@ GAME.LevelCreatorJump.prototype = {
 
 	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
 	    //this.game.stage.backgroundColor = '#73FF8F';
-	    this.add.sprite(0, 0, 'sky');
+	    this.add.sprite(0, 0, 'background');
 
-	    //  The platforms group contains the ground and the 2 ledges we can jump on
-	    platforms = this.add.group();
 
-	    //  We will enable physics for any object that is created in this group
-	    platforms.enableBody = true;
+	    var arrows = [
+	    	{"x": 40, "y": 40, "dir": "right", "selected": false},
+	    	{"x": 200, "y": 40, "dir": "down", "selected": true}
+	    ];
 
-	    // Here we create the ground. (the same for all levels!!)
-	    var ground = platforms.create(0, this.world.height - 64, 'ground');
+	    var goal = [
+	    	{"x": 200, "y": 200}
+	    ];
 
-	    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-	    ground.scale.setTo(2, 2);
+	    arrowGroup = this.add.group();
+	    arrowGroup.enableBody = true;
 
-	    //  This stops it from falling away when you jump on it
-	    ground.body.immovable = true;
+	    arrows.forEach(function(elements){
+	    	var spriteName = elements.dir + (elements.selected ? "Selected" : ""  );
 
-	    //  Now let's create the ledges
-	    this.levelData.ledgeData.forEach(function(element){
-	    	platforms.create(element.x, element.y, 'ground');
+	    	var arrow = arrowGroup.create(elements.x, elements.y, spriteName);
+
+	    	if(elements.selected) {
+	    		arrow.inputEnabled = true;
+	    		arrow.events.onInputDown.add(this.clickedArrow, this);
+	    	}
+
+	    	arrow.direction = elements.dir;
+	    	arrow.canMove = elements.selected;
+	    	//this.physics.arcade.enable(arrow);
+	    	
 	    }, this);
-	    platforms.setAll('body.immovable', true);
 
-	    // The player and its settings
-	    player = this.add.sprite(32, this.world.height - 150, 'dude');
+	    goal = this.add.sprite(goal[0].x, goal[0].y, 'goal');
+	    this.physics.arcade.enable(goal);
 
-	    //  We need to enable physics on the player
-	    this.physics.arcade.enable(player);
-
-	    //  Player physics properties. Give the little guy a slight bounce.
-	    player.body.bounce.y = 0.2;
-	    player.body.gravity.y = 300;
-	    player.body.collideWorldBounds = true;
-
-	    //  Our two animations, walking left and right.
-	    player.animations.add('left', [0, 1, 2, 3], 10, true);
-	    player.animations.add('right', [5, 6, 7, 8], 10, true);
-
-	    //  Finally some stars to collect
-	    stars = this.add.group();
-
-	    //  We will enable physics for any star that is created in this group
-	    stars.enableBody = true;
-
-	    this.levelData.starsData.forEach(function(element){
-	    	var star = stars.create(element.x, element.y, 'star');
-	    }, this);
-		stars.setAll('body.gravity.y', 300);
-		stars.setAll('body.bounce.y', 0.7 + Math.random() * 0.2); //  This just gives each star a slightly random bounce value
-
-	    // the order is important so that this is displayed over everything
-	    // create score text
-	    scoreText = this.add.text(16,16, 'score: 0',  {fontSize: '32px', fill: '#000'});
-
+	    // debugmodes
 	    qKey = this.input.keyboard.addKey(Phaser.Keyboard.Q);
-
-	    // only debugmode to make the level in one keypress
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
-
 	    cursors = this.input.keyboard.createCursorKeys();
-
-	    // add the diamond that will be visible after you have cleared the level // use the level creator json file, goal variable
-		diamond = this.add.sprite(this.levelData.goal[0].x, this.levelData.goal[0].y, 'diamond');
-	    this.physics.arcade.enable(diamond);
-	    diamond.visible = false;
-
-	    this.maxScore = this.levelData.starsData.length * 10;
-
-
 	},
 	update: function() {
 
-		// collide the player and the stars with the platform
-	    this.physics.arcade.collide(player,platforms);
-	    this.physics.arcade.collide(stars, platforms);
-
-	     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-	    this.physics.arcade.overlap(player, stars, this.collectStar, null, this);
-
-	    this.physics.arcade.overlap(player, diamond, this.nextLevel, null, this);
-
-	    //  Reset the players velocity (movement)
-	    player.body.velocity.x = 0;
-
-	    if (cursors.left.isDown)
-	    {
-	        //  Move to the left
-	        player.body.velocity.x = -150;
-
-	        player.animations.play('left');
-	    }
-	    else if (cursors.right.isDown)
-	    {
-	        //  Move to the right
-	        player.body.velocity.x = 150;
-
-	        player.animations.play('right');
-	    }
-	    else
-	    {
-	        //  Stand still
-	        player.animations.stop();
-
-	        player.frame = 4;
-	    }
-
-	    //  Allow the player to jump if they are touching the ground.
-	    if (cursors.up.isDown && player.body.touching.down)
-	    {
-	        player.body.velocity.y = -350;
-	    }
-	    else if(cursors.down.isDown) {
-	        player.body.velocity.y = 400; // go faster when pressing down button
-	    }
-
-	    // checking if you have cleared the first level, add the diamond to go to the next level
-	    if (score == this.maxScore && !diamond.visible) {
-	    	// add a diamond..
-	    	diamond.visible = true;
-	    }
+		this.physics.arcade.overlap(arrowGroup, goal, this.nextLevel, null, this);
 
 	    // quit to the menu
 	    if (qKey.isDown) {
 	    	this.state.start('MainMenu');
 	    }
 	    if (nKey.isDown) {
-	    	diamond.visible=true;
-	    	this.nextLevel(player,diamond);
+	    	this.nextLevel();
 	    }
+
 
 	},
 
-	nextLevel: function(player, diamond) {
-		if (diamond.visible) {
+
+	checkOverlap: function(spriteA, spriteB) {
+		// not the same object? 
+
+		if (spriteA == spriteB) {
+			console.log("SAME sprite");
+		} 
+
+		var spriteAx = spriteA.x;
+		var spriteAy = spriteA.y;
+
+		var spriteBx = spriteB.x;
+		var spriteBy = spriteB.y;
+
+
+    	console.log("A: " + spriteAx + " B : " + spriteBx);
+
+    	return spriteAx == spriteBx && spriteAy == spriteBy;
+	},
+
+	clickedArrow : function(arrow) {
+		console.log("clicked on arrow : " + arrow.direction);
+
+		if(arrow.canMove) {
+			// target x and y
+			var targetX, targetY;
+			if(arrow.direction == "right" || arrow.direction == "left"){
+				targetY = arrow.y;
+				targetX = (arrow.direction == "right" ? gameWidth + 20 : -20);
+			}
+			else {
+				targetX = arrow.x;
+				targetY = (arrow.direction == "up" ? -20 : gameHeight + 20);
+			}
+
+			// TODO, animate that the arrow is sliding over the grid
+			this.game.physics.arcade.moveToXY(
+			    arrow, 
+			    targetX, 
+			    targetY, 
+			    300, // speed, 
+			    500 // maxTimeToFinish(ms)
+			);
+		}
+
+		//arrow.kill();
+
+		// make the arrows in the grid that is in the same direction as the sprite be selected
+	},
+
+	nextLevel: function() {
+		console.log("you have now done this level. well done!!");
+
+		var next = true;
+		if (next) {
 			madeLevels[this.currentLevel-1] = true; // currentlevel is 1,2,3 etc and indexing start at 0
 			this.resetForNextLevel();
 			this.currentLevel++; // the current level is now 1
@@ -165,17 +136,8 @@ GAME.LevelCreatorJump.prototype = {
 				this.quitGame();
 		}
 	},
-	collectStar: function(player, star) {
-		// Removes the star from the screen
-	    star.kill();
-	    // add and update the score
-	    score += 10;
-	    scoreText.text = 'Score: ' + score;
-	},
 
 	resetForNextLevel : function() {
-		diamond.visible = false;
-		score = 0;
 	},
 
     quitGame: function (pointer) {

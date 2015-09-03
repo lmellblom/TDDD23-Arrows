@@ -4,15 +4,13 @@ see tutorial http://codetowin.io/tutorials/nback-game-states-and-menus/
 
 var GAME = GAME || {};
 
-GAME.game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+var gameWidth = 520;
+var gameHeight =  600;
+
+
+GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
 
 var player;
-var platforms;
-var cursors;
-var stars;
-
-var score = 0; // holds the score on the current level you are on
-var scoreText;
 
 var numberOfLevels = 2;
 
@@ -24,9 +22,13 @@ for (var i=0; i<numberOfLevels; i++) {
 }
 
 var menuGroup;
-var diamond;
 var qKey;
 var nKey;
+var cursors;
+var arrowGroup;
+var arrowsSelected;
+var goal;
+
 
 // add all the states that the game has
 GAME.game.state.add('Preload', GAME.Preload);

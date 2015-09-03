@@ -7,15 +7,17 @@ GAME.SelectLevels.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#9BFF73';
 		this.add.sprite(0, 0, 'background');
-		// reset game options
-		score = 0;
+
 
 		var style = { font: "30px Arial", fill: "#FFF", align: "center" };
 		var style2 = { font: "60px Arial", fill: "#FFF", align: "center" };
 
+
 		var header = this.add.text(this.world.centerX, 100, "NIVÅER", style2);
 		header.anchor.set(0.5);
 		var openLevel;
+
+		/*
 
 		// ska rita ut alla levlar.. just nu ej så bra utformad!!!
 		var startY = this.world.centerY-100;
@@ -43,15 +45,13 @@ GAME.SelectLevels.prototype = {
 				lockedLevel.anchor.set(0.5);
 				//lockedLevel.scale.setTo(0.3, 0.3);
 			}
-		}
+		}*/
 
 		// backbutton
-		var back = this.add.sprite(100, this.world.height-100, 'backIcon');
 		var backText = this.add.text(180, this.world.height-100, "Meny", style);
-		back.anchor.set(0.5);
 		backText.anchor.set(0.5);
-		back.inputEnabled = true;
-		back.events.onInputDown.add(this.backToMenu, this);
+		backText.inputEnabled = true;
+		backText.events.onInputDown.add(this.backToMenu, this);
 
 	},
 	update: function() {
