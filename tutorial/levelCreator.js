@@ -1,15 +1,26 @@
 var GAME = GAME || {};
 
-GAME.Level2 = function() {};
+GAME.LevelCreatorJump = function() {};
 
-GAME.Level2.prototype = {
+GAME.LevelCreatorJump.prototype = {
+
+	init: function(levelSelector) { // add a custom variable to tell which level to load. 
+		//var customParam1 = 'level1JSON';
+		var levelName = "level" + levelSelector + "JSON";
+
+		this.currentLevel = levelSelector; 
+
+		// load the leveldata for this particular level. 
+		this.levelData = JSON.parse(this.game.cache.getText(levelName)); 
+	}, 
+
 	create: function() {
 		//  We're going to be using physics, so enable the Arcade Physics system
 	    this.physics.startSystem(Phaser.Physics.ARCADE);
 
-	    //  A simple background for our game
-	    //this.add.sprite(0, 0, 'sky'); //73FF8F
-	    this.game.stage.backgroundColor = '#FF9266';
+	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
+	    //this.game.stage.backgroundColor = '#73FF8F';
+	    this.add.sprite(0, 0, 'sky');
 
 	    //  The platforms group contains the ground and the 2 ledges we can jump on
 	    platforms = this.add.group();
@@ -17,7 +28,7 @@ GAME.Level2.prototype = {
 	    //  We will enable physics for any object that is created in this group
 	    platforms.enableBody = true;
 
-	    // Here we create the ground.
+	    // Here we create the ground. (the same for all levels!!)
 	    var ground = platforms.create(0, this.world.height - 64, 'ground');
 
 	    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
@@ -26,14 +37,11 @@ GAME.Level2.prototype = {
 	    //  This stops it from falling away when you jump on it
 	    ground.body.immovable = true;
 
-	    //  Now let's create two ledges
-	    var ledge = platforms.create(400, 400, 'ground');
-
-	    ledge.body.immovable = true;
-
-	    ledge = platforms.create(-150, 250, 'ground');
-
-	    ledge.body.immovable = true;
+	    //  Now let's create the ledges
+	    this.levelData.ledgeData.forEach(function(element){
+	    	platforms.create(element.x, element.y, 'ground');
+	    }, this);
+	    platforms.setAll('body.immovable', true);
 
 	    // The player and its settings
 	    player = this.add.sprite(32, this.world.height - 150, 'dude');
@@ -56,19 +64,11 @@ GAME.Level2.prototype = {
 	    //  We will enable physics for any star that is created in this group
 	    stars.enableBody = true;
 
-	    //  Here we'll create 12 of them evenly spaced apart
-	    for (var i = 0; i < 8; i++)
-	    {
-	        //  Create a star inside of the 'stars' group
-	        var star = stars.create(i * 70, 0, 'star');
-
-	        //  Let gravity do its thing
-	        star.body.gravity.y = 300;
-
-	        //  This just gives each star a slightly random bounce value
-	        star.body.bounce.y = 0.7 + Math.random() * 0.2;
-	    }
-
+	    this.levelData.starsData.forEach(function(element){
+	    	var star = stars.create(element.x, element.y, 'star');
+	    }, this);
+		stars.setAll('body.gravity.y', 300);
+		stars.setAll('body.bounce.y', 0.7 + Math.random() * 0.2); //  This just gives each star a slightly random bounce value
 
 	    // the order is important so that this is displayed over everything
 	    // create score text
@@ -76,15 +76,17 @@ GAME.Level2.prototype = {
 
 	    qKey = this.input.keyboard.addKey(Phaser.Keyboard.Q);
 
-	    cursors = this.input.keyboard.createCursorKeys();
-
 	    // only debugmode to make the level in one keypress
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
 
-	    // add the diamond that will be visible after you have cleared the level
-		diamond = this.add.sprite(32, this.world.height - 150, 'diamond');
+	    cursors = this.input.keyboard.createCursorKeys();
+
+	    // add the diamond that will be visible after you have cleared the level // use the level creator json file, goal variable
+		diamond = this.add.sprite(this.levelData.goal[0].x, this.levelData.goal[0].y, 'diamond');
 	    this.physics.arcade.enable(diamond);
 	    diamond.visible = false;
+
+	    this.maxScore = this.levelData.starsData.length * 10;
 
 
 	},
@@ -134,14 +136,14 @@ GAME.Level2.prototype = {
 	    }
 
 	    // checking if you have cleared the first level, add the diamond to go to the next level
-	    if (score == 80 && !diamond.visible) {
+	    if (score == this.maxScore && !diamond.visible) {
 	    	// add a diamond..
 	    	diamond.visible = true;
 	    }
 
 	    // quit to the menu
 	    if (qKey.isDown) {
-	    	this.quitGame(null); 
+	    	this.state.start('MainMenu');
 	    }
 	    if (nKey.isDown) {
 	    	diamond.visible=true;
@@ -152,27 +154,31 @@ GAME.Level2.prototype = {
 
 	nextLevel: function(player, diamond) {
 		if (diamond.visible) {
-			madeLevels[1] = true;
+			madeLevels[this.currentLevel-1] = true; // currentlevel is 1,2,3 etc and indexing start at 0
 			this.resetForNextLevel();
-			console.log("next level");
-			this.state.start('MainMenu');
+			this.currentLevel++; // the current level is now 1
+
+			// check if you reached the end level, therefore you should go back to the menu instead numberOfLevels
+			if (this.currentLevel <= numberOfLevels) 
+				this.state.start('Level', true, false, '2');
+			else 
+				this.quitGame();
 		}
 	},
 	collectStar: function(player, star) {
 		// Removes the star from the screen
 	    star.kill();
-
 	    // add and update the score
 	    score += 10;
 	    scoreText.text = 'Score: ' + score;
 	},
+
 	resetForNextLevel : function() {
 		diamond.visible = false;
 		score = 0;
 	},
 
     quitGame: function (pointer) {
-
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 

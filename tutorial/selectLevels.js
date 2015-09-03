@@ -1,9 +1,9 @@
 var GAME = GAME || {};
 
-GAME.AllLevels = function() {};
+GAME.SelectLevels = function() {};
 
 
-GAME.AllLevels.prototype = {
+GAME.SelectLevels.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#9BFF73';
 		this.add.sprite(0, 0, 'background');
@@ -58,19 +58,10 @@ GAME.AllLevels.prototype = {
 
 	},
 	backToMenu: function() {
-		this.state.start('MainMenu');
+		this.game.state.start('MainMenu');
 	},
 	startLevel : function(){
-		if (this.number==1) {
-			this.game.state.start("Level1");
-		}
-		else if(this.number == 2) {
-			this.game.state.start("Level2");
-		}
-		else { // starta nivå 2 annars :P 
-			this.game.state.start("Level2");
-		}
-		
+		this.game.state.start('Level', true, false, this.number);
 	}
 
 };

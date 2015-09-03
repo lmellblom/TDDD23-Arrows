@@ -33,10 +33,8 @@ GAME.MainMenu.prototype = {
 		text[1].events.onInputDown.add(this.startAllLevels, this);
 		text[2].events.onInputDown.add(this.startCredit, this);
 
-
-
 		// making bubbles!! :)
-		var bubblesEmitter = this.game.add.emitter(300, 500, 50);
+		/*var bubblesEmitter = this.game.add.emitter(300, 500, 50);
           bubblesEmitter.makeParticles("bubble");
           bubblesEmitter.maxParticleScale = 0.6;
           bubblesEmitter.minParticleScale = 0.2;
@@ -46,20 +44,20 @@ GAME.MainMenu.prototype = {
           bubblesEmitter.width = 320;
           bubblesEmitter.minRotation = 0;
           bubblesEmitter.maxRotation = 40;
-          bubblesEmitter.flow(15000, 2000,1,-1);
+          bubblesEmitter.flow(15000, 2000,1,-1);*/
 
 	},
 	update: function() {
 
 	},
 	startTheGame: function() {
-		this.game.state.start("Level1");
+		this.state.start('Level', true, false, '1'); // always start att the level 1? 
 	},
 	startCredit: function() {
 		this.game.state.start('Credits');
 	},
 	startAllLevels: function() {
-		this.game.state.start('AllLevels');
+		this.game.state.start('SelectLevels');
 	},
 	hoverOver: function(text) {
 		text.fill= '#FF96B4';
