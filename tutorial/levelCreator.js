@@ -26,6 +26,8 @@ GAME.LevelCreatorJump.prototype = {
 	    goal = this.add.sprite(this.levelData.goalInfo[0].x, this.levelData.goalInfo[0].y, 'goal');
 	    this.physics.arcade.enable(goal);
 
+
+
 	    obstacleGroup = this.add.group();
 	    obstacleGroup.enableBody = true;
 	    if (this.levelData.obstacleInfo != undefined) {
@@ -106,9 +108,20 @@ GAME.LevelCreatorJump.prototype = {
 
 	overLap: function(arrow1, arrow2) {
 		console.log("overlaped!");
+		console.log("arrow1 v: " + arrow1.body.velocity + "\n arrow2 v: " + arrow2.body.velocity);
+
+		// check if one arrow is standing still, this will be true
+		if ( Phaser.Point.equals(arrow1.body.velocity,new Phaser.Point(0,0) )) {
+			this.resetOneArrow(arrow1, true);
+		}
+		else {
+			this.resetOneArrow(arrow2, true);
+		}
+
+
 		// change to true to both
-		this.resetOneArrow(arrow1, true);
-		this.resetOneArrow(arrow2, true);
+		//this.resetOneArrow(arrow1, true);
+		//this.resetOneArrow(arrow2, true);
 	},
 
 	reachedGoal: function(goal, arrows) {
@@ -137,8 +150,8 @@ GAME.LevelCreatorJump.prototype = {
 			    arrow, 
 			    targetX, 
 			    targetY, 
-			    900, // speed, 
-			    1000 // maxTimeToFinish(ms)
+			    500, // speed, 
+			    900 // maxTimeToFinish(ms)
 			);
 		}
 
