@@ -23,8 +23,8 @@ GAME.Preload.prototype = {
 
 	    this.load.image('obstalce1', 'assets/blackHole.png');
 
-	    this.load.json('level1json', 'data/level1.json');
-	    this.load.json('level2json', 'data/level2.json');
+	    //this.load.json('level1json', 'data/level1.json');
+	    //this.load.json('level2json', 'data/level2.json');
 
 	},
 	create: function() {
