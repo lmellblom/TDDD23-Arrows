@@ -30,6 +30,35 @@ var arrow;
 var obstacleGroup;
 var availableMoves;
 
+var allLevelData = [
+	{
+	    "arrows" : [ 
+	        {"x": 1, "y": 1, "dir": "right", "selected": true},
+	        {"x": 4, "y": 1, "dir": "down", "selected": false},
+	        {"x": 4, "y": 5, "dir": "left", "selected": false},
+	        {"x": 0, "y": 5, "dir": "down", "selected": false}
+	     ],
+	    "goalInfo" : [
+	        {"x":0, "y":7}
+	    ]
+	},
+	{
+	    "arrows" : [ 
+	        {"x": 1, "y": 1, "dir": "down", "selected": true},
+	        {"x": 0, "y": 2, "dir": "down", "selected": false},
+	        {"x": 3, "y": 2, "dir": "left", "selected": false},
+	        {"x": 1, "y": 4, "dir": "right", "selected": false},
+	        {"x": 2, "y": 4, "dir": "down", "selected": false},
+	        {"x": 3, "y": 4, "dir": "up", "selected": false},
+	        {"x": 2, "y": 6, "dir": "up", "selected": false},
+	        {"x": 0, "y": 7, "dir": "right", "selected": false}
+	     ],
+	    "goalInfo" : [
+	        {"x": 4, "y": 7}
+	    ]
+	}
+];
+
 
 // add all the states that the game has
 GAME.game.state.add('Boot', GAME.Boot);

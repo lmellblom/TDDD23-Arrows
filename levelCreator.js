@@ -4,12 +4,13 @@ GAME.LevelCreator = function() {};
 
 GAME.LevelCreator.prototype = {
 
-	init: function(levelSelector) { // add a custom variable to tell which level to load. 
-		var levelName = "level" + levelSelector + "json";
-		this.currentLevel = levelSelector; 
+	init: function(levelId) { // add a custom variable to tell which level to load. 
+		this.currentLevel = levelId; 
 
 		// load the leveldata for this particular level. 
-		this.levelData = this.game.cache.getJSON(levelName);
+		//this.levelData = this.game.cache.getJSON(levelName);
+		this.levelData = allLevelData[levelId-1];
+
 		availableMoves = 0;
 	}, 
 
