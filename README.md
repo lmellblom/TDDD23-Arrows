@@ -1,5 +1,4 @@
-# Game in the course TDDD23
+# TDDD23 - Arrows
 
-A game project in the course TDDD23 at LiU. 
+Arrows (name can change) is a simple puzzle game built with [Phaser](http://phaser.io) in the course [TDDD23 Design and Programming of Computer Games](https://www.ida.liu.se/~TDDD23/). 
 
-The game idea itself isn't developed yet. Now it's only tutorials to learn the framework phaser that I will use. 
