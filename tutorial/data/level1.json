@@ -1,9 +1,0 @@
-{
-    "arrows" : [
-            {"x": 40, "y": 100, "dir": "right", "selected": true},
-            {"x": 200, "y": 100, "dir": "down", "selected": false}
-    ],
-    "goalInfo" : [
-            {"x": 200, "y": 350}
-    ]
-}

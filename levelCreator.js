@@ -1,17 +1,15 @@
 var GAME = GAME || {};
 
-GAME.LevelCreatorJump = function() {};
+GAME.LevelCreator = function() {};
 
-GAME.LevelCreatorJump.prototype = {
+GAME.LevelCreator.prototype = {
 
 	init: function(levelSelector) { // add a custom variable to tell which level to load. 
-		var levelName = "level" + levelSelector + "JSON";
-
+		var levelName = "level" + levelSelector + "json";
 		this.currentLevel = levelSelector; 
 
 		// load the leveldata for this particular level. 
-		this.levelData = JSON.parse(this.game.cache.getText(levelName)); 
-
+		this.levelData = this.game.cache.getJSON(levelName);
 		availableMoves = 0;
 	}, 
 
@@ -23,25 +21,38 @@ GAME.LevelCreatorJump.prototype = {
 	    //this.game.stage.backgroundColor = '#73FF8F';
 	    this.add.sprite(0, 0, 'background');
 
-	    goal = this.add.sprite(this.levelData.goalInfo[0].x, this.levelData.goalInfo[0].y, 'goal');
+	    var grids = [
+	    	{"width": 5, "height": 8}
+	    ];
+
+	    var gridSize = 50;
+
+	    var goalX = gridSize/2 + this.levelData.goalInfo[0].x * gridSize;
+	    var goalY = gridSize/2 + this.levelData.goalInfo[0].y * gridSize;
+
+	    goal = this.add.sprite(goalX, goalY, 'goal');
 	    this.physics.arcade.enable(goal);
-
-
 
 	    obstacleGroup = this.add.group();
 	    obstacleGroup.enableBody = true;
 	    if (this.levelData.obstacleInfo != undefined) {
 	    	this.levelData.obstacleInfo.forEach(function(elements){
-	    		obstacleGroup.create(elements.x, elements.y, 'obstalce1');
+	    		var posX = gridSize/2 + elements.x * gridSize;
+	    		var posY = gridSize/2 + elements.y * gridSize;
+	    		obstacleGroup.create(posX, posY, 'obstalce1');
 	    	}, this);
 		}
 
 	    arrowGroup = this.add.group();
 	    arrowGroup.enableBody = true;
 
+	    // x and y specifiec witch index in x and y starting from 
+
 	    this.levelData.arrows.forEach(function(elements){
 	    	var spriteName = elements.dir + (elements.selected ? "Selected" : ""  );
-	    	var arrow = arrowGroup.create(elements.x, elements.y, spriteName);
+	    	var posX = gridSize/2 + elements.x * gridSize;
+	    	var posY = gridSize/2 + elements.y * gridSize;
+	    	var arrow = arrowGroup.create(posX, posY, spriteName);
 	    	arrow.inputEnabled = true;
 	    	arrow.events.onInputDown.add(this.clickedArrow, this);
 	    	arrow.direction = elements.dir;
@@ -108,7 +119,6 @@ GAME.LevelCreatorJump.prototype = {
 
 	overLap: function(arrow1, arrow2) {
 		console.log("overlaped!");
-		console.log("arrow1 v: " + arrow1.body.velocity + "\n arrow2 v: " + arrow2.body.velocity);
 
 		// check if one arrow is standing still, this will be true
 		if ( Phaser.Point.equals(arrow1.body.velocity,new Phaser.Point(0,0) )) {
@@ -170,10 +180,13 @@ GAME.LevelCreatorJump.prototype = {
 			this.currentLevel++; // the current level is now 1
 
 			// check if you reached the end level, therefore you should go back to the menu instead numberOfLevels
-			if (this.currentLevel <= numberOfLevels) 
-				this.state.start('Level', true, false, '2');
-			else 
+			if (this.currentLevel <= numberOfLevels) {
+				console.log("start next level" + this.currentLevel);
+				this.state.start('Level', true, false, this.currentLevel);
+			}
+			else {
 				this.quitGame();
+			}
 		}
 	},
 

@@ -35,7 +35,7 @@ var availableMoves;
 GAME.game.state.add('Boot', GAME.Boot);
 GAME.game.state.add('Preload', GAME.Preload);
 GAME.game.state.add('MainMenu', GAME.MainMenu);
-GAME.game.state.add('Level', GAME.LevelCreatorJump);
+GAME.game.state.add('Level', GAME.LevelCreator);
 GAME.game.state.add('Credits', GAME.Credits);
 GAME.game.state.add('SelectLevels', GAME.SelectLevels);
 

@@ -7,26 +7,17 @@ GAME.Boot.prototype = {
 
 	},
 	create: function() {
-
-		// scales everything!!!
-		this.input.maxPointers = 1;
+        // scales everything!!!
+        this.input.maxPointers = 1;
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;  
-        /*this.scale.minWidth = 375/2;
-        this.scale.minHeight = 660/2;*/
+        /*this.scale.minWidth = gameWidth/2;
+        this.scale.minHeight = gameHeight/2;
         this.scale.maxWidth = gameWidth;
-        this.scale.maxHeight = gameHeight;
-
-
+        this.scale.maxHeight = gameHeight;*/
         this.scale.pageAlignVertically = true;
         //this.scale.pageAlignHorizontally = true;
         this.scale.updateLayout(true);
 
-		this.state.start('Preload');
+        this.state.start('Preload');
 	}
 };
-
-/*
-var gameWidth = 400;
-var gameHeight =  650;
-
-*/

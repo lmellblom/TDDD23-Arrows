@@ -1,0 +1,15 @@
+{
+    "arrows" : [ 
+        {"x": 1, "y": 1, "dir": "down", "selected": true},
+        {"x": 0, "y": 2, "dir": "down", "selected": false},
+        {"x": 3, "y": 2, "dir": "left", "selected": false},
+        {"x": 1, "y": 4, "dir": "right", "selected": false},
+        {"x": 2, "y": 4, "dir": "down", "selected": false},
+        {"x": 3, "y": 4, "dir": "up", "selected": false},
+        {"x": 2, "y": 6, "dir": "up", "selected": false},
+        {"x": 0, "y": 7, "dir": "right", "selected": false}
+     ],
+    "goalInfo" : [
+        {"x": 4, "y": 7}
+    ]
+}
