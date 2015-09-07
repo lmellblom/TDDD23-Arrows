@@ -12,12 +12,14 @@ GAME.Preload.prototype = {
 	    this.load.image('leftSelected', 'assets/selected/left.png');
 	    this.load.image('downSelected', 'assets/selected/down.png');
 	    this.load.image('upSelected', 'assets/selected/up.png');
+	    this.load.image('emptySelected', 'assets/selected/empty.png');
 
 	    // all none seleted arrows
 	    this.load.image('right', 'assets/notSelected/right.png');
 	    this.load.image('left', 'assets/notSelected/left.png');
 	    this.load.image('down', 'assets/notSelected/down.png');
 	    this.load.image('up', 'assets/notSelected/up.png');
+	    this.load.image('empty', 'assets/notSelected/empty.png');
 
 	    this.load.image('goal', 'assets/home.png');
 
