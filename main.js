@@ -11,7 +11,7 @@ GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
 
 var player;
 
-var numberOfLevels = 2;
+var numberOfLevels = 3;
 
 var madeLevels = []; // a list that holds if the levels is done or not (t/f)
 
@@ -58,8 +58,29 @@ var allLevelData = [
 	    "goalInfo" : [
 	        {"x": 4, "y": 7}
 	    ]
+	},
+	{
+	    "arrows" : [ 
+	        {"x": 1, "y": 0, "dir": "down", "selected": false},
+	        {"x": 4, "y": 0, "dir": "left", "selected": false},
+	        {"x": 0, "y": 1, "dir": "right", "selected": true},
+	        {"x": 2, "y": 1, "dir": "down", "selected": false},
+	        {"x": 4, "y": 1, "dir": "up", "selected": false},
+	        {"x": 3, "y": 2, "dir": "right", "selected": false},
+	        {"x": 0, "y": 3, "dir": "down", "selected": false},
+	        {"x": 1, "y": 3, "dir": "left", "selected": false},
+	        {"x": 2, "y": 4, "dir": "right", "selected": false},
+	        {"x": 0, "y": 5, "dir": "down", "selected": false},
+	        {"x": 2, "y": 5, "dir": "left", "selected": false},
+	        {"x": 0, "y": 6, "dir": "right", "selected": false},
+	        {"x": 3, "y": 6, "dir": "up", "selected": false}
+	     ],
+	    "goalInfo" : [
+	        {"x": 4, "y": 2}
+	    ]
 	}
 ];
+
 
 	    var grids = [
 	    	{"width": 5, "height": 8}
