@@ -35,9 +35,19 @@ GAME.LevelCreator.prototype = {
 		this.arrowGroup;
 		this.click = 0;
 		this.scoreText;
+
+		// TODO : usa a global variable to set remove the global background music, and the clicks
 	}, 
 
 	create: function() {
+
+		// sounds
+		this.clickSound = this.add.audio('clickSound');
+		this.winSound = this.add.audio('winSound');
+		this.starSound = this.add.audio('starSound');
+		this.arrowSound = this.add.audio('arrowSound');
+		this.gameOverSound = this.add.audio('gameOverSound');
+
 	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
 	    this.game.stage.backgroundColor = '#FFF';
 	    var background = this.add.sprite(0, -520, 'background');
@@ -55,7 +65,6 @@ GAME.LevelCreator.prototype = {
 
         // add settings button
         this.settingsBtn = this.add.sprite(20, this.world.height-60, 'settingsBtn');
-        //settingsBtn.anchor.set(0.5);
         this.settingsBtn.scale.setTo(0.7);
         this.settingsBtn.inputEnabled = true;
         this.settingsBtn.events.onInputDown.add(this.settingsOpen, this);
@@ -92,11 +101,28 @@ GAME.LevelCreator.prototype = {
 	    // using the power of callAll we can add the same input event to all coins in the group:
 	    theGrid.callAll('events.onInputDown.add', 'events.onInputDown', this.clickedGrid, this);
 
+
+        if(this.levelData.stars != undefined) {
+        	// TODO : only add this when the level say that a star should be added
+	        this.starBar = this.add.sprite(this.world.centerX-70, 20, 'starPoints');
+	        this.starBar.scale.setTo(0.6);
+	        this.points = 0;
+	        this.maxPoints = this.levelData.stars.length;
+	        this.starPoints = this.add.text(this.world.centerX-10, 30, this.points + " / " + this.maxPoints, smallStyle);
+	        
+
+        	// set out the star in the grid
+	    	var starElement = this.gridSystem[this.levelData.stars[0].x][this.levelData.stars[0].y];
+	    	starElement.setType("star");
+	    	starElement.sprite.scale.setTo(0.6);
+	    	starElement.changeTexture();	
+        }
+        // -----------
+
 	    // add the goal
 	    var goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
 	    goalElement.setColor(this.levelData.goalInfo[0].color);
 	    goalElement.setType("goal");
-	    goalElement.setSpriteAlpha(1.0);
 		goalElement.changeTexture();
 	
 	    this.arrowGroup = this.add.group();
@@ -118,6 +144,7 @@ GAME.LevelCreator.prototype = {
 	    cursors = this.input.keyboard.createCursorKeys();
 	},
 	settingsOpen : function() {
+		if(playMusic) this.clickSound.play();
 		this.settingsBtn.inputEnabled = false;
 		var modalGroup = this.add.group();
 
@@ -151,10 +178,12 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(yesBtn);
 
         noBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
         yesBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
             this.quitGame();
@@ -172,6 +201,8 @@ GAME.LevelCreator.prototype = {
 		var gridElement = this.gridSystem[x][y];	// get the gridelement
 
 		if(gridElement.isArrow() && gridElement.isSelected) {
+
+			if(playMusic) this.arrowSound.play("",0,0.4); // maybe other sound
 			this.click++;
 			this.scoreText.text = "Clicks: " + this.click;
 
@@ -197,6 +228,14 @@ GAME.LevelCreator.prototype = {
 					element = this.gridSystem[i][item.indexNr.y];
 					if(element.isGoal())
 						continue;
+					if(element.isStar()){
+						if(playMusic) this.starSound.play(); // oterh sound
+						this.points++;
+						this.starPoints.text =  this.points + " / " + this.maxPoints;
+						// change this element to and empty now
+						element.resetToEmpty();
+						element.sprite.scale.setTo(1.0);
+					}	
 					element.setActive(true, color);
 				}
 			}
@@ -205,6 +244,14 @@ GAME.LevelCreator.prototype = {
 					element = this.gridSystem[i][item.indexNr.y];
 					if(element.isGoal())
 						continue;
+					if(element.isStar()){
+						if(playMusic) this.starSound.play(); // other sound
+						this.points++;
+						this.starPoints.text =  this.points + " / " + this.maxPoints;
+						// change this element to and empty now
+						element.resetToEmpty();
+						element.sprite.scale.setTo(1.0);
+					}	
 					element.setActive(true, color);
 				}
 			}
@@ -213,6 +260,14 @@ GAME.LevelCreator.prototype = {
 					element = this.gridSystem[item.indexNr.x][i];
 					if(element.isGoal())
 						continue;
+					if(element.isStar()){
+						if(playMusic) this.starSound.play(); // other sound later
+						this.points++;
+						this.starPoints.text =  this.points + " / " + this.maxPoints;
+						// change this element to and empty now
+						element.resetToEmpty();
+						element.sprite.scale.setTo(1.0);
+					}	
 					element.setActive(true, color);
 				}
 			}
@@ -221,17 +276,27 @@ GAME.LevelCreator.prototype = {
 					element = this.gridSystem[item.indexNr.x][i];
 					if(element.isGoal())
 						continue;
+					if(element.isStar()){
+						if(playMusic) this.starSound.play(); // other sound later
+						this.points++;
+						this.starPoints.text =  this.points + " / " + this.maxPoints;
+						// change this element to and empty now
+						element.resetToEmpty();
+						element.sprite.scale.setTo(1.0);
+					}	
 					element.setActive(true, color);
 				}
 			}
 
 			if (element.isGoal()) {
 				console.log("KLARA");
+				if(playMusic) this.winSound.play();
 				this.madeLevel();
 				this.showModalWin();
 			}
 			else if (this.availableMoves()==0) {
 				console.log("inga drag kvar.. synd!");
+				if(playMusic) this.gameOverSound.play();
 				this.showModal();
 			}
 
@@ -320,10 +385,12 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(menuBtn);
 
         tryAgainBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	modalGroup.visible = false;
             this.resetThisLevel();
         }, this);
         menuBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	modalGroup.visible = false;
             this.quitGame();
         }, this);
@@ -335,7 +402,6 @@ GAME.LevelCreator.prototype = {
         }, this);*/
 	},
 	showModalWin : function() {
-
 		var modalGroup = this.add.group();
 
 		var modal = this.game.add.graphics(this.game.width, this.game.height);
@@ -375,16 +441,19 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(tryAgainBtn);
 
         menuBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	modalGroup.visible = false;
             this.quitGame();
         }, this);
 
         tryAgainBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	modalGroup.visible = false;
             this.resetThisLevel();
         }, this);
 
         nextBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) this.clickSound.play();
         	modalGroup.visible = false;
             this.nextLevel();
         }, this);
