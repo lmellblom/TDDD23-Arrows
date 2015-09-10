@@ -14,9 +14,13 @@ GAME.Preload.prototype = {
 	    // for game ui
 	    this.load.image('clearedModule', 'assets/game-ui/LevelCleared.png');
 	    this.load.image('failedModule', 'assets/game-ui/LevelFailed.png');
+	    this.load.image('panelModule', 'assets/game-ui/panel.png');
 	    this.load.image('menuBtn', 'assets/game-ui/menu.png');
 	    this.load.image('nextBtn', 'assets/game-ui/next.png');
 	    this.load.image('reloadBtn', 'assets/game-ui/reload.png');
+	    this.load.image('settingsBtn', 'assets/game-ui/settings.png');
+	    this.load.image('yesBtn', 'assets/game-ui/yesBtn.png');
+	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
 
 
 	    

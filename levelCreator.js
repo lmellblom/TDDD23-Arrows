@@ -54,6 +54,11 @@ GAME.LevelCreator.prototype = {
         this.scoreText = this.add.text(this.world.width-130, 20, "Clicks: " + this.click, generalStyle);
 
         // add settings button
+        var settingsBtn = this.add.sprite(20, this.world.height-60, 'menuBtn');
+        //settingsBtn.anchor.set(0.5);
+        settingsBtn.scale.setTo(0.7);
+        settingsBtn.inputEnabled = true;
+        settingsBtn.events.onInputDown.add(this.settingsOpen, this);
 
 
 	    // built up the grid with empty positions
@@ -112,6 +117,45 @@ GAME.LevelCreator.prototype = {
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
 	    cursors = this.input.keyboard.createCursorKeys();
 	},
+	settingsOpen : function() {
+		var modalGroup = this.add.group();
+
+		var modal = this.game.add.graphics(this.game.width, this.game.height);
+		modal.beginFill("0x000000", 0.7);
+        modal.x = 0;
+        modal.y = 0;
+        modal.drawRect(0, 0, this.game.width, this.game.height);
+        modalGroup.add(modal);
+
+        var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'panelModule');
+        module.scale.setTo(0.9, 0.9);
+        module.anchor.set(0.5,0.5);
+        modalGroup.add(module);
+
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Do you really \n want to quit?", generalStyle);
+        text.anchor.set(0.5);
+        modalGroup.add(text);
+
+        // add menu button, next level and try level again
+        var noBtn = this.add.sprite(this.world.centerX-70, this.world.centerY+80, 'noBtn');
+        var yesBtn = this.add.sprite(this.world.centerX+70, this.world.centerY+80, 'yesBtn');
+        noBtn.anchor.set(0.5);
+        yesBtn.anchor.set(0.5);
+        noBtn.inputEnabled = true;
+        yesBtn.inputEnabled = true;
+        modalGroup.add(noBtn);
+        modalGroup.add(yesBtn);
+
+        noBtn.events.onInputDown.add(function (e,pointer){
+        	modalGroup.visible = false;
+        }, this);
+        yesBtn.events.onInputDown.add(function (e,pointer){
+        	modalGroup.visible = false;
+            this.quitGame();
+        }, this);
+
+	}
+	,
 	clickedGrid : function(item) {
 		var x = item.indexNr.x, y = item.indexNr.y;
 		var gridElement = this.gridSystem[x][y];	// get the gridelement
@@ -258,6 +302,8 @@ GAME.LevelCreator.prototype = {
         tryAgainBtn.anchor.set(0.5);
         menuBtn.inputEnabled = true;
         tryAgainBtn.inputEnabled = true;
+        modalGroup.add(tryAgainBtn);
+        modalGroup.add(menuBtn);
 
         tryAgainBtn.events.onInputDown.add(function (e,pointer){
         	modalGroup.visible = false;
@@ -306,6 +352,9 @@ GAME.LevelCreator.prototype = {
         menuBtn.inputEnabled = true;
         nextBtn.inputEnabled = true;
         tryAgainBtn.inputEnabled = true;
+        modalGroup.add(menuBtn);
+        modalGroup.add(nextBtn);
+        modalGroup.add(tryAgainBtn);
 
         menuBtn.events.onInputDown.add(function (e,pointer){
         	modalGroup.visible = false;
