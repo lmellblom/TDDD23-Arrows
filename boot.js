@@ -18,9 +18,10 @@ GAME.Boot.prototype = {
                 this.scale.minHeight = gameHeight/2;
                 this.scale.maxWidth = gameWidth;
                 this.scale.maxHeight = gameHeight;
-        } /*else {
+        } else {
                 //code for mobile devices
-        }*/
+                //this.scale.setScreenSize=true;
+        }
 
         //this.scale.pageAlignHorizontally = true;
         this.scale.updateLayout(true);
