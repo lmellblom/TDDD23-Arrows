@@ -5,6 +5,14 @@ GAME.Preload = function() {};
 GAME.Preload.prototype = {
 	preload: function() {
 
+		// load sounds
+		this.load.audio("forestSound", "assets/sounds/forest.wav");
+		this.load.audio("clickSound", "assets/sounds/menu-click.wav");
+		this.load.audio("winSound", "assets/sounds/win.wav");
+		this.load.audio("starSound", "assets/sounds/coin.wav");
+		this.load.audio("arrowSound", "assets/sounds/arrow-click.wav");
+		this.load.audio("gameOverSound", "assets/sounds/game-over.wav");
+
 		//  Load the Google WebFont Loader script
     	this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 		// loading assets for the game
@@ -21,6 +29,9 @@ GAME.Preload.prototype = {
 	    this.load.image('settingsBtn', 'assets/game-ui/settings.png');
 	    this.load.image('yesBtn', 'assets/game-ui/yesBtn.png');
 	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
+
+	    this.load.image('star', 'assets/game-ui/star.png');
+	    this.load.image('starPoints', 'assets/game-ui/starPoints.png');
 
 	    // for the levels
 	    this.load.image('levelModule', 'assets/game-ui/levelSelect.png');
@@ -59,6 +70,9 @@ GAME.Preload.prototype = {
 	        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"},
 	        {"x": 4, "y": 5, "dir": "left", "selected": false,"color": "blue"},
 	        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "blue"}
+	     ],
+	     "stars" : [
+	     	{"x": 4, "y" : 3}
 	     ],
 	    "goalInfo" : [
 	        {"x":0, "y":7, "color": "blue"}

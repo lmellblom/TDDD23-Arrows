@@ -5,6 +5,9 @@ GAME.SelectLevels = function() {};
 
 GAME.SelectLevels.prototype = {
 	create: function() {
+
+		this.clickSound = this.add.audio('clickSound');
+
 		this.add.sprite(0, -520, 'background');
 
 		// the logo is here also
@@ -71,8 +74,10 @@ GAME.SelectLevels.prototype = {
 	startLevel : function(sprite){
 		var levelIndex = sprite.level == 1 ? 0 : sprite.level - 2;
 
-		if (levelIndex == 0 || madeLevels[levelIndex])
+		if (levelIndex == 0 || madeLevels[levelIndex]){
+			this.clickSound.play()
 			this.game.state.start('Level', true, false, sprite.level);
+		}
 	}
 
 };

@@ -33,6 +33,9 @@ var obstacleGroup;
 var availableMoves;
 var allLevelData;
 
+var playMusic = true;
+var backCalmMusic = true;
+
 
 	    var grids = [
 	    	{"width": 5, "height": 8}
@@ -64,6 +67,8 @@ WebFontConfig = {
 };
 
 var generalStyle = { font: "25px Carter One", fill: "#FFF", align: "center",
+ stroke: "#000", strokeThickness: 5 };
+ var smallStyle = { font: "14px Carter One", fill: "#FFF", align: "center",
  stroke: "#000", strokeThickness: 5 };
 
 

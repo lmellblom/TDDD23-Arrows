@@ -11,15 +11,20 @@ function GridElement(sprite, type, selected, direction, color) {
 		// beroende på is selected
 		var name = (this.type == "arrow"? this.direction : this.type);
 		name    += (this.isSelected ?  color : "");
+
+		if (this.type == "star")
+			name = "star";
+
 		return name;
 	};
+
 	this.setType = function (type, dir) {
 		this.type = type;
 
 		var direction = dir || "";
 		this.direction = direction;
 
-		if(type=="arrow")
+		if(type=="arrow" || type=="star" || type=="goal")
 			this.setSpriteAlpha(1.0);
 	}
 
@@ -39,6 +44,10 @@ function GridElement(sprite, type, selected, direction, color) {
 		this.setSpriteAlpha(alphaValue);
 
 		this.changeTexture();
+	}
+
+	this.isStar = function() {
+		return this.type == "star";
 	}
 
 	this.isArrow = function() {
