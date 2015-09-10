@@ -5,54 +5,61 @@ GAME.SelectLevels = function() {};
 
 GAME.SelectLevels.prototype = {
 	create: function() {
-		this.game.antialias = true;
-		this.game.stage.backgroundColor = '#9BFF73';
-		this.add.sprite(0, 0, 'background');
+		this.add.sprite(0, -520, 'background');
 
-
-		var style = { font: "30px Arial", fill: "#FFF", align: "center" };
-		var style2 = { font: "60px Arial", fill: "#FFF", align: "center" };
-
-
-		var header = this.add.text(this.world.centerX, 100, "NIVÅER", style2);
+		// the logo is here also
+		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
 		header.anchor.set(0.5);
-		var openLevel;
 
-		/*
+		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 
-		// ska rita ut alla levlar.. just nu ej så bra utformad!!!
-		var startY = this.world.centerY-100;
-		var startX = this.world.centerX - 200;
-		for (var i=0; i<numberOfLevels+4; i++){
-			var y = i > 2 ? startY+130 : startY; // om mer nivåer än 3 så ska den hoppa neeed
-			var x = i > 2 ? startX + 200*(i-3) : startX + 200*i;
+		// tween the logo also
+		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
+          var headerTween = this.add.tween(header);
+		headerTween.to({
+			angle: -header.angle
+		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
-			if(i==0 || madeLevels[i-1]) {
-				if (madeLevels[i])
-					openLevel = this.add.sprite(x, y, 'madeItIcon');
-				else
-					openLevel = this.add.sprite(x, y, 'lineIcon');
-				var textOn = this.add.text(x, y-20, i+1, style);
-				textOn.anchor.set(0.5);
-				openLevel.anchor.set(0.5);
-				//openLevel.scale.setTo(0.3, 0.3);
+		// -------------------
 
-				// able to click on it
-				openLevel.inputEnabled = true;
-				openLevel.events.onInputDown.add(this.startLevel, {game: this, number: i+1}); // kanske inte världens bästa. TODO lösa hur man skickar med argument bättre
-			}
-			else { // a locked level
-				var lockedLevel = this.add.sprite(x, y, 'lockedIcon');
-				lockedLevel.anchor.set(0.5);
-				//lockedLevel.scale.setTo(0.3, 0.3);
-			}
-		}*/
+		var modalGroup = this.add.group();
 
-		// backbutton
-		var backText = this.add.text(180, this.world.height-100, "Meny", style);
-		backText.anchor.set(0.5);
-		backText.inputEnabled = true;
-		backText.events.onInputDown.add(this.backToMenu, this);
+        var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'levelModule');
+
+        var numberStyle = { font: "24px Skranji", fill: "#FFF", align: "center", fontWeight: "bold",  stroke: "#000", strokeThickness: 5};
+
+        module.scale.setTo(0.6, 0.6);
+        module.anchor.set(0.5,0.5);
+        modalGroup.add(module);
+
+
+        // adding the number and background to the levels
+        // får plats 10 stycken... 
+        var startX = 80;
+        var startY = this.world.centerY - 30;
+        var levelGroup = this.add.group();
+        for (var i=0; i<numberOfLevels; i++) {
+        	var isActive = (i==0 ? true : madeLevels[i-1]); //om nivån innan är klarad, då är leveln öppnad
+        	var textureName = isActive ? "activeLevel" : "inactiveLevel";
+        	var levelNr = i+1;
+        	var xPos = startX + 70*i;
+        	var yPos = startY;
+        	var levelSprite = this.add.sprite(xPos,yPos,textureName);
+        	levelSprite.level = levelNr;
+        	levelSprite.anchor.set(0.5); 
+        	levelSprite.scale.setTo(0.6, 0.6);
+
+        	var text = this.add.text(xPos+2, yPos+2, levelNr, numberStyle);
+    		text.anchor.set(0.5);
+    		levelGroup.add(levelSprite);
+        }
+
+        // set input on very level
+	    levelGroup.setAll('inputEnabled', true);
+	    // using the power of callAll we can add the same input event to all coins in the group:
+	    levelGroup.callAll('events.onInputDown.add', 'events.onInputDown', this.startLevel, this);
+
 
 	},
 	update: function() {
@@ -61,8 +68,11 @@ GAME.SelectLevels.prototype = {
 	backToMenu: function() {
 		this.game.state.start('MainMenu');
 	},
-	startLevel : function(){
-		this.game.state.start('Level', true, false, this.number);
+	startLevel : function(sprite){
+		var levelIndex = sprite.level == 1 ? 0 : sprite.level - 2;
+
+		if (levelIndex == 0 || madeLevels[levelIndex])
+			this.game.state.start('Level', true, false, sprite.level);
 	}
 
 };

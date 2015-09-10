@@ -54,11 +54,11 @@ GAME.LevelCreator.prototype = {
         this.scoreText = this.add.text(this.world.width-130, 20, "Clicks: " + this.click, generalStyle);
 
         // add settings button
-        var settingsBtn = this.add.sprite(20, this.world.height-60, 'menuBtn');
+        this.settingsBtn = this.add.sprite(20, this.world.height-60, 'settingsBtn');
         //settingsBtn.anchor.set(0.5);
-        settingsBtn.scale.setTo(0.7);
-        settingsBtn.inputEnabled = true;
-        settingsBtn.events.onInputDown.add(this.settingsOpen, this);
+        this.settingsBtn.scale.setTo(0.7);
+        this.settingsBtn.inputEnabled = true;
+        this.settingsBtn.events.onInputDown.add(this.settingsOpen, this);
 
 
 	    // built up the grid with empty positions
@@ -118,6 +118,7 @@ GAME.LevelCreator.prototype = {
 	    cursors = this.input.keyboard.createCursorKeys();
 	},
 	settingsOpen : function() {
+		this.settingsBtn.inputEnabled = false;
 		var modalGroup = this.add.group();
 
 		var modal = this.game.add.graphics(this.game.width, this.game.height);
@@ -125,6 +126,7 @@ GAME.LevelCreator.prototype = {
         modal.x = 0;
         modal.y = 0;
         modal.drawRect(0, 0, this.game.width, this.game.height);
+        modal.inputEnabled = true;
         modalGroup.add(modal);
 
         var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'panelModule');
@@ -141,17 +143,26 @@ GAME.LevelCreator.prototype = {
         var yesBtn = this.add.sprite(this.world.centerX+70, this.world.centerY+80, 'yesBtn');
         noBtn.anchor.set(0.5);
         yesBtn.anchor.set(0.5);
+        yesBtn.scale.setTo(0.7);
+        noBtn.scale.setTo(0.7);
         noBtn.inputEnabled = true;
         yesBtn.inputEnabled = true;
         modalGroup.add(noBtn);
         modalGroup.add(yesBtn);
 
         noBtn.events.onInputDown.add(function (e,pointer){
+        	this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
         yesBtn.events.onInputDown.add(function (e,pointer){
+        	this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
             this.quitGame();
+        }, this);
+
+        modal.events.onInputDown.add(function (e, pointer) {
+            this.settingsBtn.inputEnabled = true;
+        	modalGroup.visible = false;
         }, this);
 
 	}
@@ -284,6 +295,7 @@ GAME.LevelCreator.prototype = {
         modal.x = 0;
         modal.y = 0;
         modal.drawRect(0, 0, this.game.width, this.game.height);
+        modal.inputEnabled=true;
         modalGroup.add(modal);
 
         var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'failedModule');
@@ -302,6 +314,8 @@ GAME.LevelCreator.prototype = {
         tryAgainBtn.anchor.set(0.5);
         menuBtn.inputEnabled = true;
         tryAgainBtn.inputEnabled = true;
+        menuBtn.scale.setTo(0.7);
+        tryAgainBtn.scale.setTo(0.7);
         modalGroup.add(tryAgainBtn);
         modalGroup.add(menuBtn);
 
@@ -329,6 +343,7 @@ GAME.LevelCreator.prototype = {
         modal.x = 0;
         modal.y = 0;
         modal.drawRect(0, 0, this.game.width, this.game.height);
+        modal.inputEnabled=true;
         modalGroup.add(modal);
 
         var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'clearedModule');
@@ -343,12 +358,15 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(text);
 
         // add menu button, next level and try level again
-        var menuBtn = this.add.sprite(this.world.centerX-150, this.world.centerY+180, 'menuBtn');
-        var nextBtn = this.add.sprite(this.world.centerX+150, this.world.centerY+180, 'nextBtn');
+        var menuBtn = this.add.sprite(this.world.centerX-80, this.world.centerY+180, 'menuBtn');
+        var nextBtn = this.add.sprite(this.world.centerX+80, this.world.centerY+180, 'nextBtn');
         var tryAgainBtn = this.add.sprite(this.world.centerX, this.world.centerY+180, 'reloadBtn');
         menuBtn.anchor.set(0.5);
         nextBtn.anchor.set(0.5);
         tryAgainBtn.anchor.set(0.5);
+        menuBtn.scale.setTo(0.7);
+        nextBtn.scale.setTo(0.7);
+        tryAgainBtn.scale.setTo(0.7, 0.7);
         menuBtn.inputEnabled = true;
         nextBtn.inputEnabled = true;
         tryAgainBtn.inputEnabled = true;
