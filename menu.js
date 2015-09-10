@@ -6,29 +6,38 @@ GAME.MainMenu = function() {};
 GAME.MainMenu.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#969696';
-		//this.add.sprite(0, 0, 'background');
+		this.add.sprite(0, -520, 'background');
 
-		var style = { font: "65px Arial", fill: "#FFF", align: "center" };
 
-		var phrases = ["START", "LEVELS", "CREDITS"];
+		var startGame = this.add.sprite(this.world.centerX, this.world.height-200, 'playButton');
+		startGame.anchor.set(0.5);
+		startGame.inputEnabled = true;
+		startGame.events.onInputDown.add(this.startTheGame, this);
 
-		// start y value
-		var startY = this.world.centerY-100;
-		var text = [];
+		// tween the startGame to make it a little bit more good look
+		startGame.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
+        var playTween = this.add.tween(startGame);
+		playTween.to({
+			angle: -startGame.angle
+		},4000+Math.random()*4000,Phaser.Easing.Linear.None,true,0,1000,true);
 
-		// tried to short down the code a little bit
-		for (var i=0; i<1/*phrases.length*/; i++) {
-			text[i]=this.add.text(this.world.centerX, startY + 100*i, phrases[i], style);
-			text[i].anchor.set(0.5);
-    		text[i].inputEnabled = true;
 
-    		text[i].events.onInputOver.add(this.hoverOver, this, text[i]);
-			text[i].events.onInputOut.add(this.hoverOut, this, text[i]);
-		}
+		//var logo = this.add.sprite(this.world.centerX, this.world.centerY-200, 'logo');
+		//logo.anchor.set(0.5);
+		//logo.scale.setTo(0.8, 0.8);
+		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
+		header.anchor.set(0.5);
 
-		text[0].events.onInputDown.add(this.startTheGame, this);
-		//text[1].events.onInputDown.add(this.startAllLevels, this);
-		//text[2].events.onInputDown.add(this.startCredit, this);
+		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+
+		// tween the logo also
+		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
+          var headerTween = this.add.tween(header);
+		headerTween.to({
+			angle: -header.angle
+		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
+
 
 
 	},
