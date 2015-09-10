@@ -22,7 +22,10 @@ GAME.Preload.prototype = {
 	    this.load.image('yesBtn', 'assets/game-ui/yesBtn.png');
 	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
 
-
+	    // for the levels
+	    this.load.image('levelModule', 'assets/game-ui/levelSelect.png');
+	    this.load.image('inactiveLevel', 'assets/game-ui/levelSelectInactive.png');
+	    this.load.image('activeLevel', 'assets/game-ui/levelBase.png');
 	    
 
 	    // arrows that can be clicked
@@ -48,6 +51,7 @@ GAME.Preload.prototype = {
 	    this.load.image('empty', 'assets/notSelected/empty.png');
 
 	    this.load.image('goal', 'assets/home.png');
+
 	    allLevelData = [
 	{
 	    "arrows" : [ 
@@ -96,7 +100,16 @@ GAME.Preload.prototype = {
 	    "goalInfo" : [
 	        {"x": 4, "y": 2, "color": "blue"}
 	    ]
-	}
+	},
+	{
+	    "arrows" : [ 
+	        {"x": 1, "y": 1, "dir": "right", "selected": true, "color": "blue"},
+	        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"}
+	     ],
+	    "goalInfo" : [
+	        {"x":4, "y":5, "color": "blue"}
+	    ]
+	},
 ];
 
 

@@ -8,11 +8,10 @@ GAME.MainMenu.prototype = {
 		this.game.stage.backgroundColor = '#969696';
 		this.add.sprite(0, -520, 'background');
 
-
 		var startGame = this.add.sprite(this.world.centerX, this.world.height-200, 'playButton');
 		startGame.anchor.set(0.5);
 		startGame.inputEnabled = true;
-		startGame.events.onInputDown.add(this.startTheGame, this);
+		startGame.events.onInputDown.add(this.startAllLevels, this);
 
 		// tween the startGame to make it a little bit more good look
 		startGame.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
@@ -22,9 +21,6 @@ GAME.MainMenu.prototype = {
 		},4000+Math.random()*4000,Phaser.Easing.Linear.None,true,0,1000,true);
 
 
-		//var logo = this.add.sprite(this.world.centerX, this.world.centerY-200, 'logo');
-		//logo.anchor.set(0.5);
-		//logo.scale.setTo(0.8, 0.8);
 		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
 		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
 		header.anchor.set(0.5);
