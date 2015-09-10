@@ -5,6 +5,7 @@ GAME.SelectLevels = function() {};
 
 GAME.SelectLevels.prototype = {
 	create: function() {
+		this.game.antialias = true;
 		this.game.stage.backgroundColor = '#9BFF73';
 		this.add.sprite(0, 0, 'background');
 

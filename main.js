@@ -9,6 +9,7 @@ var gameHeight =  640;
 
 GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
 
+
 var player;
 
 var numberOfLevels = 3;
@@ -20,7 +21,6 @@ for (var i=0; i<numberOfLevels; i++) {
 	madeLevels[i]=false;
 }
 
-var generalStyle = { font: "35px Arial", fill: "#FFF", align: "center" };
 
 var menuGroup;
 var qKey;
@@ -31,55 +31,7 @@ var goal;
 var arrow;
 var obstacleGroup;
 var availableMoves;
-
-var allLevelData = [
-	{
-	    "arrows" : [ 
-	        {"x": 1, "y": 1, "dir": "right", "selected": true},
-	        {"x": 4, "y": 1, "dir": "down", "selected": false},
-	        {"x": 4, "y": 5, "dir": "left", "selected": false},
-	        {"x": 0, "y": 5, "dir": "down", "selected": false}
-	     ],
-	    "goalInfo" : [
-	        {"x":0, "y":7}
-	    ]
-	},
-	{
-	    "arrows" : [ 
-	        {"x": 1, "y": 1, "dir": "down", "selected": true},
-	        {"x": 0, "y": 2, "dir": "down", "selected": false},
-	        {"x": 3, "y": 2, "dir": "left", "selected": false},
-	        {"x": 1, "y": 4, "dir": "right", "selected": false},
-	        {"x": 2, "y": 4, "dir": "down", "selected": true},
-	        {"x": 3, "y": 4, "dir": "up", "selected": false},
-	        {"x": 2, "y": 6, "dir": "up", "selected": false},
-	        {"x": 0, "y": 7, "dir": "right", "selected": false}
-	     ],
-	    "goalInfo" : [
-	        {"x": 4, "y": 7}
-	    ]
-	},
-	{
-	    "arrows" : [ 
-	        {"x": 1, "y": 0, "dir": "down", "selected": false},
-	        {"x": 4, "y": 0, "dir": "left", "selected": false},
-	        {"x": 0, "y": 1, "dir": "right", "selected": true},
-	        {"x": 2, "y": 1, "dir": "down", "selected": false},
-	        {"x": 4, "y": 1, "dir": "up", "selected": false},
-	        {"x": 3, "y": 2, "dir": "right", "selected": false},
-	        {"x": 0, "y": 3, "dir": "down", "selected": false},
-	        {"x": 1, "y": 3, "dir": "left", "selected": false},
-	        {"x": 2, "y": 4, "dir": "right", "selected": false},
-	        {"x": 0, "y": 5, "dir": "down", "selected": false},
-	        {"x": 2, "y": 5, "dir": "left", "selected": false},
-	        {"x": 0, "y": 6, "dir": "right", "selected": false},
-	        {"x": 3, "y": 6, "dir": "up", "selected": false}
-	     ],
-	    "goalInfo" : [
-	        {"x": 4, "y": 2}
-	    ]
-	}
-];
+var allLevelData;
 
 
 	    var grids = [
@@ -94,6 +46,26 @@ GAME.game.state.add('MainMenu', GAME.MainMenu);
 GAME.game.state.add('Level', GAME.LevelCreator);
 GAME.game.state.add('Credits', GAME.Credits);
 GAME.game.state.add('SelectLevels', GAME.SelectLevels);
+
+
+//  The Google WebFont Loader will look for this object, so create it before loading the script.
+WebFontConfig = {
+
+    //  'active' means all requested fonts have finished loading
+    //  We set a 1 second delay before calling 'createText'.
+    //  For some reason if we don't the browser cannot render the text the first time it's created.
+   // active: function() { GAME.game.time.events.add(Phaser.Timer.SECOND, createText, this); },
+
+    //  The Google Fonts we want to load (specify as many as you like in the array)
+    google: {
+      families: ['Carter One']
+    }
+
+};
+
+var generalStyle = { font: "25px Carter One", fill: "#FFF", align: "center",
+ stroke: "#000", strokeThickness: 5 };
+
 
 // begin with the preloading
 GAME.game.state.start('Boot');
