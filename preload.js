@@ -16,7 +16,15 @@ GAME.Preload.prototype = {
 		//  Load the Google WebFont Loader script
     	this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 		// loading assets for the game
-	    this.load.image('background', 'assets/game-ui/bgSmaller.png');
+		this.preloadBack = this.add.sprite(0, -520, 'background');
+
+		// add a preload stugg
+		var style = { font: "40px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		var header = this.add.text(this.world.centerX, this.world.centerY+200, "Loading", style);
+		header.anchor.set(0.5);
+		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		this.load.setPreloadSprite(header);
+	    
 	    this.load.image('playButton', 'assets/game-ui/playBtn.png');
 
 	    // settings panel
@@ -138,6 +146,10 @@ GAME.Preload.prototype = {
 
 	},
 	create: function() {
+		
+
+		// add loading baR? 
+
 		this.state.start('MainMenu');
 	}
 };
