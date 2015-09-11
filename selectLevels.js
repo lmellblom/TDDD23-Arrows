@@ -75,7 +75,7 @@ GAME.SelectLevels.prototype = {
 		var levelIndex = sprite.level == 1 ? 0 : sprite.level - 2;
 
 		if (levelIndex == 0 || madeLevels[levelIndex]){
-			this.clickSound.play()
+			if (playMusic) this.clickSound.play()
 			this.game.state.start('Level', true, false, sprite.level);
 		}
 	}

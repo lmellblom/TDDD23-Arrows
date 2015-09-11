@@ -35,6 +35,8 @@ GAME.LevelCreator.prototype = {
 		this.arrowGroup;
 		this.click = 0;
 		this.scoreText;
+		
+		this.showSettings = false;
 
 		// TODO : usa a global variable to set remove the global background music, and the clicks
 	}, 
@@ -63,11 +65,61 @@ GAME.LevelCreator.prototype = {
 	    this.levelText = this.add.text(20, 20, "Level " + this.currentLevel, generalStyle);
         this.scoreText = this.add.text(this.world.width-130, 20, "Clicks: " + this.click, generalStyle);
 
+       
+        // add the layout and settings
+        this.base = this.add.sprite(61, this.world.height+70, "settingsBase");
+        this.settingsGroup = this.add.group();
+        this.settingsGroup.add(this.base);
+
+        this.infoBtn = this.add.sprite(61, this.world.height-50, "infoIcon");
+        this.musicBtn = this.add.sprite(61, this.world.height+20, playMusic? "musicIcon" : "banMusic");
+        this.soundBtn = this.add.sprite(61, this.world.height+80, backCalmMusic? "soundIcon" : "banSound");
+        this.menuBtn = this.add.sprite(61, this.world.height+140, "menuIcon");
+        this.settingsGroup.add(this.infoBtn);
+        this.settingsGroup.add(this.musicBtn);
+        this.settingsGroup.add(this.soundBtn);
+        this.settingsGroup.add(this.menuBtn);
+
+       	this.settingsGroup.setAll('anchor.x', 0.5);
+   		this.settingsGroup.setAll('anchor.y', 0.5);
+        this.settingsGroup.scale.set(0.7);
+
         // add settings button
         this.settingsBtn = this.add.sprite(20, this.world.height-60, 'settingsBtn');
         this.settingsBtn.scale.setTo(0.7);
         this.settingsBtn.inputEnabled = true;
         this.settingsBtn.events.onInputDown.add(this.settingsOpen, this);
+        this.settingsGroup.visible = this.showSettings;
+        this.settingsGroup.setAll('inputEnabled', true);
+        
+
+        // sett events on the settingsbuttons
+        this.infoBtn.events.onInputDown.add(function (e,pointer){
+        	//console.log("show info!!");
+        }, this);
+        this.menuBtn.events.onInputDown.add(function (e,pointer){
+        	this.openBackMenuModal();
+        }, this);
+        this.musicBtn.events.onInputDown.add(function (e,pointer){
+        	playMusic = !playMusic
+        	var texure = playMusic? "musicIcon" : "banMusic"; // change to the other
+        	this.musicBtn.loadTexture(texure,0);
+        }, this);
+        this.soundBtn.events.onInputDown.add(function (e,pointer){
+        	backCalmMusic = !backCalmMusic
+
+        	if(backCalmMusic) {
+        		backgroundMusicPlayer.resume();
+        	}
+        	else {
+        		backgroundMusicPlayer.pause();
+        	}
+
+        	var texure = backCalmMusic? "soundIcon" : "banSound"; // change to the other
+        	this.soundBtn.loadTexture(texure,0);
+        }, this);
+
+        //-------------------------
 
 
 	    // built up the grid with empty positions
@@ -143,9 +195,8 @@ GAME.LevelCreator.prototype = {
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
 	    cursors = this.input.keyboard.createCursorKeys();
 	},
-	settingsOpen : function() {
-		if(playMusic) this.clickSound.play();
-		this.settingsBtn.inputEnabled = false;
+	openBackMenuModal : function () {
+
 		var modalGroup = this.add.group();
 
 		var modal = this.game.add.graphics(this.game.width, this.game.height);
@@ -194,6 +245,15 @@ GAME.LevelCreator.prototype = {
         	modalGroup.visible = false;
         }, this);
 
+
+	},
+	settingsOpen : function() {
+		if(playMusic) this.clickSound.play();
+
+		this.showSettings = !this.showSettings;
+		this.settingsGroup.visible = this.showSettings;
+
+		this.settingsGroup.z = 1;
 	}
 	,
 	clickedGrid : function(item) {
