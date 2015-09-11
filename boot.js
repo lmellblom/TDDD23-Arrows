@@ -4,6 +4,7 @@ GAME.Boot = function() {};
 
 GAME.Boot.prototype = {
 	preload: function() {
+        this.load.image('background', 'assets/game-ui/bgSmaller.png');
 
 	},
 	create: function() {
@@ -19,6 +20,7 @@ GAME.Boot.prototype = {
                 this.scale.maxWidth = gameWidth;
                 this.scale.maxHeight = gameHeight;
         } else {
+                //this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
                 //code for mobile devices
                 //this.scale.setScreenSize=true;
         }
