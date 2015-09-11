@@ -35,6 +35,7 @@ var allLevelData;
 
 var playMusic = true;
 var backCalmMusic = true;
+var backgroundMusicPlayer;
 
 
 	    var grids = [

@@ -35,15 +35,15 @@ GAME.MainMenu.prototype = {
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
 
-		this.backgroundMusic = this.add.audio('forestSound',1,true);   
-		this.sound.setDecodedCallback(this.backgroundMusic, this.start, this);
+		backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
+		this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
 
 },
 
 	start: function() {
 
     
-   this.backgroundMusic.play(); // starts on the whole object now since i add it!! wow :D 
+   backgroundMusicPlayer.play(); // starts on the whole object now since i add it!! wow :D 
    // bass.onLoop.add(hasLooped, this);
 
  //   text.text = 'bass';

@@ -19,6 +19,15 @@ GAME.Preload.prototype = {
 	    this.load.image('background', 'assets/game-ui/bgSmaller.png');
 	    this.load.image('playButton', 'assets/game-ui/playBtn.png');
 
+	    // settings panel
+	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
+	    this.load.image('banSound', 'assets/game-ui/banSound.png');
+	    this.load.image('settingsBase', 'assets/game-ui/baseSettings.png');
+	    this.load.image('infoIcon', 'assets/game-ui/infoIcon.png');
+	    this.load.image('menuIcon', 'assets/game-ui/menuIcon.png');
+	    this.load.image('musicIcon', 'assets/game-ui/musicIcon.png');
+	    this.load.image('soundIcon', 'assets/game-ui/soundIcon.png');
+
 	    // for game ui
 	    this.load.image('clearedModule', 'assets/game-ui/LevelCleared.png');
 	    this.load.image('failedModule', 'assets/game-ui/LevelFailed.png');
