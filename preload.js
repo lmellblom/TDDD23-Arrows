@@ -17,6 +17,7 @@ GAME.Preload.prototype = {
     	this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 		// loading assets for the game
 		this.preloadBack = this.add.sprite(0, -520, 'background');
+		this.game.stage.backgroundColor = '#FFF';
 
 		// add a preload stugg
 		var style = { font: "40px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
@@ -55,6 +56,7 @@ GAME.Preload.prototype = {
 	    this.load.image('inactiveLevel', 'assets/game-ui/levelSelectInactive.png');
 	    this.load.image('activeLevel', 'assets/game-ui/levelBase.png');
 	    
+	    this.load.image('rightArrow', 'assets/game-ui/arrowActive.png');
 
 	    // arrows that can be clicked
 	    this.load.image('rightblue', 'assets/blue/right.png');
@@ -79,6 +81,7 @@ GAME.Preload.prototype = {
 	    this.load.image('empty', 'assets/notSelected/empty.png');
 
 	    this.load.image('goal', 'assets/home.png');
+	    this.load.image('blackHole', 'assets/blackHole.png');
 
 	    allLevelData = [
 	{
@@ -89,7 +92,8 @@ GAME.Preload.prototype = {
 	        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "blue"}
 	     ],
 	     "stars" : [
-	     	{"x": 4, "y" : 3}
+	     	{"x": 4, "y" : 3},
+	     	{"x": 1, "y" : 5},
 	     ],
 	    "goalInfo" : [
 	        {"x":0, "y":7, "color": "blue"}
@@ -110,6 +114,9 @@ GAME.Preload.prototype = {
 	     ],
 	    "goalInfo" : [
 	        {"x": 4, "y": 7, "color": "blue"}
+	    ],
+	    "blackHole" : [
+	    	{"x":2, "y":2}
 	    ]
 	},
 	{
@@ -143,13 +150,22 @@ GAME.Preload.prototype = {
 	},
 ];
 
+	},
+
+
+	create: function() {
+		backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
+		this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
 
 	},
-	create: function() {
+
+	start: function() {    
+		backgroundMusicPlayer.play(); // starts on the whole object now since i add it!! wow :D 
+		this.state.start('MainMenu');
+	}
 		
 
 		// add loading baR? 
 
-		this.state.start('MainMenu');
-	}
+		
 };
