@@ -1,7 +1,7 @@
 function GridElement(sprite, type, selected, direction, color) {
 	this.sprite = sprite;
 	this.isSelected = selected || false;
-	this.type = type || "empty"; // kanske typ empty, arrow, goal
+	this.type = type || "empty"; // kanske typ empty, arrow, goal, hole
 	this.direction = direction || "";
 	this.color = color || "";
 
@@ -12,8 +12,12 @@ function GridElement(sprite, type, selected, direction, color) {
 		var name = (this.type == "arrow"? this.direction : this.type);
 		name    += (this.isSelected ?  color : "");
 
-		if (this.type == "star")
+		if (this.type == "star") {
 			name = "star";
+		}
+		else if(this.type == "hole") {
+			name = "blackHole";
+		}
 
 		return name;
 	};
@@ -24,12 +28,21 @@ function GridElement(sprite, type, selected, direction, color) {
 		var direction = dir || "";
 		this.direction = direction;
 
-		if(type=="arrow" || type=="star" || type=="goal")
+		if(type != "empty")
 			this.setSpriteAlpha(1.0);
+	}
+
+	this.isType = function(name) {
+		return this.type==name;
+
 	}
 
 	this.isGoal = function() {
 		return this.type=="goal";
+	}
+
+	this.isHole = function() {
+		return this.type == "hole";
 	}
 
 	this.setSelected = function(s) {
@@ -40,7 +53,7 @@ function GridElement(sprite, type, selected, direction, color) {
 		this.color = col || this.color;
 		this.isSelected = condition;
 
-		var alphaValue = condition ? 1.0 : (this.type=="arrow")? 1.0 : 0.4;
+		var alphaValue = condition ? 1.0 : (this.type=="arrow" || this.type=="hole") ? 1.0 : 0.4;
 		this.setSpriteAlpha(alphaValue);
 
 		this.changeTexture();

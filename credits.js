@@ -4,10 +4,10 @@ GAME.Credits = function() {};
 
 GAME.Credits.prototype = {
 	create: function() {
-		this.game.stage.backgroundColor = '#9273FF';
-		this.add.sprite(0, 0, 'background');
-		// reset game options
-		score = 0;
+		this.game.stage.backgroundColor = '#969696';
+		this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+
+		
 
 		var style = { font: "65px Arial", fill: "#FFF", align: "center" };
 		var phrase = "by Linnéa";

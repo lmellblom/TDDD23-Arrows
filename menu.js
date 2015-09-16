@@ -6,7 +6,7 @@ GAME.MainMenu = function() {};
 GAME.MainMenu.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#969696';
-		this.add.sprite(0, -520, 'background');
+		this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
 
 		var startGame = this.add.sprite(this.world.centerX, this.world.height-200, 'playButton');
 		startGame.anchor.set(0.5);
@@ -34,21 +34,20 @@ GAME.MainMenu.prototype = {
 			angle: -header.angle
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
+		//backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
+		//this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
+		clickSound = this.add.audio('clickSound');
 
-		backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
-		this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
+		// my name
+		var style = { font: "12px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 2 };
+		var name = this.add.text(this.world.centerX, this.world.height-20, "by Linnéa Mellblom", style);
+		name.anchor.set(0.5);
 
-},
+	},
 
-	start: function() {
-
-    
-   backgroundMusicPlayer.play(); // starts on the whole object now since i add it!! wow :D 
-   // bass.onLoop.add(hasLooped, this);
-
- //   text.text = 'bass';
-
-},
+	//start: function() {    
+	//	backgroundMusicPlayer.play(); // starts on the whole object now since i add it!! wow :D 
+	//},
 	update: function() {
 
 	},
@@ -60,12 +59,6 @@ GAME.MainMenu.prototype = {
 	},
 	startAllLevels: function() {
 		this.game.state.start('SelectLevels');
-	},
-	hoverOver: function(text) {
-		text.fill= '#FF96B4';
-	},
-	hoverOut: function(text) {
-		text.fill= '#fff';
 	}
 
 };

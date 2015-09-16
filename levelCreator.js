@@ -38,13 +38,13 @@ GAME.LevelCreator.prototype = {
 		
 		this.showSettings = false;
 
-		// TODO : usa a global variable to set remove the global background music, and the clicks
+		this.gameOver = "";
 	}, 
 
 	create: function() {
 
-		// sounds
-		this.clickSound = this.add.audio('clickSound');
+		// sounds, mayb add this in the main instead as global?
+		//clickSound
 		this.winSound = this.add.audio('winSound');
 		this.starSound = this.add.audio('starSound');
 		this.arrowSound = this.add.audio('arrowSound');
@@ -52,7 +52,7 @@ GAME.LevelCreator.prototype = {
 
 	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
 	    this.game.stage.backgroundColor = '#FFF';
-	    var background = this.add.sprite(0, -520, 'background');
+	    var background = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
 	    background.alpha = 0.8;
 
 	    var whiteBack = this.game.add.graphics(this.game.width, this.game.height);
@@ -65,62 +65,8 @@ GAME.LevelCreator.prototype = {
 	    this.levelText = this.add.text(20, 20, "Level " + this.currentLevel, generalStyle);
         this.scoreText = this.add.text(this.world.width-130, 20, "Clicks: " + this.click, generalStyle);
 
-       
-        // add the layout and settings
-        this.base = this.add.sprite(61, this.world.height+70, "settingsBase");
-        this.settingsGroup = this.add.group();
-        this.settingsGroup.add(this.base);
-
-        this.infoBtn = this.add.sprite(61, this.world.height-50, "infoIcon");
-        this.musicBtn = this.add.sprite(61, this.world.height+20, playMusic? "musicIcon" : "banMusic");
-        this.soundBtn = this.add.sprite(61, this.world.height+80, backCalmMusic? "soundIcon" : "banSound");
-        this.menuBtn = this.add.sprite(61, this.world.height+140, "menuIcon");
-        this.settingsGroup.add(this.infoBtn);
-        this.settingsGroup.add(this.musicBtn);
-        this.settingsGroup.add(this.soundBtn);
-        this.settingsGroup.add(this.menuBtn);
-
-       	this.settingsGroup.setAll('anchor.x', 0.5);
-   		this.settingsGroup.setAll('anchor.y', 0.5);
-        this.settingsGroup.scale.set(0.7);
-
-        // add settings button
-        this.settingsBtn = this.add.sprite(20, this.world.height-60, 'settingsBtn');
-        this.settingsBtn.scale.setTo(0.7);
-        this.settingsBtn.inputEnabled = true;
-        this.settingsBtn.events.onInputDown.add(this.settingsOpen, this);
-        this.settingsGroup.visible = this.showSettings;
-        this.settingsGroup.setAll('inputEnabled', true);
-        
-
-        // sett events on the settingsbuttons
-        this.infoBtn.events.onInputDown.add(function (e,pointer){
-        	//console.log("show info!!");
-        }, this);
-        this.menuBtn.events.onInputDown.add(function (e,pointer){
-        	this.openBackMenuModal();
-        }, this);
-        this.musicBtn.events.onInputDown.add(function (e,pointer){
-        	playMusic = !playMusic
-        	var texure = playMusic? "musicIcon" : "banMusic"; // change to the other
-        	this.musicBtn.loadTexture(texure,0);
-        }, this);
-        this.soundBtn.events.onInputDown.add(function (e,pointer){
-        	backCalmMusic = !backCalmMusic
-
-        	if(backCalmMusic) {
-        		backgroundMusicPlayer.resume();
-        	}
-        	else {
-        		backgroundMusicPlayer.pause();
-        	}
-
-        	var texure = backCalmMusic? "soundIcon" : "banSound"; // change to the other
-        	this.soundBtn.loadTexture(texure,0);
-        }, this);
-
-        //-------------------------
-
+       	// add a settingspanel to the level, handles all buttons and functions.
+       	settingsPanel(this);
 
 	    // built up the grid with empty positions
 	    var theGrid = this.add.group();
@@ -163,11 +109,26 @@ GAME.LevelCreator.prototype = {
 	        this.starPoints = this.add.text(this.world.centerX-10, 30, this.points + " / " + this.maxPoints, smallStyle);
 	        
 
-        	// set out the star in the grid
-	    	var starElement = this.gridSystem[this.levelData.stars[0].x][this.levelData.stars[0].y];
-	    	starElement.setType("star");
-	    	starElement.sprite.scale.setTo(0.6);
-	    	starElement.changeTexture();	
+        	// set out the star in the grid, a foor loop
+        	this.levelData.stars.forEach(function(elements){
+        		var starElement = this.gridSystem[elements.x][elements.y];
+        		starElement.setType("star");
+	    		starElement.sprite.scale.setTo(0.5);
+	    		starElement.changeTexture();	
+        	}, this);
+	    	
+	    	
+        }
+
+        if(this.levelData.blackHole != undefined) {
+        	// set out the star in the grid, a foor loop
+        	this.levelData.blackHole.forEach(function(elements){
+        		var el = this.gridSystem[elements.x][elements.y];
+        		el.setType("hole");
+	    		//el.sprite.scale.setTo(0.5);
+	    		el.changeTexture();	
+        	}, this);
+
         }
         // -----------
 
@@ -195,9 +156,21 @@ GAME.LevelCreator.prototype = {
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
 	    cursors = this.input.keyboard.createCursorKeys();
 	},
-	openBackMenuModal : function () {
+	// this function should open a module and ask if the user want to go back to menu
+	backOneStep : function () {
 
 		var modalGroup = this.add.group();
+
+		/*var moduleInfo = {
+			"backgroundPanel": "panelModule",
+			"backgroundScale": 0.9,
+			"text": "Do you really \n want to quit?",
+			"buttons" : [
+			{"sprite": "noBtn", "functions": null, "x": this.world.centerX-70, "y":this.world.centerY+80},
+			{"sprite": "yesBtn", "functions": this.quitGame(), "x": this.world.centerX+70, "y": this.world.centerY+80},
+
+			]
+		};*/
 
 		var modal = this.game.add.graphics(this.game.width, this.game.height);
 		modal.beginFill("0x000000", 0.7);
@@ -206,6 +179,34 @@ GAME.LevelCreator.prototype = {
         modal.drawRect(0, 0, this.game.width, this.game.height);
         modal.inputEnabled = true;
         modalGroup.add(modal);
+/*
+        var module = this.add.sprite(this.world.centerX ,this.world.centerY , moduleInfo.backgroundPanel);
+        module.scale.setTo(moduleInfo.backgroundScale);
+        module.anchor.set(0.5,0.5);
+        modalGroup.add(module);
+
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, moduleInfo.text, generalStyle);
+        text.anchor.set(0.5);
+        modalGroup.add(text);
+
+        // add buttons
+        moduleInfo.buttons.forEach(function(button){
+        	var btn = this.add.sprite(button.x, button.y, button.sprite);
+        	btn.anchor.set(0.5);
+        	btn.scale.setTo(0.7);
+        	btn.inputEnabled = true;
+        	modalGroup.add(btn);
+
+        	btn.events.onInputDown.add(function (e,pointer){
+	        	if(playMusic) this.clickSound.play();
+	        	this.settingsBtn.inputEnabled = true;
+	        	modalGroup.visible = false;
+	        	button.functions;
+	        }, this);
+        }, this);
+
+
+        */
 
         var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'panelModule');
         module.scale.setTo(0.9, 0.9);
@@ -229,33 +230,24 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(yesBtn);
 
         noBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
         yesBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
             this.quitGame();
         }, this);
 
-        modal.events.onInputDown.add(function (e, pointer) {
+       modal.events.onInputDown.add(function (e, pointer) {
             this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
 
 
 	},
-	settingsOpen : function() {
-		if(playMusic) this.clickSound.play();
-
-		this.showSettings = !this.showSettings;
-		this.settingsGroup.visible = this.showSettings;
-
-		this.settingsGroup.z = 1;
-	}
-	,
 	clickedGrid : function(item) {
 		var x = item.indexNr.x, y = item.indexNr.y;
 		var gridElement = this.gridSystem[x][y];	// get the gridelement
@@ -283,69 +275,44 @@ GAME.LevelCreator.prototype = {
 			var direction = gridElement.direction; // the direction to shoot
 
 			var element; 
+			// break statement so that I can exit the loop if I reach the goal or a hole.
+			breakme: {
 			if(direction == "left") {
 				for (var i=item.indexNr.x-1; i>=0; i--) {
-					element = this.gridSystem[i][item.indexNr.y];
-					if(element.isGoal())
-						continue;
-					if(element.isStar()){
-						if(playMusic) this.starSound.play(); // oterh sound
-						this.points++;
-						this.starPoints.text =  this.points + " / " + this.maxPoints;
-						// change this element to and empty now
-						element.resetToEmpty();
-						element.sprite.scale.setTo(1.0);
-					}	
-					element.setActive(true, color);
+					var e = this.elementClick(i, item.indexNr.y, color);
+					element = e.element;
+					
+					if(element.isGoal() || element.isType("hole"))
+						 break breakme;
 				}
 			}
 			else if(direction == "right") {
 				for (var i=item.indexNr.x+1; i<this.gridInfo.nrWidth; i++) {
-					element = this.gridSystem[i][item.indexNr.y];
-					if(element.isGoal())
-						continue;
-					if(element.isStar()){
-						if(playMusic) this.starSound.play(); // other sound
-						this.points++;
-						this.starPoints.text =  this.points + " / " + this.maxPoints;
-						// change this element to and empty now
-						element.resetToEmpty();
-						element.sprite.scale.setTo(1.0);
-					}	
-					element.setActive(true, color);
+					var e = this.elementClick(i, item.indexNr.y, color);
+					element = e.element;
+					
+					if(element.isGoal() || element.isType("hole"))
+						 break breakme;
 				}
 			}
 			else if(direction == "up") {
 				for (var i=item.indexNr.y-1; i>=0; i--) {
-					element = this.gridSystem[item.indexNr.x][i];
-					if(element.isGoal())
-						continue;
-					if(element.isStar()){
-						if(playMusic) this.starSound.play(); // other sound later
-						this.points++;
-						this.starPoints.text =  this.points + " / " + this.maxPoints;
-						// change this element to and empty now
-						element.resetToEmpty();
-						element.sprite.scale.setTo(1.0);
-					}	
-					element.setActive(true, color);
+					var e = this.elementClick(item.indexNr.x, i, color);
+					element = e.element;
+					
+					if(element.isGoal() || element.isType("hole"))
+						 break breakme;
 				}
 			}
 			else if(direction == "down") {
 				for (var i=item.indexNr.y+1; i<this.gridInfo.nrHeight; i++) {
-					element = this.gridSystem[item.indexNr.x][i];
-					if(element.isGoal())
-						continue;
-					if(element.isStar()){
-						if(playMusic) this.starSound.play(); // other sound later
-						this.points++;
-						this.starPoints.text =  this.points + " / " + this.maxPoints;
-						// change this element to and empty now
-						element.resetToEmpty();
-						element.sprite.scale.setTo(1.0);
-					}	
-					element.setActive(true, color);
+					var e = this.elementClick(item.indexNr.x, i, color);
+					element = e.element;
+
+					if(element.isGoal() || element.isType("hole"))
+						 break breakme;
 				}
+			}
 			}
 
 			if (element.isGoal()) {
@@ -354,7 +321,13 @@ GAME.LevelCreator.prototype = {
 				this.madeLevel();
 				this.showModalWin();
 			}
-			else if (this.availableMoves()==0) {
+			else if(element.isType("hole")) {
+				console.log("woops! the arrow reached a black hole and disapeared!");
+				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
+
+			}
+			
+			if (!element.isGoal() && this.availableMoves()==0) {
 				console.log("inga drag kvar.. synd!");
 				if(playMusic) this.gameOverSound.play();
 				this.showModal();
@@ -363,6 +336,26 @@ GAME.LevelCreator.prototype = {
 			// ändra detta gridElement till en empty igen
 			gridElement.resetToEmpty();
 		}
+	},
+	// function that handles click and looks if the element is a goal or not
+	// will also return the element it goes over.
+	elementClick : function(x,y, color) {
+		var element = this.gridSystem[x][y];
+		var reachedGoal;
+		if(element.isGoal())
+			reachedGoal = true;
+		if(element.isStar()){
+			if(playMusic) this.starSound.play(); // oterh sound
+			this.points++;
+			this.starPoints.text =  this.points + " / " + this.maxPoints;
+			// change this element to and empty now
+			element.resetToEmpty();
+			element.sprite.scale.setTo(1.0);
+		}
+		element.setActive(true, color);
+		reachedGoal = false;
+
+		return {"goal" : reachedGoal, "element":element};
 	},
 
 	// ingen bra funktion överhuvudtaget, utan borde kunna ha + och - helt enkelt
@@ -407,8 +400,8 @@ GAME.LevelCreator.prototype = {
 				console.log("Starting the next level, level" + this.currentLevel);
 				this.state.start('Level', true, false, this.currentLevel);
 			}
-			else {
-				this.quitGame();
+			else { // you have reeached the end level! congratz...
+				this.state.start('Finished');
 			}
 		}
 	},
@@ -429,6 +422,7 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(module);
 
         var text = this.add.text(this.world.centerX, this.world.centerY-30, "OH noooh! \n No moves left..", generalStyle);
+        text.text = text.text + " \n" + this.gameOver ;
         text.anchor.set(0.5);
         modalGroup.add(text);
 
@@ -445,12 +439,12 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(menuBtn);
 
         tryAgainBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	modalGroup.visible = false;
             this.resetThisLevel();
         }, this);
         menuBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	modalGroup.visible = false;
             this.quitGame();
         }, this);
@@ -501,19 +495,19 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(tryAgainBtn);
 
         menuBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	modalGroup.visible = false;
             this.quitGame();
         }, this);
 
         tryAgainBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	modalGroup.visible = false;
             this.resetThisLevel();
         }, this);
 
         nextBtn.events.onInputDown.add(function (e,pointer){
-        	if(playMusic) this.clickSound.play();
+        	if(playMusic) clickSound.play();
         	modalGroup.visible = false;
             this.nextLevel();
         }, this);
