@@ -148,6 +148,8 @@ GAME.LevelCreator.prototype = {
 	     	arrow.setSelected(elements.selected);
 	     	arrow.changeTexture();
 
+	     	if(this.currentLevel==1 && elements.selected) this.tween = this.add.tween(arrow.sprite.scale).to( { x: [1.5, 1.0], y: [1.5, 1.0]  }, 2000, "Linear", true, -1, false);
+
 	     	this.arrowGroup.add(arrow.sprite);
 	    }, this);
 
@@ -249,8 +251,12 @@ GAME.LevelCreator.prototype = {
 
 	},
 	clickedGrid : function(item) {
+
+
 		var x = item.indexNr.x, y = item.indexNr.y;
 		var gridElement = this.gridSystem[x][y];	// get the gridelement
+
+		if(this.currentLevel==1) {this.tween.stop(); gridElement.sprite.scale.setTo(1.0);  } // reset the tween if level 1
 
 		if(gridElement.isArrow() && gridElement.isSelected) {
 
@@ -317,20 +323,30 @@ GAME.LevelCreator.prototype = {
 
 			if (element.isGoal()) {
 				console.log("KLARA");
+
+				// deside how many stars the player gets, depending on how good the player was!
+				var bestPoints = this.levelData.best; 
+				// compare this.click and bestPoints
+				// 
+				var starsPoints = this.click==bestPoints ? 3 : 2; // kan bara få 3 eller 2 stjärnor än så länge ;) 
+				madeLevels[this.currentLevel-1].stars  = starsPoints;
+
 				if(playMusic) this.winSound.play();
 				this.madeLevel();
 				this.showModalWin();
+				console.log(this.levelData.tip);
+				console.log("You got " + starsPoints + " stars!");
 			}
 			else if(element.isType("hole")) {
 				console.log("woops! the arrow reached a black hole and disapeared!");
 				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
-
 			}
 			
 			if (!element.isGoal() && this.availableMoves()==0) {
 				console.log("inga drag kvar.. synd!");
 				if(playMusic) this.gameOverSound.play();
 				this.showModal();
+				console.log(this.levelData.tip);
 			}
 
 			// ändra detta gridElement till en empty igen

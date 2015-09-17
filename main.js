@@ -18,13 +18,14 @@ GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
 
 var player;
 
-var numberOfLevels = 3;
+var numberOfLevels = 10;
 
 var madeLevels = []; // a list that holds if the levels is done or not (t/f)
 
 // init that you have not made any levels yet!!
 for (var i=0; i<numberOfLevels; i++) {
 	madeLevels[i]=false;
+  madeLevels[i].stars = 0;
 }
 
 
