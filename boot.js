@@ -6,6 +6,7 @@ GAME.Boot.prototype = {
 	preload: function() {
         //this.load.image('background', 'assets/game-ui/bgSmaller.png');
         this.load.image('background', 'assets/game-ui/background_wide.png');
+        this.load.image('spaceBackground', 'assets/space.jpg');
 
 	},
 	create: function() {
