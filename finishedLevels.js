@@ -6,7 +6,7 @@ GAME.FinishedLevels = function() {};
 GAME.FinishedLevels.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#969696';
-		this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+		this.add.sprite(0, -(1000 - gameHeight), 'spaceBackground');
 
 		var backBtn = this.add.sprite(this.world.centerX, this.world.height-200, 'playButton');
 		backBtn.anchor.set(0.5);

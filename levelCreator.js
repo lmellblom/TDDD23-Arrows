@@ -52,7 +52,11 @@ GAME.LevelCreator.prototype = {
 
 	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
 	    this.game.stage.backgroundColor = '#FFF';
-	    var background = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+	    if (this.currentLevel <=5)
+	    	var background = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+	    else
+		    var background = this.add.sprite(-100, -(1000 - gameHeight), 'spaceBackground');
+
 	    background.alpha = 0.8;
 
 	    var whiteBack = this.game.add.graphics(this.game.width, this.game.height);
@@ -248,6 +252,8 @@ GAME.LevelCreator.prototype = {
         	modalGroup.visible = false;
         }, this);
 
+       //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
+
 
 	},
 	clickedGrid : function(item) {
@@ -324,29 +330,23 @@ GAME.LevelCreator.prototype = {
 			if (element.isGoal()) {
 				console.log("KLARA");
 
-				// deside how many stars the player gets, depending on how good the player was!
-				var bestPoints = this.levelData.best; 
-				// compare this.click and bestPoints
-				// 
-				var starsPoints = this.click==bestPoints ? 3 : 2; // kan bara få 3 eller 2 stjärnor än så länge ;) 
-				madeLevels[this.currentLevel-1].stars  = starsPoints;
-
 				if(playMusic) this.winSound.play();
 				this.madeLevel();
 				this.showModalWin();
-				console.log(this.levelData.tip);
-				console.log("You got " + starsPoints + " stars!");
+				//console.log(this.levelData.tip);
+				//console.log("You got " + starsPoints + " stars!");
 			}
 			else if(element.isType("hole")) {
-				console.log("woops! the arrow reached a black hole and disapeared!");
+				//console.log("woops! the arrow reached a black hole and disapeared!");
 				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
 			}
 			
 			if (!element.isGoal() && this.availableMoves()==0) {
-				console.log("inga drag kvar.. synd!");
+				//console.log("inga drag kvar.. synd!");
 				if(playMusic) this.gameOverSound.play();
+				if (!element.isType("hole")) this.gameOver = "You run out of active arrows.."
 				this.showModal();
-				console.log(this.levelData.tip);
+				//console.log(this.levelData.tip);
 			}
 
 			// ändra detta gridElement till en empty igen
@@ -400,12 +400,13 @@ GAME.LevelCreator.prototype = {
 
 	madeLevel : function(){
 		madeLevels[this.currentLevel-1]=true;
-
+		this.sp = (this.click == this.levelData.best ? 3 : 2); // kan bara få 3 eller 2 stjärnor än så länge ;) 
+		//madeLevels[this.currentLevel-1].stars = this.sp;
+		if (madeLevelsStars[this.currentLevel-1] < this.sp) // bara spara det nya resultatet om det är bättre
+			madeLevelsStars[this.currentLevel-1] = this.sp;
 	},
  
 	nextLevel: function() {
-		console.log("You made the level in " + this.click +  " clicks.");
-
 		var next = true;
 		if (next) {
 			this.resetForNextLevel();
@@ -413,7 +414,7 @@ GAME.LevelCreator.prototype = {
 
 			// check if you reached the end level, therefore you should go back to the menu instead numberOfLevels
 			if (this.currentLevel <= numberOfLevels) {
-				console.log("Starting the next level, level" + this.currentLevel);
+				//console.log("Starting the next level, level" + this.currentLevel);
 				this.state.start('Level', true, false, this.currentLevel);
 			}
 			else { // you have reeached the end level! congratz...
@@ -437,10 +438,30 @@ GAME.LevelCreator.prototype = {
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
 
-        var text = this.add.text(this.world.centerX, this.world.centerY-30, "OH noooh! \n No moves left..", generalStyle);
+      /*  var text = this.add.text(this.world.centerX, this.world.centerY-30, "OH noooh! \n No moves left..", generalStyle);
         text.text = text.text + " \n" + this.gameOver ;
         text.anchor.set(0.5);
         modalGroup.add(text);
+*/
+
+        // ------- the text inside --------
+        var nStyle = { font: "18px Carter One", fill: "#000" };
+        nStyle.wordWrap = true;
+        nStyle.wordWrapWidth = module.width-30;
+        nStyle.align = "left";
+
+        var tStyle = mediumStyle;
+        tStyle.wordWrap = true;
+        tStyle.wordWrapWidth = module.width-30;
+
+        var text = this.add.text(this.world.centerX, this.world.centerY-60, "OH noooh! \n No moves left..", tStyle);
+        //text.text = text.text + " \n" + this.gameOver ;
+        text.anchor.set(0.5);
+        modalGroup.add(text);
+
+        var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.gameOver, nStyle);
+        tip.anchor.set(0.5);
+        modalGroup.add(tip);
 
         // add menu button, next level and try level again
         var menuBtn = this.add.sprite(this.world.centerX-70, this.world.centerY+180, 'menuBtn');
@@ -465,6 +486,8 @@ GAME.LevelCreator.prototype = {
             this.quitGame();
         }, this);
 
+       // this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
+
         // add buttons to click!! 
         /*modal.events.onInputDown.add(function (e, pointer) {
             modalGroup.visible = false;
@@ -487,11 +510,30 @@ GAME.LevelCreator.prototype = {
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
 
-        // the text inside
-        var stringText = "Congratulations!\n Clicks: " + this.click;
-        var text = this.add.text(this.world.centerX, this.world.centerY-30, stringText, generalStyle);
+        // ------- the text inside --------
+        var nStyle = { font: "18px Carter One", fill: "#000" };
+        nStyle.wordWrap = true;
+        nStyle.wordWrapWidth = module.width-30;
+        nStyle.align = "left";
+
+        var text = this.add.text(this.world.centerX, this.world.centerY-60, "Clicks: " + this.click, mediumStyle);
         text.anchor.set(0.5);
         modalGroup.add(text);
+
+        //var starsT = this.add.text(this.world.centerX, this.world.centerY, "Stars: " + this.sp, mediumStyle);
+        for (var i=0; i<3; i++) {
+        	var starsT = this.add.sprite(this.world.centerX-30 + i*30 ,this.world.centerY-30, 'star');
+        	starsT.scale.setTo(0.4);
+        	starsT.anchor.set(0.5);
+        	var a = i+1 <= this.sp ? 1.0 : 0.3; 
+        	starsT.alpha = a;
+        	modalGroup.add(starsT);
+    	}
+
+        var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.levelData.tip, nStyle);
+        tip.anchor.set(0.5);
+        modalGroup.add(tip);
+
 
         // add menu button, next level and try level again
         var menuBtn = this.add.sprite(this.world.centerX-80, this.world.centerY+180, 'menuBtn');
@@ -509,6 +551,9 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(menuBtn);
         modalGroup.add(nextBtn);
         modalGroup.add(tryAgainBtn);
+
+        //game.add.tween(sprite).from( { y: -200 }, 2000, Phaser.Easing.Bounce.Out, true);
+        //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
 
         menuBtn.events.onInputDown.add(function (e,pointer){
         	if(playMusic) clickSound.play();

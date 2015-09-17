@@ -21,11 +21,12 @@ var player;
 var numberOfLevels = 10;
 
 var madeLevels = []; // a list that holds if the levels is done or not (t/f)
+var madeLevelsStars = [];
 
 // init that you have not made any levels yet!!
 for (var i=0; i<numberOfLevels; i++) {
 	madeLevels[i]=false;
-  madeLevels[i].stars = 0;
+  madeLevelsStars[i] = 0;
 }
 
 
@@ -80,8 +81,11 @@ WebFontConfig = {
 
 var generalStyle = { font: "25px Carter One", fill: "#FFF", align: "center",
  stroke: "#000", strokeThickness: 5 };
+  var mediumStyle = { font: "18px Carter One", fill: "#FFF", align: "center",
+ stroke: "#000", strokeThickness: 4 };
+
  var smallStyle = { font: "14px Carter One", fill: "#FFF", align: "center",
- stroke: "#000", strokeThickness: 5 };
+ stroke: "#000", strokeThickness: 3 };
 
 
 // begin with the preloading

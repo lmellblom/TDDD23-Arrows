@@ -10,8 +10,13 @@ GAME.SelectLevels.prototype = {
 		this.currentPage = 1;
 
 		this.clickSound = this.add.audio('clickSound');
+		this.modalGroup = this.add.group();
 
-		this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+		var backGreen = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+		var spaceBack = this.add.sprite(this.game.width, -(1000 - gameHeight), 'spaceBackground'); // different kind of graphics when different stages sort of?
+		this.modalGroup.add(backGreen);
+		this.modalGroup.add(spaceBack);
+
 
 		// the logo is here also
 		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
@@ -28,8 +33,10 @@ GAME.SelectLevels.prototype = {
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
 		// ------------------- 
+		var levelNames = ["Find your way home", "Watch out for black holes!"];
+		var styleLevelName = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
 
-		this.modalGroup = this.add.group();
+		
         var numberStyle = { font: "24px Skranji", fill: "#FFF", align: "center", fontWeight: "bold",  stroke: "#000", strokeThickness: 5};
         var levelGroup = this.add.group();
         var levelClick = this.add.group();
@@ -41,6 +48,11 @@ GAME.SelectLevels.prototype = {
 	        module.scale.setTo(0.6, 0.6);
 	        module.anchor.set(0.5,0.5);
 	        this.modalGroup.add(module);
+
+	        // the levelName
+	        var levelN = this.add.text(xValue,this.world.centerY-40, levelNames[nr], styleLevelName);
+	    	levelN.anchor.set(0.5);    	
+	    	this.modalGroup.add(levelN); 
 
 	        // adding the number and background to the levels
 	        // får plats 5 stycken... 
@@ -60,7 +72,20 @@ GAME.SelectLevels.prototype = {
 	        	levelSprite.anchor.set(0.5); 
 	        	levelSprite.scale.setTo(0.6, 0.6);
 
-	        	var text = this.add.text(xPos+2, yPos+2, levelNr, numberStyle);
+	        	var text = this.add.text(xPos+2, yPos-2, levelNr, numberStyle);
+	        	// lägg till stjärnor under beroende på om man klarat eller inte
+	        	
+	        	if (madeLevelsStars[i]!= 0) { 
+	        	for (var index=0; index<3; index++) {
+		        	var starsT = this.add.sprite(xPos-15 + index*15 ,yPos+40, 'star');
+		        	starsT.scale.setTo(0.25);
+		        	starsT.anchor.set(0.5);
+		        	var a = index+1 <= madeLevelsStars[i] ? 1.0 : 0.3; 
+		        	starsT.alpha = a;
+		        	this.modalGroup.add(starsT);
+		    	}
+		    }
+
 	    		text.anchor.set(0.5);    	
 
 	    		levelClick.add(text);    		
@@ -104,8 +129,17 @@ GAME.SelectLevels.prototype = {
 
 	    this.arrowButtonG.setAll('inputEnabled', true);
 	    // using the power of callAll we can add the same input event to all coins in the group:
-	    this.arrowButtonG.callAll('events.onInputDown.add', 'events.onInputDown', function (button){
-	    	if(button.dir==="left" && this.currentPage>1) {
+	    this.arrowButtonG.callAll('events.onInputDown.add', 'events.onInputDown', this.arrowClicked, this);
+
+		// my name
+		var style = { font: "12px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 2 };
+		var name = this.add.text(this.world.centerX, this.world.height-20, "by Linnéa Mellblom", style);
+		name.anchor.set(0.5);
+
+
+	},
+	arrowClicked : function(button) {
+		if(button.dir==="left" && this.currentPage>1) {
 	    		var slide = '+' + this.world.width; 
 
 	    		this.rightArrow.alpha = 1;
@@ -116,7 +150,7 @@ GAME.SelectLevels.prototype = {
 	    		}
 	    		var buttonsTween = this.add.tween(this.modalGroup);
 				buttonsTween.to({
-					x: slide// + 450*(this.currentPage-1)
+					x: slide
 				}, 500, Phaser.Easing.Cubic.None);
 				buttonsTween.start();
 	    	}
@@ -130,18 +164,10 @@ GAME.SelectLevels.prototype = {
 	    		}
 	    		var buttonsTween = this.add.tween(this.modalGroup);
 				buttonsTween.to({
-					x: slide// + 450*(this.currentPage-1)
+					x: slide
 				}, 500, Phaser.Easing.Cubic.None);
 				buttonsTween.start();
 	    	}
-        }, this);
-
-
-			// my name
-		var style = { font: "12px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 2 };
-		var name = this.add.text(this.world.centerX, this.world.height-20, "by Linnéa Mellblom", style);
-		name.anchor.set(0.5);
-
 
 	},
 	update: function() {

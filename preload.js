@@ -103,7 +103,7 @@ GAME.Preload.prototype = {
 		        {"x":4, "y":6, "color": "blue"}
 		    ],
 		    "tip" : "Reach the goal in as few clicks as possible.",
-		    "best": 1
+		    "best": 2
 		},
 		{
 		    "arrows" : [ 
@@ -134,45 +134,6 @@ GAME.Preload.prototype = {
 		    "tip" : "When a arrow is fired, it will activate all arrows in its direction.",
 		    "best": 3
 		},
-
-		/* later level with stars
-		{
-		    "arrows" : [ 
-		        {"x": 1, "y": 1, "dir": "right", "selected": true, "color": "blue"},
-		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"},
-		        {"x": 2, "y": 3, "dir": "up", "selected": false,"color": "blue"},
-		        {"x": 4, "y": 5, "dir": "left", "selected": false,"color": "blue"},
-		        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "blue"}
-		     ],
-		     "stars" : [
-		     	{"x": 4, "y" : 3},
-		     	{"x": 1, "y" : 5},
-		     ],
-		    "goalInfo" : [
-		        {"x":0, "y":7, "color": "blue"}
-		    ]
-		},*/
-		/* a black hole level to save for later
-		{
-		    "arrows" : [ 
-		        {"x": 1, "y": 1, "dir": "down", "selected": true,"color": "blue"},
-		        {"x": 0, "y": 2, "dir": "down", "selected": false,"color": "blue"},
-		        {"x": 3, "y": 2, "dir": "left", "selected": false,"color": "blue"},
-		        {"x": 2, "y": 3, "dir": "right", "selected": false,"color": "blue"},
-		        {"x": 1, "y": 4, "dir": "right", "selected": false,"color": "blue"},
-		        {"x": 2, "y": 4, "dir": "down", "selected": true,"color": "blue"},
-		        {"x": 3, "y": 4, "dir": "up", "selected": false,"color": "blue"},
-		        {"x": 4, "y": 3, "dir": "down", "selected": false,"color": "blue"},
-		        {"x": 2, "y": 6, "dir": "up", "selected": false,"color": "blue"},
-		        {"x": 0, "y": 7, "dir": "right", "selected": false,"color": "blue"}
-		     ],
-		    "goalInfo" : [
-		        {"x": 4, "y": 7, "color": "blue"}
-		    ],
-		    "blackHole" : [
-		    	{"x":2, "y":2}
-		    ]
-		},*/
 		{
 		    "arrows" : [ 
 		        {"x": 1, "y": 1, "dir": "down", "selected": true,"color": "blue"},
@@ -214,7 +175,157 @@ GAME.Preload.prototype = {
 		    ],
 		    "tip" : "Sometimes it may exist several ways to reach to the goal. Try to take the shortest one.",
 		    "best": 7
+		},
+		// black holes !!
+		/* a black hole level to save for later*/
+		{
+		    "arrows" : [ 
+		        {"x": 1, "y": 1, "dir": "down", "selected": true, "color": "blue"},
+		        {"x": 1, "y": 3, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 3, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 5, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 5, "dir": "down", "selected": false, "color": "blue"},
+		        {"x": 3, "y": 7, "dir": "up", "selected": false, "color": "blue"}
+		     ],
+		    "goalInfo" : [
+		        {"x":1, "y":7, "color": "blue"}
+		    ],
+		     "blackHole" : [
+		    	{"x":1, "y":4}
+		    ],
+		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
+		    "best": 5
+		},
+		{
+		    "arrows" : [ 
+		        {"x": 1, "y": 1, "dir": "down", "selected": true,"color": "blue"},
+		        {"x": 0, "y": 2, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 2, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 3, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 4, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 4, "dir": "down", "selected": true,"color": "blue"},
+		        {"x": 3, "y": 4, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 3, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 6, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 7, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 6, "dir": "right", "selected": false,"color": "blue"}
+		     ],
+		    "goalInfo" : [
+		        {"x": 4, "y": 7, "color": "blue"}
+		    ],
+		    "blackHole" : [
+		    	{"x":2, "y":2},
+		    	{"x":1, "y":5}
+		    ],
+		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
+		    "best": 4
+		},
+		{
+		    "arrows" : [ 
+		        {"x": 0, "y": 0, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 2, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 4, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 6, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 7, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 0, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 4, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 5, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 7, "dir": "up", "selected": true,"color": "blue"},
+		        {"x": 2, "y": 0, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 6, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 3, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 5, "dir": "up", "selected": false,"color": "blue"}
+		     ],
+		    "goalInfo" : [
+		        {"x": 1, "y": 1, "color": "blue"}
+		    ],
+		    "blackHole" : [
+		    	{"x":1, "y":3},
+		    	{"x":3, "y":1},
+		    	{"x":3, "y":5},
+		    	{"x":3, "y":6}
+		    ],
+		    "tip" : "Don't let all the arrows fool you.",
+		    "best": 6
+		},
+		{
+		    "arrows" : [ 
+		        {"x": 0, "y": 0, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 2, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 4, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 6, "dir": "up", "selected": true,"color": "blue"},
+		        {"x": 1, "y": 7, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 1, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 2, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 6, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 0, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 2, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 4, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 0, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 2, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 7, "dir": "left", "selected": false,"color": "blue"}
+		     ],
+		    "goalInfo" : [
+		        {"x": 1, "y": 6, "color": "blue"}
+		    ],
+		    "blackHole" : [
+		    	{"x":0, "y":1},
+		    	{"x":1, "y":3},
+		    	{"x":1, "y":5},
+		    	{"x":3, "y":3},
+		    	{"x":3, "y":6}
+		    ],
+		    "tip" : "So many arrows and black holes! Gosh",
+		    "best": 5
+		},
+		{
+		    "arrows" : [ 
+		        {"x": 0, "y": 0, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 2, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 6, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 0, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 2, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 1, "y": 5, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 4, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 7, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 0, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 1, "dir": "right", "selected": false,"color": "blue"},
+		        {"x": 3, "y": 2, "dir": "left", "selected": true,"color": "blue"},
+		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 4, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 5, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 6, "dir": "left", "selected": false,"color": "blue"}
+		     ],
+		    "goalInfo" : [
+		        {"x": 1, "y": 7, "color": "blue"}
+		    ],
+		    "blackHole" : [
+		    	{"x":1, "y":1},
+		    	{"x":1, "y":6},
+		    	{"x":3, "y":3},
+		    	{"x":3, "y":7}
+		    ],
+		    "tip" : "",
+		    "best": 7
 		}
+		// stars
+				/* later level with stars
+		{
+		    "arrows" : [ 
+		        {"x": 1, "y": 1, "dir": "right", "selected": true, "color": "blue"},
+		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"},
+		        {"x": 2, "y": 3, "dir": "up", "selected": false,"color": "blue"},
+		        {"x": 4, "y": 5, "dir": "left", "selected": false,"color": "blue"},
+		        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "blue"}
+		     ],
+		     "stars" : [
+		     	{"x": 4, "y" : 3},
+		     	{"x": 1, "y" : 5},
+		     ],
+		    "goalInfo" : [
+		        {"x":0, "y":7, "color": "blue"}
+		    ]
+		},*/
 	];
 
 	},
