@@ -4,10 +4,6 @@ see tutorial http://codetowin.io/tutorials/nback-game-states-and-menus/
 
 var GAME = GAME || {};
 
-var innerWidth = window.innerWidth;
-var innerHeight = window.innerHeight;
-var gameRatio = innerWidth/innerHeight;
-
 var gameWidth = 448;
 var gameHeight =  640; // 520 640+520 = 1160 // 1181 är bakgrunden
 var backgroundHeight = 1181; 
@@ -15,15 +11,12 @@ var backgroundHeight = 1181;
 
 GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
 
-
 var player;
-
-var numberOfLevels = 10;
+var numberOfLevels = 15;
 
 //localStorage.clear();
 
 // init that you have not made any levels yet!! OR get from the storage if the user have been on the site before !!!! 
-
 if ( localStorage.getItem("arrowMadeLevels")==null ) {
   var madeLevels = []; // a list that holds if the levels is done or not (t/f)
   var madeLevelsStars = [];
@@ -33,8 +26,8 @@ if ( localStorage.getItem("arrowMadeLevels")==null ) {
   }
 }
 else {
-  var madeLevels = JSON.parse(localStorage.getItem("arrowMadeLevels"));
-  var madeLevelsStars = JSON.parse(localStorage.getItem("arrowLevelStars"));
+  madeLevels = JSON.parse(localStorage.getItem("arrowMadeLevels"));
+  madeLevelsStars = JSON.parse(localStorage.getItem("arrowLevelStars"));
 }
 
 var menuGroup;
@@ -51,8 +44,6 @@ var allLevelData;
 // variables that specifies if the backgroundm music and the clicks should be playes
 var playMusic = true;
 var backCalmMusic = true;
-
-
 var backgroundMusicPlayer;
 var clickSound;
 

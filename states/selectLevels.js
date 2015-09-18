@@ -6,17 +6,29 @@ GAME.SelectLevels = function() {};
 GAME.SelectLevels.prototype = {
 	create: function() {
 
-		this.pages = 2;
+		this.pages = numberOfLevels/5; // +1 för inforutan först!!
 		this.currentPage = 1;
 
 		this.clickSound = this.add.audio('clickSound');
 		this.modalGroup = this.add.group();
 
-		var backGreen = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
+		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - gameHeight), 'background');
 		var spaceBack = this.add.sprite(this.game.width, -(1000 - gameHeight), 'spaceBackground'); // different kind of graphics when different stages sort of?
+		//var snowBack = this.add.sprite(2*this.game.width, -(768 - gameHeight), 'background'); 
 		this.modalGroup.add(backGreen);
 		this.modalGroup.add(spaceBack);
+		//this.modalGroup.add(snowBack);
 
+		// add information about the game here
+		var info = "Game by Linnéa Mellblom. More info will come up shortly! Enjoy.";
+		var infoS = mediumStyle;
+		infoS.wordWrap = true;
+        infoS.wordWrapWidth = this.game.width-this.game.width/3;
+        infoS.align = "left";
+        var theInfo = this.add.text(-this.game.width+this.game.width/2, this.game.height/2, info, infoS);
+        theInfo.anchor.set(0.5);
+        this.modalGroup.add(theInfo);
+		
 
 		// the logo is here also
 		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
@@ -33,7 +45,7 @@ GAME.SelectLevels.prototype = {
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
 		// ------------------- 
-		var levelNames = ["Find your way home", "Watch out for black holes!"];
+		var levelNames = ["Find your way home", "Watch out for black holes!", "The stars are shining"];
 		var styleLevelName = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
 
 		
@@ -76,7 +88,7 @@ GAME.SelectLevels.prototype = {
 	        	levelSprite.anchor.set(0.5); 
 	        	levelSprite.scale.setTo(0.6, 0.6);
 
-	        	var text = this.add.text(xPos+2, yPos-2, levelNr, numberStyle);
+	        	var text = this.add.text(xPos+2, yPos+2, levelNr, numberStyle);
 	        	// lägg till stjärnor under beroende på om man klarat eller inte
 	        	
 	        	if (madeLevelsStars[i]!= 0) { 
@@ -125,7 +137,7 @@ GAME.SelectLevels.prototype = {
 	    this.leftArrow.scale.setTo(0.8);
 	    this.leftArrow.anchor.set(0.5);
 	    this.leftArrow.dir = "left"; 
-	    this.leftArrow.alpha = 0.4; // since first page and should not be able to go left..
+	    this.leftArrow.alpha = 1.0; // since first page and should not be able to go left..
 
 	    this.arrowButtonG = this.add.group();    
 	    this.arrowButtonG.add(this.leftArrow);
@@ -143,13 +155,13 @@ GAME.SelectLevels.prototype = {
 
 	},
 	arrowClicked : function(button) {
-		if(button.dir==="left" && this.currentPage>1) {
+		if(button.dir==="left" && this.currentPage>=1) {
 	    		var slide = '+' + this.world.width; 
 
 	    		this.rightArrow.alpha = 1;
 	    		this.currentPage--;
-	    		if (this.currentPage==1) {
-	    			button.alpha = 0.4;
+	    		if (this.currentPage==0) {
+	    			button.alpha = 0.0;
 
 	    		}
 	    		var buttonsTween = this.add.tween(this.modalGroup);
@@ -163,7 +175,7 @@ GAME.SelectLevels.prototype = {
 	    		this.leftArrow.alpha = 1;
 	    		this.currentPage++;
 	    		if (this.currentPage==this.pages) {
-	    			button.alpha = 0.4;
+	    			button.alpha = 0.0;
 
 	    		}
 	    		var buttonsTween = this.add.tween(this.modalGroup);
