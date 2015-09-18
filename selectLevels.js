@@ -40,6 +40,9 @@ GAME.SelectLevels.prototype = {
         var numberStyle = { font: "24px Skranji", fill: "#FFF", align: "center", fontWeight: "bold",  stroke: "#000", strokeThickness: 5};
         var levelGroup = this.add.group();
         var levelClick = this.add.group();
+        
+        //console.log("LEVELS!!!! \n   levels: " + madeLevels);
+		//console.log("stars: " + madeLevelsStars);
 
         for (var nr = 0; nr < numberOfLevels/5 ; nr++) {
         	var xValue = this.world.centerX + nr*this.game.width;
@@ -61,6 +64,7 @@ GAME.SelectLevels.prototype = {
 
 	        for (var j=0; j<5; j++) {
 	        	i = nr *5+j;
+
 	        	var isActive = (i==0 ? true : madeLevels[i-1]); //om nivån innan är klarad, då är leveln öppnad
 	        	var textureName = isActive ? "activeLevel" : "inactiveLevel";
 	        	var levelNr = i+1;

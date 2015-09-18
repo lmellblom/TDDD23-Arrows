@@ -398,12 +398,28 @@ GAME.LevelCreator.prototype = {
 	    }
 	},
 
+/*
+localStorage["names"] = JSON.stringify(names);
+
+//...
+var storedNames = JSON.parse(localStorage["names"]);
+
+*/
+
 	madeLevel : function(){
-		madeLevels[this.currentLevel-1]=true;
+		// only update when another value.. 
+		if (!madeLevels[this.currentLevel-1]){
+			madeLevels[this.currentLevel-1]=true;
+			localStorage.setItem("arrowMadeLevels", JSON.stringify(madeLevels));
+		}
 		this.sp = (this.click == this.levelData.best ? 3 : 2); // kan bara få 3 eller 2 stjärnor än så länge ;) 
 		//madeLevels[this.currentLevel-1].stars = this.sp;
-		if (madeLevelsStars[this.currentLevel-1] < this.sp) // bara spara det nya resultatet om det är bättre
+		if (madeLevelsStars[this.currentLevel-1] < this.sp) { // bara spara det nya resultatet om det är bättre
 			madeLevelsStars[this.currentLevel-1] = this.sp;
+			localStorage.setItem("arrowLevelStars", JSON.stringify(madeLevelsStars));
+		}
+
+		// update the local storage with the new record and made the level!!
 	},
  
 	nextLevel: function() {
