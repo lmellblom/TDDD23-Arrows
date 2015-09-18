@@ -54,10 +54,13 @@ GAME.LevelCreator.prototype = {
 	    this.game.stage.backgroundColor = '#FFF';
 	    if (this.currentLevel <=5)
 	    	var background = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
-	    else
-		    var background = this.add.sprite(-100, -(1000 - gameHeight), 'spaceBackground');
+	    else if (this.currentLevel >=6)
+		    var background = this.add.sprite(0, -(1000 - gameHeight), 'spaceBackground');
+		else {
+			var background = this.add.sprite(0, -(768 - gameHeight), 'background');
+		} 
 
-	    background.alpha = 0.8;
+	    background.alpha = this.currentLevel > 10 ? 0.7 : 0.8;
 
 	    var whiteBack = this.game.add.graphics(this.game.width, this.game.height);
 		whiteBack.beginFill("#FFF", 0.2);
@@ -106,17 +109,19 @@ GAME.LevelCreator.prototype = {
 
         if(this.levelData.stars != undefined) {
         	// TODO : only add this when the level say that a star should be added
-	        this.starBar = this.add.sprite(this.world.centerX-70, 20, 'starPoints');
+	        this.starBar = this.add.sprite(this.world.centerX, 40, 'starPoints');
 	        this.starBar.scale.setTo(0.6);
+	        this.starBar.anchor.set(0.5);
 	        this.points = 0;
 	        this.maxPoints = this.levelData.stars.length;
-	        this.starPoints = this.add.text(this.world.centerX-10, 30, this.points + " / " + this.maxPoints, smallStyle);
-	        
+	        this.starPoints = this.add.text(this.world.centerX, 42, this.points + " / " + this.maxPoints, smallStyle);
+	        this.starPoints.anchor.set(0.5);
 
         	// set out the star in the grid, a foor loop
         	this.levelData.stars.forEach(function(elements){
         		var starElement = this.gridSystem[elements.x][elements.y];
         		starElement.setType("star");
+        		starElement.setColor(elements.color);
 	    		starElement.sprite.scale.setTo(0.5);
 	    		starElement.changeTexture();	
         	}, this);
@@ -141,6 +146,8 @@ GAME.LevelCreator.prototype = {
 	    goalElement.setColor(this.levelData.goalInfo[0].color);
 	    goalElement.setType("goal");
 		goalElement.changeTexture();
+		// ge målet lite rörelse ;) 
+		this.add.tween(goalElement.sprite.scale).to( { x: [1.3, 1.0], y: [1.3, 1.0]  }, 3000, "Linear", true, -1, false);
 	
 	    this.arrowGroup = this.add.group();
 
@@ -167,17 +174,6 @@ GAME.LevelCreator.prototype = {
 
 		var modalGroup = this.add.group();
 
-		/*var moduleInfo = {
-			"backgroundPanel": "panelModule",
-			"backgroundScale": 0.9,
-			"text": "Do you really \n want to quit?",
-			"buttons" : [
-			{"sprite": "noBtn", "functions": null, "x": this.world.centerX-70, "y":this.world.centerY+80},
-			{"sprite": "yesBtn", "functions": this.quitGame(), "x": this.world.centerX+70, "y": this.world.centerY+80},
-
-			]
-		};*/
-
 		var modal = this.game.add.graphics(this.game.width, this.game.height);
 		modal.beginFill("0x000000", 0.7);
         modal.x = 0;
@@ -185,34 +181,6 @@ GAME.LevelCreator.prototype = {
         modal.drawRect(0, 0, this.game.width, this.game.height);
         modal.inputEnabled = true;
         modalGroup.add(modal);
-/*
-        var module = this.add.sprite(this.world.centerX ,this.world.centerY , moduleInfo.backgroundPanel);
-        module.scale.setTo(moduleInfo.backgroundScale);
-        module.anchor.set(0.5,0.5);
-        modalGroup.add(module);
-
-        var text = this.add.text(this.world.centerX, this.world.centerY-20, moduleInfo.text, generalStyle);
-        text.anchor.set(0.5);
-        modalGroup.add(text);
-
-        // add buttons
-        moduleInfo.buttons.forEach(function(button){
-        	var btn = this.add.sprite(button.x, button.y, button.sprite);
-        	btn.anchor.set(0.5);
-        	btn.scale.setTo(0.7);
-        	btn.inputEnabled = true;
-        	modalGroup.add(btn);
-
-        	btn.events.onInputDown.add(function (e,pointer){
-	        	if(playMusic) this.clickSound.play();
-	        	this.settingsBtn.inputEnabled = true;
-	        	modalGroup.visible = false;
-	        	button.functions;
-	        }, this);
-        }, this);
-
-
-        */
 
         var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'panelModule');
         module.scale.setTo(0.9, 0.9);
@@ -328,18 +296,26 @@ GAME.LevelCreator.prototype = {
 			}
 
 			if (element.isGoal()) {
-				console.log("KLARA");
-
-				if(playMusic) this.winSound.play();
-				this.madeLevel();
-				this.showModalWin();
-				//console.log(this.levelData.tip);
-				//console.log("You got " + starsPoints + " stars!");
+				if(this.levelData.stars != undefined && this.points==this.maxPoints) {
+					if(playMusic) this.winSound.play();
+					this.madeLevel();
+					this.showModalWin();
+				}
+				else if(this.levelData.stars != undefined && this.points!=this.maxPoints){
+					this.gameOver = "You didn't collect all the stars."
+					this.showModal();
+				}
+				else {
+					if(playMusic) this.winSound.play();
+					this.madeLevel();
+					this.showModalWin();
+				}
 			}
 			else if(element.isType("hole")) {
 				//console.log("woops! the arrow reached a black hole and disapeared!");
 				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
 			}
+			
 			
 			if (!element.isGoal() && this.availableMoves()==0) {
 				//console.log("inga drag kvar.. synd!");
@@ -358,8 +334,10 @@ GAME.LevelCreator.prototype = {
 	elementClick : function(x,y, color) {
 		var element = this.gridSystem[x][y];
 		var reachedGoal;
-		if(element.isGoal())
+		if(element.isGoal()) {
 			reachedGoal = true;
+			element.sprite.scale.setTo(1.0);
+		}
 		if(element.isStar()){
 			if(playMusic) this.starSound.play(); // oterh sound
 			this.points++;
@@ -470,7 +448,7 @@ var storedNames = JSON.parse(localStorage["names"]);
         tStyle.wordWrap = true;
         tStyle.wordWrapWidth = module.width-30;
 
-        var text = this.add.text(this.world.centerX, this.world.centerY-60, "OH noooh! \n No moves left..", tStyle);
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "OH noooh!", tStyle);
         //text.text = text.text + " \n" + this.gameOver ;
         text.anchor.set(0.5);
         modalGroup.add(text);

@@ -13,7 +13,7 @@ function GridElement(sprite, type, selected, direction, color) {
 		name    += (this.isSelected ?  color : "");
 
 		if (this.type == "star") {
-			name = "star";
+			name = "star" + this.color;
 		}
 		else if(this.type == "hole") {
 			name = "blackHole";

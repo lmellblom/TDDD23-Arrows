@@ -49,7 +49,9 @@ GAME.Preload.prototype = {
 	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
 
 	    this.load.image('star', 'assets/game-ui/star.png');
-	    this.load.image('starPoints', 'assets/game-ui/starPoints.png');
+	    this.load.image('starblue', 'assets/game-ui/starBlue.png');
+	    this.load.image('starpink', 'assets/game-ui/starPink.png');
+	    this.load.image('starPoints', 'assets/points.png');
 
 	    // for the levels
 	    this.load.image('levelModule', 'assets/game-ui/levelSelect.png');
@@ -93,8 +95,8 @@ GAME.Preload.prototype = {
 	    	best: the best number of clicks the level can have
 
 	    */
-	    allLevelData = [
-	    {
+	  allLevelData = [
+	    { // level 1
 		    "arrows" : [ 
 		        {"x": 1, "y": 2, "dir": "down", "selected": true, "color": "blue"},
 		        {"x": 1, "y": 6, "dir": "right", "selected": false, "color": "blue"}
@@ -105,7 +107,7 @@ GAME.Preload.prototype = {
 		    "tip" : "Reach the goal in as few clicks as possible.",
 		    "best": 2
 		},
-		{
+		{// level 2
 		    "arrows" : [ 
 		        {"x": 1, "y": 1, "dir": "right", "selected": true, "color": "blue"},
 		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"},
@@ -118,7 +120,7 @@ GAME.Preload.prototype = {
 		    "tip" : "You don't need to click on all arrows to reach the goal.",
 		    "best": 3
 		},
-		{
+		{// level 3
 		    "arrows" : [ 
 		        {"x": 0, "y": 1, "dir": "down", "selected": true, "color": "blue"},
 		        {"x": 2, "y": 1, "dir": "right", "selected": false,"color": "blue"},
@@ -134,7 +136,7 @@ GAME.Preload.prototype = {
 		    "tip" : "When a arrow is fired, it will activate all arrows in its direction.",
 		    "best": 3
 		},
-		{
+		{// level 4
 		    "arrows" : [ 
 		        {"x": 1, "y": 1, "dir": "down", "selected": true,"color": "blue"},
 		        {"x": 0, "y": 2, "dir": "down", "selected": false,"color": "blue"},
@@ -154,7 +156,7 @@ GAME.Preload.prototype = {
 		    "best": 4
 		},
 
-		{
+		{// level 5
 		    "arrows" : [ 
 		        {"x": 1, "y": 0, "dir": "down", "selected": false,"color": "blue"},
 		        {"x": 4, "y": 0, "dir": "left", "selected": false,"color": "blue"},
@@ -178,7 +180,7 @@ GAME.Preload.prototype = {
 		},
 		// black holes !!
 		/* a black hole level to save for later*/
-		{
+		{// level 6
 		    "arrows" : [ 
 		        {"x": 1, "y": 1, "dir": "down", "selected": true, "color": "blue"},
 		        {"x": 1, "y": 3, "dir": "right", "selected": false,"color": "blue"},
@@ -196,7 +198,7 @@ GAME.Preload.prototype = {
 		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
 		    "best": 5
 		},
-		{
+		{// level 7
 		    "arrows" : [ 
 		        {"x": 1, "y": 1, "dir": "down", "selected": true,"color": "blue"},
 		        {"x": 0, "y": 2, "dir": "down", "selected": false,"color": "blue"},
@@ -220,7 +222,7 @@ GAME.Preload.prototype = {
 		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
 		    "best": 4
 		},
-		{
+		{// level 8
 		    "arrows" : [ 
 		        {"x": 0, "y": 0, "dir": "right", "selected": false,"color": "blue"},
 		        {"x": 0, "y": 2, "dir": "right", "selected": false,"color": "blue"},
@@ -248,7 +250,7 @@ GAME.Preload.prototype = {
 		    "tip" : "Don't let all the arrows fool you.",
 		    "best": 6
 		},
-		{
+		{// level 9
 		    "arrows" : [ 
 		        {"x": 0, "y": 0, "dir": "right", "selected": false,"color": "blue"},
 		        {"x": 0, "y": 2, "dir": "right", "selected": false,"color": "blue"},
@@ -278,7 +280,7 @@ GAME.Preload.prototype = {
 		    "tip" : "So many arrows and black holes! Gosh",
 		    "best": 5
 		},
-		{
+		{// level 10
 		    "arrows" : [ 
 		        {"x": 0, "y": 0, "dir": "right", "selected": false,"color": "blue"},
 		        {"x": 0, "y": 2, "dir": "down", "selected": false,"color": "blue"},
@@ -305,27 +307,163 @@ GAME.Preload.prototype = {
 		    	{"x":3, "y":3},
 		    	{"x":3, "y":7}
 		    ],
-		    "tip" : "",
+		    "tip" : "You rock!",
 		    "best": 7
-		}
+		},
 		// stars
-				/* later level with stars
-		{
+		// later level with stars
+		{// level 11
 		    "arrows" : [ 
-		        {"x": 1, "y": 1, "dir": "right", "selected": true, "color": "blue"},
-		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "blue"},
-		        {"x": 2, "y": 3, "dir": "up", "selected": false,"color": "blue"},
-		        {"x": 4, "y": 5, "dir": "left", "selected": false,"color": "blue"},
-		        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "blue"}
+		        {"x": 1, "y": 1, "dir": "right", "selected": true, "color": "pink"},
+		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 3, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 5, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "pink"}
 		     ],
 		     "stars" : [
-		     	{"x": 4, "y" : 3},
-		     	{"x": 1, "y" : 5},
+		     	{"x": 4, "y" : 3, "color": "pink"},
+		     	{"x": 1, "y" : 5, "color": "pink"}
 		     ],
 		    "goalInfo" : [
-		        {"x":0, "y":7, "color": "blue"}
-		    ]
-		},*/
+		        {"x":0, "y":7, "color": "pink"}
+		    ],
+		    "tip": "Collect all the stars in order to be able to go home.",
+		    "best": 4
+		},
+		{// level 12
+		    "arrows" : [ 
+		        {"x": 0, "y": 0, "dir": "down", "selected": false, "color": "pink"},
+		        {"x": 0, "y": 1, "dir": "right", "selected": true,"color": "pink"},
+		        {"x": 0, "y": 7, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 0, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 3, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 6, "dir": "right", "selected": false, "color": "pink"},
+		        {"x": 2, "y": 0, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 2, "dir": "down", "selected": true,"color": "pink"},
+		        {"x": 2, "y": 3, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 4, "dir": "up", "selected": false, "color": "pink"},
+		        {"x": 4, "y": 1, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 3, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 6, "dir": "up", "selected": false,"color": "pink"}
+		     ],
+		     "stars" : [
+		     	{"x": 1, "y" : 5, "color": "pink"},
+		     	{"x": 2, "y" : 1, "color": "pink"},
+		     	{"x": 3, "y" : 6, "color": "pink"},
+		     	{"x": 4, "y" : 2, "color": "pink"}
+		     ],
+		    "goalInfo" : [
+		        {"x":0, "y":3, "color": "pink"}
+		    ],
+		    "tip": "Remember to choose the 'right' way.",
+		    "best": 8
+		},
+		// lägg till lite black holes on these 3 next levels!!!
+		{// level 13
+		    "arrows" : [ 
+		        {"x": 0, "y": 1, "dir": "right", "selected": false, "color": "pink"},
+		        {"x": 0, "y": 5, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 0, "y": 7, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 0, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 2, "dir": "down", "selected": true,"color": "pink"},
+		        {"x": 2, "y": 0, "dir": "down", "selected": false, "color": "pink"},
+		        {"x": 2, "y": 4, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 2, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 3, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 5, "dir": "up", "selected": false, "color": "pink"},
+		        {"x": 3, "y": 6, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 0, "dir": "down", "selected": true,"color": "pink"},
+		        {"x": 4, "y": 3, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 6, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 7, "dir": "left", "selected": false,"color": "pink"}
+		     ],
+		     "stars" : [
+		     	{"x": 1, "y" : 5, "color": "pink"},
+		     	{"x": 2, "y" : 7, "color": "pink"},
+		     	{"x": 4, "y" : 1, "color": "pink"}
+		     ],
+		    "goalInfo" : [
+		        {"x":2, "y":2, "color": "pink"}
+		    ],
+		    "blackHole" : [
+		    	{"x":0, "y":0},
+		    	{"x":2, "y":3},
+		    	{"x":4, "y":5}
+		    ],
+		    "tip": "Oh, black holes appeard when collecting stars. Watch out!",
+		    "best": 10
+		},
+		{// level 14
+		    "arrows" : [ 
+		        {"x": 0, "y": 0, "dir": "right", "selected": false, "color": "pink"},
+		        {"x": 0, "y": 2, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 0, "y": 6, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 2, "dir": "down", "selected": true,"color": "pink"},
+		        {"x": 1, "y": 4, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 5, "dir": "up", "selected": false, "color": "pink"},
+		        {"x": 3, "y": 0, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 3, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 5, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 0, "dir": "left", "selected": true, "color": "pink"},
+		        {"x": 4, "y": 3, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 4, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 5, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 6, "dir": "left", "selected": false,"color": "pink"}
+		     ],
+		     "stars" : [
+		     	{"x": 0, "y" : 4, "color": "pink"},
+		     	{"x": 1, "y" : 6, "color": "pink"},
+		     	{"x": 2, "y" : 0, "color": "pink"},
+		     	{"x": 3, "y" : 4, "color": "pink"}
+		     ],
+		    "goalInfo" : [
+		        {"x":2, "y":3, "color": "pink"}
+		    ],
+		    "blackHole" : [
+		    	{"x":1, "y":5},
+		    	{"x":2, "y":1},
+		    	{"x":4, "y":2}
+		    ],
+		    "tip": "Keep going!",
+		    "best": 9
+		},
+		{// level 15
+		    "arrows" : [ 
+		        {"x": 0, "y": 0, "dir": "right", "selected": false, "color": "pink"},
+		        {"x": 0, "y": 5, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 0, "y": 7, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 2, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 5, "dir": "left", "selected": false,"color": "pink"},
+		        {"x": 1, "y": 7, "dir": "up", "selected": false, "color": "pink"},
+		        {"x": 2, "y": 0, "dir": "down", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 1, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 2, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 2, "y": 4, "dir": "right", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 0, "dir": "left", "selected": false, "color": "pink"},
+		        {"x": 3, "y": 1, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 3, "y": 5, "dir": "left", "selected": true,"color": "pink"},
+		        {"x": 3, "y": 7, "dir": "up", "selected": false,"color": "pink"},
+		        {"x": 4, "y": 5, "dir": "down", "selected": true,"color": "pink"},
+		        {"x": 4, "y": 7, "dir": "left", "selected": false,"color": "pink"}
+		     ],
+		     "stars" : [
+		     	{"x": 1, "y" : 0, "color": "pink"},
+		     	{"x": 2, "y" : 3, "color": "pink"},
+		     	{"x": 2, "y" : 7, "color": "pink"},
+		     	{"x": 4, "y" : 1, "color": "pink"}
+		     ],
+		    "goalInfo" : [
+		        {"x":3, "y":4, "color": "pink"}
+		    ],
+		    "blackHole" : [
+		    	{"x":1, "y":1},
+		    	{"x":2, "y":6},
+		    	{"x":3, "y":2},
+		    	{"x":4, "y":3}
+		    ],
+		    "tip": "Wow, so many black holes to avoid and stars to collect!",
+		    "best": 10
+		}
 	];
 
 	},
