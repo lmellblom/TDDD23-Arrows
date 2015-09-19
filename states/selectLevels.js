@@ -94,7 +94,7 @@ GAME.SelectLevels.prototype = {
 	        	// lägg till stjärnor under beroende på om man klarat eller inte
 
 	        	
-	        	if (i < madeLevelsStars.length && madeLevelsStars[i]!= 0) { 
+	        	if (madeLevelsStars[i]!= 0) { 
 	        	for (var index=0; index<3; index++) {
 		        	var starsT = this.add.sprite(xPos-15 + index*15 ,yPos+40, 'star');
 		        	starsT.scale.setTo(0.25);
