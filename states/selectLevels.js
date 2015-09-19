@@ -74,6 +74,8 @@ GAME.SelectLevels.prototype = {
 	        var startX = 80 + nr*this.game.width;
 	        var startY = this.world.centerY - 30;
 
+//	        console.log(madeLevelsStars.length + " hur många nivåer?");
+
 	        for (var j=0; j<5; j++) {
 	        	i = nr *5+j;
 
@@ -90,6 +92,7 @@ GAME.SelectLevels.prototype = {
 
 	        	var text = this.add.text(xPos+2, yPos+2, levelNr, numberStyle);
 	        	// lägg till stjärnor under beroende på om man klarat eller inte
+
 	        	
 	        	if (i < madeLevelsStars.length && madeLevelsStars[i]!= 0) { 
 	        	for (var index=0; index<3; index++) {
