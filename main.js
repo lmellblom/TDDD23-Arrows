@@ -17,17 +17,19 @@ var numberOfLevels = 15;
 //localStorage.clear();
 
 // init that you have not made any levels yet!! OR get from the storage if the user have been on the site before !!!! 
-if ( localStorage.getItem("arrowMadeLevels")==null ) {
   var madeLevels = []; // a list that holds if the levels is done or not (t/f)
   var madeLevelsStars = [];
   for (var i=0; i<numberOfLevels; i++) {
   	madeLevels[i]=false;
     madeLevelsStars[i] = 0;
   }
-}
-else {
-  madeLevels = JSON.parse(localStorage.getItem("arrowMadeLevels"));
-  madeLevelsStars = JSON.parse(localStorage.getItem("arrowLevelStars"));
+if ( localStorage.getItem("arrowMadeLevels")!=null ) {
+  var mL = JSON.parse(localStorage.getItem("arrowMadeLevels"));
+  var mLS = JSON.parse(localStorage.getItem("arrowLevelStars"));
+  for (var i=0; i<mL.length; i++) {
+    madeLevels[i] = mL[i];
+    madeLevelsStars[i] = mLS[i];
+  }
 }
 
 var menuGroup;
