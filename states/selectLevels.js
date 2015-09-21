@@ -6,8 +6,9 @@ GAME.SelectLevels = function() {};
 GAME.SelectLevels.prototype = {
 	create: function() {
 
-		this.pages = numberOfLevels/5; // +1 för inforutan först!!
-		this.currentPage = 1;
+		this.pages = numberOfLevels/5 + 1; // +1 för inforutan först!!
+		this.currentPage = 2;
+
 
 		this.clickSound = this.add.audio('clickSound');
 		this.modalGroup = this.add.group();
@@ -155,15 +156,18 @@ GAME.SelectLevels.prototype = {
 		var name = this.add.text(this.world.centerX, this.world.height-20, "by Linnéa Mellblom", style);
 		name.anchor.set(0.5);
 
+		
+
 
 	},
 	arrowClicked : function(button) {
-		if(button.dir==="left" && this.currentPage>=1) {
-	    		var slide = '+' + this.world.width; 
+		if (!this.tweens.isTweening(this.modalGroup)) { // to prevent the module to slide even more if it is already moving!
 
+		if(button.dir==="left" && this.currentPage>1) {
+	    		var slide = '+' + this.world.width; 
 	    		this.rightArrow.alpha = 1;
 	    		this.currentPage--;
-	    		if (this.currentPage==0) {
+	    		if (this.currentPage==1) {
 	    			button.alpha = 0.0;
 
 	    		}
@@ -173,7 +177,7 @@ GAME.SelectLevels.prototype = {
 				}, 500, Phaser.Easing.Cubic.None);
 				buttonsTween.start();
 	    	}
-	    	else if(button.dir === "right" && this.currentPage<this.pages){
+	    else if(button.dir === "right" && this.currentPage<this.pages){
 	    		var slide = '-' + this.world.width;
 	    		this.leftArrow.alpha = 1;
 	    		this.currentPage++;
@@ -187,6 +191,7 @@ GAME.SelectLevels.prototype = {
 				}, 500, Phaser.Easing.Cubic.None);
 				buttonsTween.start();
 	    	}
+	    }
 
 	},
 	update: function() {
