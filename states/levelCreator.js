@@ -164,10 +164,45 @@ GAME.LevelCreator.prototype = {
 	     	this.arrowGroup.add(arrow.sprite);
 	    }, this);
 
+	     // place 3 random arrows in each level! wow
+	    // görs ej på de två första nivåerna på varje chapter. 
+	    
+	    this.placeRandomArrow(5);
+		// ==========================
+
 	    // debugmodes
 	    qKey = this.input.keyboard.addKey(Phaser.Keyboard.Q);
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
 	    cursors = this.input.keyboard.createCursorKeys();
+	},
+	placeRandomArrow : function(nrRandomArrows) {
+		var addExtraArrwos = this.currentLevel%5 > 2 ? true : false;
+		if (addExtraArrwos) {
+		    //var nrRandomArrows = 3;
+		    var placedArrows = 0;
+
+		    while (placedArrows!=nrRandomArrows) {
+		    	var xPos = getRandom(0, 4); //  TODO, globala variabler senare
+		    	var yPos = getRandom(0, 7); 
+		    	var element = this.gridSystem[xPos][yPos];
+		    	if(element.isType("empty")) {
+		    		// slumpe direction och selected
+		    		var directions = ["left", "right", "down", "up"];
+		    		var dirIndex = getRandom(0,3);
+		    		//var sel = [true, false];
+		    		//var selIndex = getRandom(0,1);
+
+		    		//console.log("the new arrow: " + directions[dirIndex] + " " + sel[selIndex] + " x,y " + xPos + "," + yPos);
+
+		    		// make a random new arrow and place it, else go again in the while loop
+		    		element.setColor("blue"); // hur göra här? kanske ha en färg per nivå
+		    		element.setType("arrow", directions[dirIndex]);
+			     	element.setSelected(false);//sel[selIndex]); // always set to false instead!! 
+			     	element.changeTexture();
+		    		placedArrows++;
+		    	} 
+		    }
+		}
 	},
 	// this function should open a module and ask if the user want to go back to menu
 	backOneStep : function () {
@@ -302,6 +337,7 @@ GAME.LevelCreator.prototype = {
 					this.showModalWin();
 				}
 				else if(this.levelData.stars != undefined && this.points!=this.maxPoints){
+					if(playMusic) this.gameOverSound.play();
 					this.gameOver = "You didn't collect all the stars."
 					this.showModal();
 				}
@@ -312,6 +348,7 @@ GAME.LevelCreator.prototype = {
 				}
 			}
 			else if(element.isType("hole")) {
+
 				//console.log("woops! the arrow reached a black hole and disapeared!");
 				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
 			}
@@ -390,7 +427,7 @@ var storedNames = JSON.parse(localStorage["names"]);
 			madeLevels[this.currentLevel-1]=true;
 			localStorage.setItem("arrowMadeLevels", JSON.stringify(madeLevels));
 		}
-		this.sp = (this.click == this.levelData.best ? 3 : 2); // kan bara få 3 eller 2 stjärnor än så länge ;) 
+		this.sp = (this.click <= this.levelData.best ? 3 :    (this.click > this.levelData.best+2 ? 1 : 2)  ); // kan bara få 3 eller 2 stjärnor än så länge ;) om man får 3 klick över bästa så får man 1 stjärna? 
 		//madeLevels[this.currentLevel-1].stars = this.sp;
 		if (madeLevelsStars[this.currentLevel-1] < this.sp) { // bara spara det nya resultatet om det är bättre
 			madeLevelsStars[this.currentLevel-1] = this.sp;
@@ -567,6 +604,12 @@ var storedNames = JSON.parse(localStorage["names"]);
             this.nextLevel();
         }, this);
 	},
+	showInfo : function() {
+		console.log("visa info?");
+
+
+
+	},
 	resetThisLevel : function() {
 		this.state.start('Level', true, false, this.currentLevel); // go to the same level!!
 	},
@@ -583,3 +626,9 @@ var storedNames = JSON.parse(localStorage["names"]);
 
     }
 };
+
+// help functions with random stuff
+// help function
+function getRandom(min, max) {
+	return Math.floor(Math.random() * (max-min+1) + min);
+}

@@ -34,7 +34,7 @@ function settingsPanel(world) {
 
     // sett events on the settingsbuttons
         self.infoBtn.events.onInputDown.add(function (e,pointer){
-        	//console.log("show info!!");
+            self.showInfo();
         }, self);
         self.menuBtn.events.onInputDown.add(function (e,pointer){
 	        self.backOneStep(); // here should it be something else? 
