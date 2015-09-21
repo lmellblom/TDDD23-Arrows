@@ -28,6 +28,9 @@ GAME.Preload.prototype = {
 	    
 	    this.load.image('playButton', 'assets/game-ui/playBtn.png');
 
+	    // level selection
+	    this.load.image('levelSquare', 'assets/square.png');
+
 	    // settings panel
 	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
 	    this.load.image('banSound', 'assets/game-ui/banSound.png');
