@@ -16,20 +16,68 @@ GAME.Preload.prototype = {
 		//  Load the Google WebFont Loader script
     	this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 		// loading assets for the game
-		this.preloadBack = this.add.sprite(0, -520, 'background');
+		this.preloadBack = this.add.sprite(0, -(backgroundHeight - this.world.height),'background');
+		if (this.world.width > this.preloadBack.width) { // add more
+			this.add.sprite(this.preloadBack.width, -(backgroundHeight - this.world.height), 'background');
+		}
 		this.game.stage.backgroundColor = '#FFF';
 
-		// add a preload stugg
-		var style = { font: "40px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
-		var header = this.add.text(this.world.centerX, this.world.centerY+200, "Loading", style);
+		// lägger till rubriken här med!!
+		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
 		header.anchor.set(0.5);
+
 		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
-		this.load.setPreloadSprite(header);
+
+		// maskoten?
+		var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
+	    mascot.scale.setTo(0.5);
+
+		// tween the logo also
+		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
+          var headerTween = this.add.tween(header);
+		headerTween.to({
+			angle: -header.angle
+		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
+
+		// add a preload stugg
+		//var style = { font: "40px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		//var header = this.add.text(this.world.centerX, this.world.centerY+200, "Loading", style);
+
+		// fixa detta på ngt sätt!! ? 
+
+		var base = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressBase');
+		var basebg = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressBack');
+		this.loader = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressGreen');
+		base.scale.setTo(0.7);
+		basebg.scale.setTo(0.7);
+		this.loader.scale.setTo(0.7);
+		base.anchor.set(0.5);
+		basebg.anchor.set(0.5);
+		this.loader.anchor.set(0.5);
+
+		this.load.setPreloadSprite(this.loader);
+
+
+		/*
+		this.load.image('progressBase', 'assets/game-ui/Base.png');
+        this.load.image('progressBack', 'assets/game-ui/Bg.png');
+        this.load.image('progressGreen', 'assets/game-ui/progressGreen.png');*/
+
+		//header.anchor.set(0.5);
+		//header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		//this.load.setPreloadSprite(header);
 	    
-	    this.load.image('playButton', 'assets/game-ui/playBtn.png');
+	    this.load.image('playButton', 'assets/game-ui/startBtn.png'); 		// ändra denna mellan playBtn och startBtn
 
 	    // level selection
 	    this.load.image('levelSquare', 'assets/square.png');
+
+	    // mascot
+	    
+	    this.load.image('spaceHelmet', 'assets/mascot/space.png');
+
+	    this.load.image('tipBar', 'assets/game-ui/tips.png');
 
 	    // settings panel
 	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
@@ -47,14 +95,17 @@ GAME.Preload.prototype = {
 	    this.load.image('menuBtn', 'assets/game-ui/menu.png');
 	    this.load.image('nextBtn', 'assets/game-ui/next.png');
 	    this.load.image('reloadBtn', 'assets/game-ui/reload.png');
+	    this.load.image('reloadIcon', 'assets/game-ui/reload.png'); 			
 	    this.load.image('settingsBtn', 'assets/game-ui/settings.png');
+	    this.load.image('clearProgress', 'assets/game-ui/clearProgress.png');
 	    this.load.image('yesBtn', 'assets/game-ui/yesBtn.png');
 	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
 
 	    this.load.image('star', 'assets/game-ui/star.png');
 	    this.load.image('starblue', 'assets/game-ui/starBlue.png');
 	    this.load.image('starpink', 'assets/game-ui/starPink.png');
-	    this.load.image('starPoints', 'assets/points.png');
+	    //this.load.image('starPoints', 'assets/points.png');
+	    this.load.image('starPoints', 'assets/game-ui/starPoints.png');
 
 	    // for the levels
 	    this.load.image('levelModule', 'assets/game-ui/levelSelect.png');

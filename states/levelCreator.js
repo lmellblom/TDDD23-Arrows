@@ -17,7 +17,14 @@ GAME.LevelCreator.prototype = {
 	    	"padding": 64
 	    };
 
-		var w = this.gridInfo.nrWidth, h=this.gridInfo.nrHeight;
+	    if (this.world.width > this.world.height) { 
+	    	var change =  this.gridInfo.nrWidth;
+	    	this.gridInfo.nrWidth = this.gridInfo.nrHeight;
+	    	this.gridInfo.nrHeight = change; 
+	    }
+
+
+	    var w = this.gridInfo.nrWidth, h=this.gridInfo.nrHeight;
 
 		this.gridSystem = new Array(w);
 		for (var x=0; x<w; x++){
@@ -52,28 +59,50 @@ GAME.LevelCreator.prototype = {
 
 	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
 	    this.game.stage.backgroundColor = '#FFF';
-	    if (this.currentLevel <=5)
-	    	var background = this.add.sprite(0, -(backgroundHeight - gameHeight), 'background');
-	    else if (this.currentLevel >=6)
-		    var background = this.add.sprite(0, -(1000 - gameHeight), 'spaceBackground');
+	    if (this.currentLevel <=5) {
+	    	var background = this.add.sprite(0, -(backgroundHeight - this.world.height), 'background');
+	    	if (this.world.width > background.width) { // add more
+				var back = this.add.sprite(background.width, -(backgroundHeight - this.world.height), 'background');
+				back.alpha = 0.8;
+			}
+	    }
+	    else if (this.currentLevel >=6){
+		    var background = this.add.sprite(0, -(1000 - this.world.height), 'spaceBackground');
+		    if (this.world.width > background.width) { // add more
+				var back = this.add.sprite(background.width*2, -(1000 - this.world.height), 'spaceBackground');
+				back.scale.x *= -1;
+				if (this.currentLevel > 10)
+					back.alpha = 0.7;
+				else
+					back.alpha = 0.8;
+			}
+		}
 		else {
-			var background = this.add.sprite(0, -(768 - gameHeight), 'background');
+			var background = this.add.sprite(0, -(768 - this.world.height), 'background');
+			if (this.world.width > background.width) { // add more
+				this.add.sprite(background.width, -(768 - this.world.height), 'background');
+			}
 		} 
+
 
 	    background.alpha = this.currentLevel > 10 ? 0.7 : 0.8;
 
-	    var whiteBack = this.game.add.graphics(this.game.width, this.game.height);
+	    var whiteBack = this.game.add.graphics(this.world.width, this.world.height);
 		whiteBack.beginFill("#FFF", 0.2);
 		var padding = 0;
         whiteBack.x = padding;
         whiteBack.y = padding;
-        whiteBack.drawRect(padding, padding, this.game.width-padding*4, this.game.height-padding*4);
+        whiteBack.drawRect(padding, padding, this.world.width-padding*4, this.world.height-padding*4);
 
 	    this.levelText = this.add.text(20, 20, "Level " + this.currentLevel, generalStyle);
         this.scoreText = this.add.text(this.world.width-130, 20, "Clicks: " + this.click, generalStyle);
 
        	// add a settingspanel to the level, handles all buttons and functions.
-       	settingsPanel(this);
+       	settingsPanel(this, "inGame");
+       	this.reloadBtn = self.add.sprite(80, self.world.height-60, 'reloadIcon');
+       	this.reloadBtn.scale.setTo(0.7);
+       	this.reloadBtn.inputEnabled = true;
+       	this.reloadBtn.events.onInputDown.add(this.reloadLevelBtn, this);
 
 	    // built up the grid with empty positions
 	    var theGrid = this.add.group();
@@ -81,8 +110,8 @@ GAME.LevelCreator.prototype = {
 	    for (var x=0; x<this.gridInfo.nrWidth; x++) {
 	    	for (var y=0; y<this.gridInfo.nrHeight; y++) {
 	    		// deside the pixel position
-	    		var posX = this.gridInfo.padding + this.gridInfo.sizes/2 + x * this.gridInfo.sizes;
-	    		var posY = this.gridInfo.padding + this.gridInfo.sizes/2 + y * this.gridInfo.sizes;
+	    		var posX = this.gridInfo.padding + this.gridInfo.sizes/2 + x * this.gridInfo.sizes + this.world.centerX-this.gridInfo.sizes*this.gridInfo.nrWidth/2.0-this.gridInfo.padding;
+	    		var posY = this.gridInfo.padding + this.gridInfo.sizes/2 + y * this.gridInfo.sizes + this.world.centerY-this.gridInfo.sizes*this.gridInfo.nrHeight/2.0-this.gridInfo.padding;
 	    		// create the sprite and place the center in the position
 
 	    		var gridSprite = theGrid.create(posX,posY,'empty');
@@ -114,12 +143,16 @@ GAME.LevelCreator.prototype = {
 	        this.starBar.anchor.set(0.5);
 	        this.points = 0;
 	        this.maxPoints = this.levelData.stars.length;
-	        this.starPoints = this.add.text(this.world.centerX, 42, this.points + " / " + this.maxPoints, smallStyle);
+	        this.starPoints = this.add.text(this.world.centerX+13, 44, this.points + " / " + this.maxPoints, smallStyle);
 	        this.starPoints.anchor.set(0.5);
 
         	// set out the star in the grid, a foor loop
         	this.levelData.stars.forEach(function(elements){
-        		var starElement = this.gridSystem[elements.x][elements.y];
+
+	    		if (this.world.width > this.world.height)
+	    			var starElement = this.gridSystem[elements.y][elements.x];
+	    		else
+        			var starElement = this.gridSystem[elements.x][elements.y];
         		starElement.setType("star");
         		starElement.setColor(elements.color);
 	    		starElement.sprite.scale.setTo(0.5);
@@ -132,7 +165,10 @@ GAME.LevelCreator.prototype = {
         if(this.levelData.blackHole != undefined) {
         	// set out the star in the grid, a foor loop
         	this.levelData.blackHole.forEach(function(elements){
-        		var el = this.gridSystem[elements.x][elements.y];
+        		if (this.world.width > this.world.height)
+        			var el = this.gridSystem[elements.y][elements.x];
+        		else
+        			var el = this.gridSystem[elements.x][elements.y];
         		el.setType("hole");
 	    		//el.sprite.scale.setTo(0.5);
 	    		el.changeTexture();	
@@ -142,7 +178,10 @@ GAME.LevelCreator.prototype = {
         // -----------
 
 	    // add the goal
-	    var goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
+	    if (this.world.width > this.world.height)
+	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].y][this.levelData.goalInfo[0].x];
+	   	else
+	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
 	    goalElement.setColor(this.levelData.goalInfo[0].color);
 	    goalElement.setType("goal");
 		goalElement.changeTexture();
@@ -153,9 +192,33 @@ GAME.LevelCreator.prototype = {
 
 	    // add all the arrows
 	     this.levelData.arrows.forEach(function(elements){
-	     	var arrow = this.gridSystem[elements.x][elements.y];
+	     	if (this.world.width > this.world.height)
+	     		var arrow = this.gridSystem[elements.y][elements.x];
+	     	else
+	     		var arrow = this.gridSystem[elements.x][elements.y];
 	     	arrow.setColor(elements.color);
-	     	arrow.setType("arrow", elements.dir);
+
+	     	// change the direction on the arrow if horizontal play!! 
+	     	var arrowDirection = elements.dir;
+	     	if (this.world.width > this.world.height) {
+	     		switch(arrowDirection) {
+    				case "right":
+        				arrowDirection="down";
+        				break;
+    				case "down":
+        				arrowDirection="right";
+       				 break;
+       				case "up":
+        				arrowDirection="left";
+        				break;
+    				case "left":
+        				arrowDirection="up";
+       				break;
+       			}
+
+	     	}
+
+	     	arrow.setType("arrow", arrowDirection);
 	     	arrow.setSelected(elements.selected);
 	     	arrow.changeTexture();
 
@@ -182,8 +245,8 @@ GAME.LevelCreator.prototype = {
 		    var placedArrows = 0;
 
 		    while (placedArrows!=nrRandomArrows) {
-		    	var xPos = getRandom(0, 4); //  TODO, globala variabler senare
-		    	var yPos = getRandom(0, 7); 
+		    	var xPos = getRandom(0, this.gridInfo.nrWidth-1); //  TODO, globala variabler senare
+		    	var yPos = getRandom(0, this.gridInfo.nrHeight-1); 
 		    	var element = this.gridSystem[xPos][yPos];
 		    	if(element.isType("empty")) {
 		    		// slumpe direction och selected
@@ -330,6 +393,15 @@ GAME.LevelCreator.prototype = {
 			}
 			}
 
+
+
+		 	if(element==undefined) {
+				if(playMusic) this.gameOverSound.play();
+				this.gameOver = "You walked out of the field and run out of active arrows.."; // ändra denna text sen. 
+				this.showModal();
+			}
+			else {
+
 			if (element.isGoal()) {
 				if(this.levelData.stars != undefined && this.points==this.maxPoints) {
 					if(playMusic) this.winSound.play();
@@ -352,8 +424,7 @@ GAME.LevelCreator.prototype = {
 				//console.log("woops! the arrow reached a black hole and disapeared!");
 				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
 			}
-			
-			
+
 			if (!element.isGoal() && this.availableMoves()==0) {
 				//console.log("inga drag kvar.. synd!");
 				if(playMusic) this.gameOverSound.play();
@@ -361,6 +432,7 @@ GAME.LevelCreator.prototype = {
 				this.showModal();
 				//console.log(this.levelData.tip);
 			}
+		}
 
 			// ändra detta gridElement till en empty igen
 			gridElement.resetToEmpty();
@@ -490,6 +562,11 @@ var storedNames = JSON.parse(localStorage["names"]);
         text.anchor.set(0.5);
         modalGroup.add(text);
 
+        
+        var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
+        tipBar.scale.setTo(0.8);
+        modalGroup.add(tipBar);
+
         var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.gameOver, nStyle);
         tip.anchor.set(0.5);
         modalGroup.add(tip);
@@ -561,6 +638,10 @@ var storedNames = JSON.parse(localStorage["names"]);
         	modalGroup.add(starsT);
     	}
 
+    	var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
+    	tipBar.scale.setTo(0.8);
+        modalGroup.add(tipBar);
+
         var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.levelData.tip, nStyle);
         tip.anchor.set(0.5);
         modalGroup.add(tip);
@@ -604,9 +685,58 @@ var storedNames = JSON.parse(localStorage["names"]);
             this.nextLevel();
         }, this);
 	},
-	showInfo : function() {
-		console.log("visa info?");
+	reloadLevelBtn : function() {
 
+		var modalGroup = this.add.group();
+
+		var modal = this.game.add.graphics(this.game.width, this.game.height);
+		modal.beginFill("0x000000", 0.7);
+        modal.x = 0;
+        modal.y = 0;
+        modal.drawRect(0, 0, this.game.width, this.game.height);
+        modal.inputEnabled = true;
+        modalGroup.add(modal);
+
+        var module = this.add.sprite(this.world.centerX ,this.world.centerY , 'panelModule');
+        module.scale.setTo(0.9, 0.9);
+        module.anchor.set(0.5,0.5);
+        modalGroup.add(module);
+
+        var st = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Do you want to restart the level?", st);
+        text.anchor.set(0.5);
+        modalGroup.add(text);
+
+        // add menu button, next level and try level again
+        var noBtn = this.add.sprite(this.world.centerX-70, this.world.centerY+80, 'noBtn');
+        var yesBtn = this.add.sprite(this.world.centerX+70, this.world.centerY+80, 'yesBtn');
+        noBtn.anchor.set(0.5);
+        yesBtn.anchor.set(0.5);
+        yesBtn.scale.setTo(0.7);
+        noBtn.scale.setTo(0.7);
+        noBtn.inputEnabled = true;
+        yesBtn.inputEnabled = true;
+        modalGroup.add(noBtn);
+        modalGroup.add(yesBtn);
+
+        noBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) clickSound.play();
+        	this.settingsBtn.inputEnabled = true;
+        	modalGroup.visible = false;
+        }, this);
+        yesBtn.events.onInputDown.add(function (e,pointer){
+        	if(playMusic) clickSound.play();
+        	this.settingsBtn.inputEnabled = true;
+        	modalGroup.visible = false;
+            this.resetThisLevel();
+        }, this);
+
+       modal.events.onInputDown.add(function (e, pointer) {
+            this.settingsBtn.inputEnabled = true;
+        	modalGroup.visible = false;
+        }, this);
+
+       //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
 
 
 	},
@@ -622,7 +752,10 @@ var storedNames = JSON.parse(localStorage["names"]);
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
         //  Then let's go back to the main menu.
-        this.state.start('SelectLevels');
+        //this.state.start('SelectLevels');
+        var pageStart = Math.floor((this.currentLevel-1)/5); //show the page which indicate the chapter you are on. page 2 är chapter 1 vilket är nivå 1-5 etc...
+        
+        this.state.start('SelectLevels', true, false, pageStart+2);
 
     }
 };
