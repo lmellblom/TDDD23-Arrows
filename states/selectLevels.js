@@ -3,11 +3,39 @@ var GAME = GAME || {};
 GAME.SelectLevels = function() {};
 
 
+
 GAME.SelectLevels.prototype = {
+	init: function(pageId) { // add a custom variable to tell which page to show first
+		this.currentPage = pageId || 2; 
+	},
 	create: function() {
 
+		this.game.stage.backgroundColor = '#FFF';
+
+		/*var element = document.getElementsByTagName('body')[0];
+		var hammer    = new Hammer.Manager(element);
+		var swipe     = new Hammer.Swipe();
+
+		hammer.add(swipe);
+
+		hammer.on("swiperight", function(ev, self) {
+			console.log(self);
+	    	
+	    	if (this.currentPage >=2) {
+		    	showSpecificChapter(this.currentPage-1, false);
+		    	console.log( ev.type +" gesture detected.");
+		    }
+		}, this);
+
+		hammer.on("swipeleft", function(ev, self) {
+	    	if (this.currentPage<this.pages){
+	    		showSpecificChapter(this.currentPage+1, false);
+	    		console.log( ev.type +" gesture detected.");
+	   	 	}
+		}, this);*/
+
 		this.pages = numberOfLevels/5 + 1; // +1 för inforutan först!!
-		this.currentPage = 2;
+		//this.currentPage = 2;
 
 		this.drawStars = [];
 		this.drawLevels = [];
@@ -16,9 +44,9 @@ GAME.SelectLevels.prototype = {
 		this.clickSound = this.add.audio('clickSound');
 		this.modalGroup = this.add.group();
 
-		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - gameHeight), 'background');
-		var spaceBack = this.add.sprite(this.game.width, -(1000 - gameHeight), 'spaceBackground'); // different kind of graphics when different stages sort of?
-		//var snowBack = this.add.sprite(2*this.game.width, -(768 - gameHeight), 'background'); 
+		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
+		var spaceBack = this.add.sprite(this.game.width, -(1000 - this.world.height), 'spaceBackground'); // different kind of graphics when different stages sort of?
+		//var snowBack = this.add.sprite(2*this.game.width, -(768 - gameHeight), 'background');
 		this.modalGroup.add(backGreen);
 		this.modalGroup.add(spaceBack);
 		//this.modalGroup.add(snowBack);
@@ -34,7 +62,9 @@ GAME.SelectLevels.prototype = {
 
         // lägga till en knapp för om man vill radera sina framsteg
         var st = { font: "16px Carter One", fill: "#000", align: "left",  stroke: "#000", strokeThickness: 0 };
-        var change = this.add.text(-this.game.width+this.game.width/5, this.game.height/2 + 50, "Clear your progress in the game", st);
+        //var change = this.add.text(-this.game.width+this.game.width/5, this.game.height/2 + 50, "Clear your progress in the game", st);
+        var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2 + 50,'clearProgress');
+        change.anchor.set(0.5);
         change.inputEnabled =true;
         change.events.onInputDown.add(this.clearProgress, this);
 
@@ -60,16 +90,21 @@ GAME.SelectLevels.prototype = {
 	    this.drawTheLevels();
 
 	    // add settingspanel
-	    settingsPanel(this);
+	    settingsPanel(this, "levelSelect");
+
+	    var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
+	    mascot.scale.setTo(0.5);
+	    this.helmet = this.add.sprite(this.world.width - 170, this.world.height-178, 'spaceHelmet');
+	    this.helmet.scale.setTo(0.5);
 
 	    // the arrow do not work correctly att the moment!! 
-	    this.rightArrow = this.add.sprite(this.world.width - 30, this.world.centerY+10, 'rightArrow');
+	    this.rightArrow = this.add.sprite(this.world.centerX + 200, this.world.centerY+10, 'rightArrow');
 	    this.rightArrow.scale.setTo(0.8);
 	    this.rightArrow.anchor.set(0.5);
 	    this.rightArrow.dir = "right";
 
 	    // left arrow, sprite.angle
-       	this.leftArrow = this.add.sprite(30, this.world.centerY+10, 'rightArrow');
+       	this.leftArrow = this.add.sprite(this.world.centerX - 200, this.world.centerY+10, 'rightArrow');
        	this.leftArrow.angle = 180;
 	    this.leftArrow.scale.setTo(0.8);
 	    this.leftArrow.anchor.set(0.5);
@@ -83,12 +118,6 @@ GAME.SelectLevels.prototype = {
 	    this.arrowButtonG.setAll('inputEnabled', true);
 	    // using the power of callAll we can add the same input event to all coins in the group:
 	    this.arrowButtonG.callAll('events.onInputDown.add', 'events.onInputDown', this.arrowClicked, this);
-
-		// my name
-		var style = { font: "12px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 2 };
-		var name = this.add.text(this.world.centerX, this.world.height-20, "by Linnéa Mellblom", style);
-		name.anchor.set(0.5);
-
 
 		// lägga till små rektanglar länst ned för att kunna trycka på, typ gå mellan sidor snabbt.
 		// levelSquare
@@ -105,6 +134,8 @@ GAME.SelectLevels.prototype = {
 		}
 		this.allSquares.setAll('inputEnabled', true);
 	    this.allSquares.callAll('events.onInputDown.add', 'events.onInputDown', this.showSpecificChapter, this);
+
+	    this.showSpecificChapter(this.currentPage, false);
 
 
 
@@ -133,7 +164,7 @@ GAME.SelectLevels.prototype = {
 
 	        // adding the number and background to the levels
 	        // får plats 5 stycken... 
-	        var startX = 80 + nr*this.game.width;
+	        var startX = this.world.centerX-140 + nr*this.game.width;
 	        var startY = this.world.centerY - 30;
 
 //	        console.log(madeLevelsStars.length + " hur många nivåer?");
@@ -208,6 +239,8 @@ GAME.SelectLevels.prototype = {
 	arrowClicked : function(button) {
 		if (!this.tweens.isTweening(this.modalGroup)) { // to prevent the module to slide even more if it is already moving!
 
+
+
 		if(button.dir==="left" && this.currentPage>1) {
 	    		var slide = '+' + this.world.width; 
 	    		this.rightArrow.alpha = 1;
@@ -248,24 +281,40 @@ GAME.SelectLevels.prototype = {
 	    	}
 	    }
 
+	    this.helmet.visible = this.currentPage >=3 ? true : false;
+
 	},
 	update: function() {
 
 	},
-	showSpecificChapter : function (number) {
-		var i = number.page-1;
+	showSpecificChapter : function (number, shoudlTween) {
+		var tweening = shoudlTween; 
+		var number = number.page || number;
+		var i = number-1;
+
+		// show helmet or not?
+
+		this.helmet.visible = number >=3 ? true : false;
+
+
 		this.allSquares.setAll('alpha', 0.5);
 		// reset all other elemets
 		this.pageSelector[i].alpha = 1.0;
 
-		this.currentPage = number.page; 
+		this.currentPage = number; 
 
+		// to be able to use both. 
+		if (!tweening) {
+			this.modalGroup.x = this.world.width-this.world.width*i;
+		}
+		else {
 		// tween to right position.. 
 		this.add.tween(this.modalGroup)
 			.to({
 				x: this.world.width - this.world.width * i
 			}, 500, "Linear")
 			.start();
+		}
 		this.leftArrow.alpha = 1.0;
 		this.rightArrow.alpha = 1.0;
 		if (this.currentPage==1) {
@@ -275,8 +324,9 @@ GAME.SelectLevels.prototype = {
 	    else if (this.currentPage==this.pages) {
 	    	this.rightArrow.alpha = 0.0;
 	    }
+
 	},
-	showInfo : function() {
+	firstSettingsBtn : function() {
 		// går till informationssidan som ligger längst till vänster om alla chapters
 		this.rightArrow.alpha = 1.0;
 		this.add.tween(this.modalGroup)

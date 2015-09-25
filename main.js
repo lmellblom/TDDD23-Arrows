@@ -9,7 +9,24 @@ var gameHeight =  640; // 520 640+520 = 1160 // 1181 är bakgrunden
 var backgroundHeight = 1181; 
 
 
-GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
+        var w = window.innerWidth ;//* pixelRatio,
+        var h = window.innerHeight ;//* pixelRatio;
+
+        var aspectRatioDevice = w/h;
+         
+        var aspectRatioSafeZone = gameWidth / gameHeight;
+        console.log("safe zone " + aspectRatioSafeZone + " device ratio: " + aspectRatioDevice);
+        var extraWidth = 0, extraHeight = 0;
+        if (aspectRatioSafeZone < aspectRatioDevice) {
+        // have to add game pixels vertically in order to fill the device screen
+        extraWidth = aspectRatioDevice * gameHeight - gameWidth;
+        } else {
+        // have to add game pixels horizontally
+        extraHeight = gameWidth / aspectRatioDevice - gameHeight;
+        }
+
+//GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
+GAME.game = new Phaser.Game(gameWidth + extraWidth, gameHeight + extraHeight, Phaser.AUTO, '');
 
 var player;
 var numberOfLevels = 15;
@@ -43,7 +60,7 @@ var obstacleGroup;
 var availableMoves;
 var allLevelData;
 
-// variables that specifies if the backgroundm music and the clicks should be playes
+// variables that specifies if the background music and the clicks should be playes
 var playMusic = true;
 var backCalmMusic = true;
 var backgroundMusicPlayer;
