@@ -10,28 +10,26 @@ GAME.SelectLevels.prototype = {
 
 		this.game.stage.backgroundColor = '#FFF';
 
-		/* TESTING swipe. Maybe use or not.. 
+		//TESTING swipe. Maybe use or not.. 
 		var element = document.getElementsByTagName('body')[0];
 		var hammer    = new Hammer.Manager(element);
 		var swipe     = new Hammer.Swipe();
 
 		hammer.add(swipe);
 
-		hammer.on("swiperight", function(ev, self) {
-			console.log(self);
-	    	
+		hammer.on("swiperight", ((ev) => {    	
 	    	if (this.currentPage >=2) {
-		    	showSpecificChapter(this.currentPage-1, false);
+		    	this.showSpecificChapter(this.currentPage-1, true);
 		    	console.log( ev.type +" gesture detected.");
 		    }
-		}, this);
+		}));
 
-		hammer.on("swipeleft", function(ev, self) {
+		hammer.on("swipeleft", ((ev) => {    	
 	    	if (this.currentPage<this.pages){
-	    		showSpecificChapter(this.currentPage+1, false);
-	    		console.log( ev.type +" gesture detected.");
-	   	 	}
-		}, this);*/
+		    	this.showSpecificChapter(this.currentPage+1, true);
+		    	console.log( ev.type +" gesture detected.");
+		    }
+		}));
 
 		this.pages = numberOfLevels/5 + 1; // +1 för inforutan först!!
 		this.drawStars = [];
@@ -63,7 +61,7 @@ GAME.SelectLevels.prototype = {
         this.modalGroup.add(change);
 		
 		// the logo is here also
-		/*var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
 		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
 		header.anchor.set(0.5);
 		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
@@ -73,7 +71,7 @@ GAME.SelectLevels.prototype = {
           var headerTween = this.add.tween(header);
 		headerTween.to({
 			angle: -header.angle
-		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);*/
+		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
 		// draw stars and levels
 	    this.drawTheLevels();
@@ -162,7 +160,7 @@ GAME.SelectLevels.prototype = {
 	        	var textureName = isActive ? "activeLevel" : "inactiveLevel";
 	        	var levelNr = i+1;
 	        	var xPos = startX + 70*j;
-	        	var yPos = startY+40 + (isActive? 2 : 0 );	 // set this value to another when only have 5 levels on each module. when ten use startY else another
+	        	var yPos = startY + 40 + (isActive? 2 : 0 );	 // set this value to another when only have 5 levels on each module. when ten use startY else another
 
 	        	var levelSprite = this.add.sprite(xPos,yPos,textureName);
 	        	levelSprite.level = levelNr;
@@ -172,21 +170,30 @@ GAME.SelectLevels.prototype = {
 
 	        	if(isActive) levelSprite.tint = 0xf1d4a6;
 
-	        	var text = this.add.text(xPos+2, yPos+2, levelNr, numberStyle);
+	        	var text = this.add.text(xPos +2, yPos + (isActive? -2 : +4), levelNr, numberStyle);
 	        	text.anchor.set(0.5);    	
 	    		levelClick.add(text);    		
 	    		levelGroup.add(levelSprite);
 
 	        	// lägg till stjärnor under beroende på om man klarat eller inte
+	        	var spacing = 12;
+	        	var paddY = 16;
 	        	if (madeLevelsStars[i]!= 0) { 
-		        	for (var index=0; index<3; index++) {
-			        	var starsT = this.add.sprite(xPos-15 + index*15 ,yPos+40, 'star');
-			        	starsT.scale.setTo(0.25);
-			        	starsT.anchor.set(0.5);
-			        	var a = index+1 <= madeLevelsStars[i] ? 1.0 : 0.3; 
-			        	starsT.alpha = a;
-			        	this.drawStars.push(starsT);
-			        	this.modalGroup.add(starsT);
+		        	for (var indexStar=0; indexStar<3; indexStar++) {
+
+		        		var addStar = this.add.sprite(xPos-spacing + indexStar*spacing ,yPos+paddY, 'smallStar');
+		        		addStar.anchor.set(0.5);
+		        		addStar.scale.setTo(0.65);
+		        		addStar.angle = 9;
+
+		        		// tint the star depending on how you many stars you got
+		        		if (indexStar + 1 > madeLevelsStars[i]) {
+		        			addStar.tint = 0x000000;
+		        			addStar.alpha = 0.3;
+		        		} 
+
+		        		this.drawStars.push(addStar);
+			        	levelGroup.add(addStar);
 			    	}
 		    	}
 

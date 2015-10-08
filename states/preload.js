@@ -77,6 +77,9 @@ GAME.Preload.prototype = {
 
 	    this.load.image('tipBar', 'assets/game-ui/tips.png');
 
+	    // stars levelselct
+	    this.load.image('smallStar', 'assets/star.png');
+
 	    // settings panel
 	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
 	    this.load.image('banSound', 'assets/game-ui/banSound.png');
