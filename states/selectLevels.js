@@ -2,8 +2,6 @@ var GAME = GAME || {};
 
 GAME.SelectLevels = function() {};
 
-
-
 GAME.SelectLevels.prototype = {
 	init: function(pageId) { // add a custom variable to tell which page to show first
 		this.currentPage = pageId || 2; 
@@ -12,7 +10,8 @@ GAME.SelectLevels.prototype = {
 
 		this.game.stage.backgroundColor = '#FFF';
 
-		/*var element = document.getElementsByTagName('body')[0];
+		/* TESTING swipe. Maybe use or not.. 
+		var element = document.getElementsByTagName('body')[0];
 		var hammer    = new Hammer.Manager(element);
 		var swipe     = new Hammer.Swipe();
 
@@ -35,21 +34,15 @@ GAME.SelectLevels.prototype = {
 		}, this);*/
 
 		this.pages = numberOfLevels/5 + 1; // +1 för inforutan först!!
-		//this.currentPage = 2;
-
 		this.drawStars = [];
 		this.drawLevels = [];
-
-
 		this.clickSound = this.add.audio('clickSound');
 		this.modalGroup = this.add.group();
 
 		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 		var spaceBack = this.add.sprite(this.game.width, -(1000 - this.world.height), 'spaceBackground'); // different kind of graphics when different stages sort of?
-		//var snowBack = this.add.sprite(2*this.game.width, -(768 - gameHeight), 'background');
 		this.modalGroup.add(backGreen);
 		this.modalGroup.add(spaceBack);
-		//this.modalGroup.add(snowBack);
 
 		// add information about the game here
 		var info = "Game by Linnéa Mellblom. More info will come up shortly! Enjoy.";
@@ -59,24 +52,20 @@ GAME.SelectLevels.prototype = {
         infoS.align = "left";
         var theInfo = this.add.text(-this.game.width+this.game.width/2, this.game.height/2-70, info, infoS);
         theInfo.anchor.set(0.5);
+        this.modalGroup.add(theInfo);
 
-        // lägga till en knapp för om man vill radera sina framsteg
-        var st = { font: "16px Carter One", fill: "#000", align: "left",  stroke: "#000", strokeThickness: 0 };
-        //var change = this.add.text(-this.game.width+this.game.width/5, this.game.height/2 + 50, "Clear your progress in the game", st);
+        // button to clear your prograss. 
         var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2 + 50,'clearProgress');
         change.anchor.set(0.5);
+        change.scale.setTo(0.8);
         change.inputEnabled =true;
         change.events.onInputDown.add(this.clearProgress, this);
-
-        this.modalGroup.add(theInfo);
         this.modalGroup.add(change);
 		
-
 		// the logo is here also
-		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
+		/*var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
 		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
 		header.anchor.set(0.5);
-
 		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 
 		// tween the logo also
@@ -84,7 +73,7 @@ GAME.SelectLevels.prototype = {
           var headerTween = this.add.tween(header);
 		headerTween.to({
 			angle: -header.angle
-		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
+		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);*/
 
 		// draw stars and levels
 	    this.drawTheLevels();
@@ -92,6 +81,7 @@ GAME.SelectLevels.prototype = {
 	    // add settingspanel
 	    settingsPanel(this, "levelSelect");
 
+	    // the mascot
 	    var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
 	    mascot.scale.setTo(0.5);
 	    this.helmet = this.add.sprite(this.world.width - 170, this.world.height-178, 'spaceHelmet');
@@ -135,16 +125,13 @@ GAME.SelectLevels.prototype = {
 		this.allSquares.setAll('inputEnabled', true);
 	    this.allSquares.callAll('events.onInputDown.add', 'events.onInputDown', this.showSpecificChapter, this);
 
+	    // show the specific page on the level selection.
 	    this.showSpecificChapter(this.currentPage, false);
-
-
-
 	},
 	drawTheLevels : function() {
 		var levelNames = ["Find your way home", "Watch out for black holes!", "The stars are shining"];
 		var styleLevelName = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
 
-		
         var numberStyle = { font: "24px Skranji", fill: "#FFF", align: "center", fontWeight: "bold",  stroke: "#000", strokeThickness: 5};
         var levelGroup = this.add.group();
         var levelClick = this.add.group();
@@ -167,8 +154,7 @@ GAME.SelectLevels.prototype = {
 	        var startX = this.world.centerX-140 + nr*this.game.width;
 	        var startY = this.world.centerY - 30;
 
-//	        console.log(madeLevelsStars.length + " hur många nivåer?");
-
+	        // place the level sprites with the right level number
 	        for (var j=0; j<5; j++) {
 	        	i = nr *5+j;
 
@@ -176,7 +162,7 @@ GAME.SelectLevels.prototype = {
 	        	var textureName = isActive ? "activeLevel" : "inactiveLevel";
 	        	var levelNr = i+1;
 	        	var xPos = startX + 70*j;
-	        	var yPos = startY+40;	 // set this value to another when only have 5 levels on each module. when ten use startY else another
+	        	var yPos = startY+40 + (isActive? 2 : 0 );	 // set this value to another when only have 5 levels on each module. when ten use startY else another
 
 	        	var levelSprite = this.add.sprite(xPos,yPos,textureName);
 	        	levelSprite.level = levelNr;
@@ -184,27 +170,27 @@ GAME.SelectLevels.prototype = {
 	        	levelSprite.scale.setTo(0.6, 0.6);
 	        	this.drawLevels.push(levelSprite);
 
+	        	if(isActive) levelSprite.tint = 0xf1d4a6;
+
 	        	var text = this.add.text(xPos+2, yPos+2, levelNr, numberStyle);
-	        	// lägg till stjärnor under beroende på om man klarat eller inte
-
-	        	
-	        	if (madeLevelsStars[i]!= 0) { 
-	        	for (var index=0; index<3; index++) {
-		        	var starsT = this.add.sprite(xPos-15 + index*15 ,yPos+40, 'star');
-		        	starsT.scale.setTo(0.25);
-		        	starsT.anchor.set(0.5);
-		        	var a = index+1 <= madeLevelsStars[i] ? 1.0 : 0.3; 
-		        	starsT.alpha = a;
-		        	this.drawStars.push(starsT);
-		        	this.modalGroup.add(starsT);
-		    	}
-		    }
-
-	    		text.anchor.set(0.5);    	
-
+	        	text.anchor.set(0.5);    	
 	    		levelClick.add(text);    		
-	    		levelGroup.add(levelSprite); 		
+	    		levelGroup.add(levelSprite);
 
+	        	// lägg till stjärnor under beroende på om man klarat eller inte
+	        	if (madeLevelsStars[i]!= 0) { 
+		        	for (var index=0; index<3; index++) {
+			        	var starsT = this.add.sprite(xPos-15 + index*15 ,yPos+40, 'star');
+			        	starsT.scale.setTo(0.25);
+			        	starsT.anchor.set(0.5);
+			        	var a = index+1 <= madeLevelsStars[i] ? 1.0 : 0.3; 
+			        	starsT.alpha = a;
+			        	this.drawStars.push(starsT);
+			        	this.modalGroup.add(starsT);
+			    	}
+		    	}
+
+	    		 		
 	        }
     	}
 
@@ -222,9 +208,7 @@ GAME.SelectLevels.prototype = {
 
 	},
 	resetDrawing : function () {
-
-
-		// alltsåå.. kommer bli så sämst detta...
+		// alltsåå.. kommer bli så sämst detta... TODO : ändra till bättreeee
 		this.drawLevels.forEach(function(level){
 			level.kill();
 		}, this);
@@ -234,12 +218,9 @@ GAME.SelectLevels.prototype = {
 		this.drawLevels = [];
 		this.drawStars = [];
 		this.drawTheLevels();
-	}
-	,
+	},
 	arrowClicked : function(button) {
 		if (!this.tweens.isTweening(this.modalGroup)) { // to prevent the module to slide even more if it is already moving!
-
-
 
 		if(button.dir==="left" && this.currentPage>1) {
 	    		var slide = '+' + this.world.width; 
@@ -292,15 +273,12 @@ GAME.SelectLevels.prototype = {
 		var number = number.page || number;
 		var i = number-1;
 
-		// show helmet or not?
-
+		// show helmet or not? depending on the space levels or not
 		this.helmet.visible = number >=3 ? true : false;
-
 
 		this.allSquares.setAll('alpha', 0.5);
 		// reset all other elemets
 		this.pageSelector[i].alpha = 1.0;
-
 		this.currentPage = number; 
 
 		// to be able to use both. 
@@ -368,7 +346,7 @@ GAME.SelectLevels.prototype = {
         module.scale.setTo(0.9, 0.9);
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
-        var st = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
+        var st = { font: "18px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
 
         var text = this.add.text(this.world.centerX, this.world.centerY-20, "Are you sure you want \n to clear your progress?", st);
         text.anchor.set(0.5);
@@ -415,8 +393,6 @@ GAME.SelectLevels.prototype = {
             this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
-
-
 	},
 
 };

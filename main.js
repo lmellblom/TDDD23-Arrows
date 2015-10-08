@@ -5,33 +5,32 @@ see tutorial http://codetowin.io/tutorials/nback-game-states-and-menus/
 var GAME = GAME || {};
 
 var gameWidth = 448;
-var gameHeight =  640; // 520 640+520 = 1160 // 1181 är bakgrunden
+var gameHeight =  640; 
 var backgroundHeight = 1181; 
 
+/* for scaling everything, adding extra padding (background) to to the game. */
+var w = window.innerWidth ;//* pixelRatio,
+var h = window.innerHeight ;//* pixelRatio;
 
-        var w = window.innerWidth ;//* pixelRatio,
-        var h = window.innerHeight ;//* pixelRatio;
-
-        var aspectRatioDevice = w/h;
-         
-        var aspectRatioSafeZone = gameWidth / gameHeight;
-        console.log("safe zone " + aspectRatioSafeZone + " device ratio: " + aspectRatioDevice);
-        var extraWidth = 0, extraHeight = 0;
-        if (aspectRatioSafeZone < aspectRatioDevice) {
-        // have to add game pixels vertically in order to fill the device screen
-        extraWidth = aspectRatioDevice * gameHeight - gameWidth;
-        } else {
-        // have to add game pixels horizontally
-        extraHeight = gameWidth / aspectRatioDevice - gameHeight;
-        }
+var aspectRatioDevice = w/h; 
+var aspectRatioSafeZone = gameWidth / gameHeight;
+var extraWidth = 0, extraHeight = 0;
+if (aspectRatioSafeZone < aspectRatioDevice) {
+// have to add game pixels vertically in order to fill the device screen
+extraWidth = aspectRatioDevice * gameHeight - gameWidth;
+} else {
+// have to add game pixels horizontally
+extraHeight = gameWidth / aspectRatioDevice - gameHeight;
+}
 
 //GAME.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, '');
 GAME.game = new Phaser.Game(gameWidth + extraWidth, gameHeight + extraHeight, Phaser.AUTO, '');
 
+
+// ===================== GLOBAL VARIABELS AND SETTINGS =======================================
 var player;
 var numberOfLevels = 15;
 
-//localStorage.clear();
 
 // init that you have not made any levels yet!! OR get from the storage if the user have been on the site before !!!! 
   var madeLevels = []; // a list that holds if the levels is done or not (t/f)
@@ -66,10 +65,6 @@ var backCalmMusic = true;
 var backgroundMusicPlayer;
 var clickSound;
 
-	    var grids = [
-	    	{"width": 5, "height": 8}
-	    ];
-
 
 // add all the states that the game has
 GAME.game.state.add('Boot', GAME.Boot);
@@ -96,6 +91,7 @@ WebFontConfig = {
 
 };
 
+// general styles to the font in order to get a nice feeling
 var generalStyle = { font: "25px Carter One", fill: "#FFF", align: "center",
  stroke: "#000", strokeThickness: 5 };
   var mediumStyle = { font: "18px Carter One", fill: "#FFF", align: "center",
@@ -103,7 +99,6 @@ var generalStyle = { font: "25px Carter One", fill: "#FFF", align: "center",
 
  var smallStyle = { font: "14px Carter One", fill: "#FFF", align: "center",
  stroke: "#000", strokeThickness: 3 };
-
 
 // begin with the preloading
 GAME.game.state.start('Boot');

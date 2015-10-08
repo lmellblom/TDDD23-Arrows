@@ -4,7 +4,7 @@ GAME.LevelCreator = function() {};
 
 GAME.LevelCreator.prototype = {
 
-	init: function(levelId) { // add a custom variable to tell which level to load. 
+	init: function(levelId) { 
 		this.currentLevel = levelId; 
 
 		// load the leveldata for this particular level. 
@@ -12,52 +12,52 @@ GAME.LevelCreator.prototype = {
 
 	    this.gridInfo = {
 	    	"sizes" : 64,
-	    	"nrWidth": 5,
-	    	"nrHeight": 8,
 	    	"padding": 64
 	    };
 
+	    // add extra information about the grid, is located in the levelData so set it to gridIndo
+	    this.gridInfo.nrWidth = this.levelData.nrWidth;
+	    this.gridInfo.nrHeight = this.levelData.nrHeight;
+
+	    // If the canvas of the game is larger in width than height, flip
+	    // the grid. 
 	    if (this.world.width > this.world.height) { 
-	    	var change =  this.gridInfo.nrWidth;
+	    	var change = this.gridInfo.nrWidth;
 	    	this.gridInfo.nrWidth = this.gridInfo.nrHeight;
 	    	this.gridInfo.nrHeight = change; 
 	    }
 
-
+	    // Create a new array and init with null to place sprites here later
 	    var w = this.gridInfo.nrWidth, h=this.gridInfo.nrHeight;
-
 		this.gridSystem = new Array(w);
 		for (var x=0; x<w; x++){
 			this.gridSystem[x] = new Array(h);
 		}
-		//init with null, place the sprites here later
 		for (var x=0; x<w; x++){
 			for (var y=0; y<h; y++){
 				this.gridSystem[x][y] = null; 
 			}
 		}
 
+		// A lot of different variables 
 		this.inGoal = false;
 		this.availableMoves; 
 		this.arrowGroup;
 		this.click = 0;
 		this.scoreText;
-		
 		this.showSettings = false;
-
 		this.gameOver = "";
 	}, 
 
 	create: function() {
-
-		// sounds, mayb add this in the main instead as global?
-		//clickSound
+		// sounds, maybe add this in the main instead as global? TODO
 		this.winSound = this.add.audio('winSound');
 		this.starSound = this.add.audio('starSound');
 		this.arrowSound = this.add.audio('arrowSound');
 		this.gameOverSound = this.add.audio('gameOverSound');
 
-	    //  A simple background for our game -> this will add a background image instead. this.add.sprite(0, 0, 'sky'); //73FF8F
+		// Handles the background and which to place
+		// Also add more background if the world is bigger than the background
 	    this.game.stage.backgroundColor = '#FFF';
 	    if (this.currentLevel <=5) {
 	    	var background = this.add.sprite(0, -(backgroundHeight - this.world.height), 'background');
@@ -84,42 +84,42 @@ GAME.LevelCreator.prototype = {
 			}
 		} 
 
-
 	    background.alpha = this.currentLevel > 10 ? 0.7 : 0.8;
 
+	    // setting a white layer over, to easier see the grid
 	    var whiteBack = this.game.add.graphics(this.world.width, this.world.height);
-		whiteBack.beginFill("#FFF", 0.2);
+		whiteBack.beginFill("#FFF", 0.15);
 		var padding = 0;
         whiteBack.x = padding;
         whiteBack.y = padding;
+        whiteBack.z = -1;
         whiteBack.drawRect(padding, padding, this.world.width-padding*4, this.world.height-padding*4);
 
+        // add the level and score text in the top
 	    this.levelText = this.add.text(20, 20, "Level " + this.currentLevel, generalStyle);
         this.scoreText = this.add.text(this.world.width-130, 20, "Clicks: " + this.click, generalStyle);
 
-       	// add a settingspanel to the level, handles all buttons and functions.
+       	// Add a settingspanel to the level, handles all buttons and functions.
        	settingsPanel(this, "inGame");
        	this.reloadBtn = self.add.sprite(80, self.world.height-60, 'reloadIcon');
        	this.reloadBtn.scale.setTo(0.7);
        	this.reloadBtn.inputEnabled = true;
        	this.reloadBtn.events.onInputDown.add(this.reloadLevelBtn, this);
 
-	    // built up the grid with empty positions
+	    // Build up the grid with empty positions
 	    var theGrid = this.add.group();
-
 	    for (var x=0; x<this.gridInfo.nrWidth; x++) {
 	    	for (var y=0; y<this.gridInfo.nrHeight; y++) {
-	    		// deside the pixel position
+	    		// deside the pixel position so that the grid will be centered in the window
 	    		var posX = this.gridInfo.padding + this.gridInfo.sizes/2 + x * this.gridInfo.sizes + this.world.centerX-this.gridInfo.sizes*this.gridInfo.nrWidth/2.0-this.gridInfo.padding;
 	    		var posY = this.gridInfo.padding + this.gridInfo.sizes/2 + y * this.gridInfo.sizes + this.world.centerY-this.gridInfo.sizes*this.gridInfo.nrHeight/2.0-this.gridInfo.padding;
+	    		
 	    		// create the sprite and place the center in the position
-
 	    		var gridSprite = theGrid.create(posX,posY,'empty');
 	    		gridSprite.alpha = 0.4;
 	    		gridSprite.anchor.set(0.5);
 
-	    		// save in a 2D array the reference to the sprite
-	    		// create a new element object
+	    		// save in a 2D array the reference to the sprite, create a new element object
 	    		var grid = new GridElement(gridSprite, "empty", false);
 	    		this.gridSystem[x][y] = grid;
 
@@ -130,77 +130,76 @@ GAME.LevelCreator.prototype = {
 	    		};
 	    	}
 	    }
-	    // set input on very grid
+
+	    // set input on every grid
 	    theGrid.setAll('inputEnabled', true);
-	    // using the power of callAll we can add the same input event to all coins in the group:
+	    // using the power of callAll we can add the same input event to all grids in the group:
 	    theGrid.callAll('events.onInputDown.add', 'events.onInputDown', this.clickedGrid, this);
 
-
+	    // If the level has stars, add these
         if(this.levelData.stars != undefined) {
-        	// TODO : only add this when the level say that a star should be added
 	        this.starBar = this.add.sprite(this.world.centerX, 40, 'starPoints');
 	        this.starBar.scale.setTo(0.6);
 	        this.starBar.anchor.set(0.5);
+	        
 	        this.points = 0;
+	        
 	        this.maxPoints = this.levelData.stars.length;
 	        this.starPoints = this.add.text(this.world.centerX+13, 44, this.points + " / " + this.maxPoints, smallStyle);
 	        this.starPoints.anchor.set(0.5);
 
-        	// set out the star in the grid, a foor loop
+        	// Go trought the leveldata and add the stars
         	this.levelData.stars.forEach(function(elements){
-
+        		// desides if the grid is flipped or not, setting different x and y values depending on this
 	    		if (this.world.width > this.world.height)
 	    			var starElement = this.gridSystem[elements.y][elements.x];
 	    		else
         			var starElement = this.gridSystem[elements.x][elements.y];
+        		
         		starElement.setType("star");
         		starElement.setColor(elements.color);
 	    		starElement.sprite.scale.setTo(0.5);
 	    		starElement.changeTexture();	
-        	}, this);
-	    	
-	    	
+        	}, this);	    	
         }
 
+        // Adding blackholes if the level has it
         if(this.levelData.blackHole != undefined) {
-        	// set out the star in the grid, a foor loop
         	this.levelData.blackHole.forEach(function(elements){
+        		// desides if the grid is flipped or not, setting different x and y values depending on this
         		if (this.world.width > this.world.height)
         			var el = this.gridSystem[elements.y][elements.x];
         		else
         			var el = this.gridSystem[elements.x][elements.y];
+
         		el.setType("hole");
-	    		//el.sprite.scale.setTo(0.5);
 	    		el.changeTexture();	
         	}, this);
-
         }
-        // -----------
 
-	    // add the goal
+	    // Add the goal
+	    // Desides if the grid is flipped or not, setting different x and y values depending on this
 	    if (this.world.width > this.world.height)
 	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].y][this.levelData.goalInfo[0].x];
 	   	else
 	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
+	    
 	    goalElement.setColor(this.levelData.goalInfo[0].color);
 	    goalElement.setType("goal");
 		goalElement.changeTexture();
-		// ge målet lite rörelse ;) 
+
+		// Give the goal a little bit of movement
 		this.add.tween(goalElement.sprite.scale).to( { x: [1.3, 1.0], y: [1.3, 1.0]  }, 3000, "Linear", true, -1, false);
 	
+		// Add all the arrows to the grid
 	    this.arrowGroup = this.add.group();
+	    this.levelData.arrows.forEach(function(elements){
+	    	var arrowDirection = elements.dir;
 
-	    // add all the arrows
-	     this.levelData.arrows.forEach(function(elements){
-	     	if (this.world.width > this.world.height)
-	     		var arrow = this.gridSystem[elements.y][elements.x];
-	     	else
-	     		var arrow = this.gridSystem[elements.x][elements.y];
-	     	arrow.setColor(elements.color);
-
-	     	// change the direction on the arrow if horizontal play!! 
-	     	var arrowDirection = elements.dir;
+	    	// desides if the grid is flipped or not, setting different x and y values depending on this
 	     	if (this.world.width > this.world.height) {
+	     		var arrow = this.gridSystem[elements.y][elements.x];
+
 	     		switch(arrowDirection) {
     				case "right":
         				arrowDirection="down";
@@ -215,33 +214,38 @@ GAME.LevelCreator.prototype = {
         				arrowDirection="up";
        				break;
        			}
-
 	     	}
-
+	     	else
+	     		var arrow = this.gridSystem[elements.x][elements.y];
+	     	
+	     	arrow.setColor(elements.color);
 	     	arrow.setType("arrow", arrowDirection);
 	     	arrow.setSelected(elements.selected);
 	     	arrow.changeTexture();
 
+	     	// If it is the first level, add a little bit of movement to the arrow that can be clicked.
 	     	if(this.currentLevel==1 && elements.selected) this.tween = this.add.tween(arrow.sprite.scale).to( { x: [1.5, 1.0], y: [1.5, 1.0]  }, 2000, "Linear", true, -1, false);
 
 	     	this.arrowGroup.add(arrow.sprite);
 	    }, this);
 
-	     // place 3 random arrows in each level! wow
-	    // görs ej på de två första nivåerna på varje chapter. 
-	    
+	    // Place 5 random arrows. The function only does this at level 2-5 at each chapter
 	    this.placeRandomArrow(5);
-		// ==========================
 
+		// ==========================
 	    // debugmodes
 	    qKey = this.input.keyboard.addKey(Phaser.Keyboard.Q);
 	    nKey = this.input.keyboard.addKey(Phaser.Keyboard.N);
+
+	    // adding the cursor.
 	    cursors = this.input.keyboard.createCursorKeys();
 	},
+
+	// Function than randomly places nrRandomArrows on the grid. 
+	// Will only add extra arrows if the level is number 2-5 on each chapter.
 	placeRandomArrow : function(nrRandomArrows) {
 		var addExtraArrwos = this.currentLevel%5 > 2 ? true : false;
 		if (addExtraArrwos) {
-		    //var nrRandomArrows = 3;
 		    var placedArrows = 0;
 
 		    while (placedArrows!=nrRandomArrows) {
@@ -249,25 +253,22 @@ GAME.LevelCreator.prototype = {
 		    	var yPos = getRandom(0, this.gridInfo.nrHeight-1); 
 		    	var element = this.gridSystem[xPos][yPos];
 		    	if(element.isType("empty")) {
-		    		// slumpe direction och selected
+		    		// get a random direction
 		    		var directions = ["left", "right", "down", "up"];
 		    		var dirIndex = getRandom(0,3);
-		    		//var sel = [true, false];
-		    		//var selIndex = getRandom(0,1);
-
-		    		//console.log("the new arrow: " + directions[dirIndex] + " " + sel[selIndex] + " x,y " + xPos + "," + yPos);
-
+		    		
 		    		// make a random new arrow and place it, else go again in the while loop
 		    		element.setColor("blue"); // hur göra här? kanske ha en färg per nivå
 		    		element.setType("arrow", directions[dirIndex]);
-			     	element.setSelected(false);//sel[selIndex]); // always set to false instead!! 
+			     	element.setSelected(false); // always set to false instead!! 
 			     	element.changeTexture();
 		    		placedArrows++;
 		    	} 
 		    }
 		}
 	},
-	// this function should open a module and ask if the user want to go back to menu
+	
+	// This function should open a module and ask if the user want to go back to menu
 	backOneStep : function () {
 
 		var modalGroup = this.add.group();
@@ -285,7 +286,8 @@ GAME.LevelCreator.prototype = {
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
 
-        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Do you really \n want to quit?", generalStyle);
+        var st = { font: "20px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Do you really \n want to quit?", st);
         text.anchor.set(0.5);
         modalGroup.add(text);
 
@@ -319,152 +321,165 @@ GAME.LevelCreator.prototype = {
         }, this);
 
        //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
-
-
 	},
+
+	// The user clicked on the grid 
+	// This function will activate all arrows in that direction
+	// Also checks if it has travelled over a star, a black hole or have reached the goal. 
 	clickedGrid : function(item) {
-
-
 		var x = item.indexNr.x, y = item.indexNr.y;
-		var gridElement = this.gridSystem[x][y];	// get the gridelement
+		var gridElement = this.gridSystem[x][y]; // get the gridElement
 
 		if(this.currentLevel==1) {this.tween.stop(); gridElement.sprite.scale.setTo(1.0);  } // reset the tween if level 1
 
+		// if the element the user clicked on is an arrow and can be clicked on
 		if(gridElement.isArrow() && gridElement.isSelected) {
-
-			if(playMusic) this.arrowSound.play("",0,0.4); // maybe other sound
+			if(playMusic) this.arrowSound.play("",0,0.4); // the attributes tell how loud the sound should be
+			
 			this.click++;
 			this.scoreText.text = "Clicks: " + this.click;
 
-			// hämta färgen på denna pil, ska aktivera alla andra med den färgen
+			// get the color of the arrow that was clicked on 
 			var color = gridElement.color;
 
-			// se till att sätta selected till false på alla andra piler
+			// set all other arrows to deactivated on the grid before
+			// proceeding to activate other arrows
 			for (var x=0; x<this.gridInfo.nrWidth; x++){
 				for (var y=0; y<this.gridInfo.nrHeight; y++){
 					var e = this.gridSystem[x][y];
-					if(e.isSelected) { // om man hittade en aktiv grid, set till not active
+					if(e.isSelected) { // if active arrow, set to false. 
 						e.setActive(false);
 					}
 				}
 			}
 
-			// sätt selected till true på den raden som pilen skjuter åt
-			var direction = gridElement.direction; // the direction to shoot
-
+			// The direction to shoot. Need to traverse the array different
+			// depending on the direction. 
+			var direction = gridElement.direction; 
 			var element; 
 			// break statement so that I can exit the loop if I reach the goal or a hole.
 			breakme: {
-			if(direction == "left") {
-				for (var i=item.indexNr.x-1; i>=0; i--) {
-					var e = this.elementClick(i, item.indexNr.y, color);
-					element = e.element;
-					
-					if(element.isGoal() || element.isType("hole"))
-						 break breakme;
+				if(direction == "left") {
+					for (var i=item.indexNr.x-1; i>=0; i--) {
+						var e = this.walkedOverElement(i, item.indexNr.y, color);
+						element = e.element;
+						
+						if(e.goal || element.isType("hole"))
+							 break breakme;
+					}
+				}
+				else if(direction == "right") {
+					for (var i=item.indexNr.x+1; i<this.gridInfo.nrWidth; i++) {
+						var e = this.walkedOverElement(i, item.indexNr.y, color);
+						element = e.element;
+						
+						if(e.goal || element.isType("hole"))
+							 break breakme;
+					}
+				}
+				else if(direction == "up") {
+					for (var i=item.indexNr.y-1; i>=0; i--) {
+						var e = this.walkedOverElement(item.indexNr.x, i, color);
+						element = e.element;
+						
+						if(e.goal || element.isType("hole"))
+							 break breakme;
+					}
+				}
+				else if(direction == "down") {
+					for (var i=item.indexNr.y+1; i<this.gridInfo.nrHeight; i++) {
+						var e = this.walkedOverElement(item.indexNr.x, i, color);
+						element = e.element;
+
+						if(e.goal || element.isType("hole"))
+							 break breakme;
+					}
 				}
 			}
-			else if(direction == "right") {
-				for (var i=item.indexNr.x+1; i<this.gridInfo.nrWidth; i++) {
-					var e = this.elementClick(i, item.indexNr.y, color);
-					element = e.element;
-					
-					if(element.isGoal() || element.isType("hole"))
-						 break breakme;
-				}
-			}
-			else if(direction == "up") {
-				for (var i=item.indexNr.y-1; i>=0; i--) {
-					var e = this.elementClick(item.indexNr.x, i, color);
-					element = e.element;
-					
-					if(element.isGoal() || element.isType("hole"))
-						 break breakme;
-				}
-			}
-			else if(direction == "down") {
-				for (var i=item.indexNr.y+1; i<this.gridInfo.nrHeight; i++) {
-					var e = this.elementClick(item.indexNr.x, i, color);
-					element = e.element;
 
-					if(element.isGoal() || element.isType("hole"))
-						 break breakme;
-				}
-			}
-			}
-
-
-
+			// The variable element now will hold the last element it visited or a goal or a hole
 		 	if(element==undefined) {
 				if(playMusic) this.gameOverSound.play();
 				this.gameOver = "You walked out of the field and run out of active arrows.."; // ändra denna text sen. 
 				this.showModal();
 			}
 			else {
-
-			if (element.isGoal()) {
-				if(this.levelData.stars != undefined && this.points==this.maxPoints) {
-					if(playMusic) this.winSound.play();
-					this.madeLevel();
-					this.showModalWin();
+				// The element reached was a goal. Check if the level has stars, if so check
+				// if have collected all in order to reach the goal. If not a level with star, just win. 
+				if (element.isGoal()) {
+					if(this.levelData.stars != undefined && this.points==this.maxPoints) {
+						if(playMusic) this.winSound.play();
+						this.madeLevel();
+						this.showModalWin();
+					}
+					else if(this.levelData.stars != undefined && this.points!=this.maxPoints){
+						if(playMusic) this.gameOverSound.play();
+						this.gameOver = "You didn't collect all the stars."
+						this.showModal();
+					}
+					else {
+						if(playMusic) this.winSound.play();
+						this.madeLevel();
+						this.showModalWin();
+					}
 				}
-				else if(this.levelData.stars != undefined && this.points!=this.maxPoints){
+				// If the element type was a hole, just change the text that may appear later
+				else if(element.isType("hole")) {
+					this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
+				}
+
+				// If the element is not a goal and you don't have more active arrows.
+				// Show the fail module and change the game over text depeding on if dissapeared in a hole or not
+				if (!element.isGoal() && this.availableMoves()==0) {
 					if(playMusic) this.gameOverSound.play();
-					this.gameOver = "You didn't collect all the stars."
+					if (!element.isType("hole")) this.gameOver = "You run out of active arrows.."
 					this.showModal();
 				}
-				else {
-					if(playMusic) this.winSound.play();
-					this.madeLevel();
-					this.showModalWin();
-				}
-			}
-			else if(element.isType("hole")) {
-
-				//console.log("woops! the arrow reached a black hole and disapeared!");
-				this.gameOver = "You got stuck in a black hole.\n Tip: try to avoid it!";
 			}
 
-			if (!element.isGoal() && this.availableMoves()==0) {
-				//console.log("inga drag kvar.. synd!");
-				if(playMusic) this.gameOverSound.play();
-				if (!element.isType("hole")) this.gameOver = "You run out of active arrows.."
-				this.showModal();
-				//console.log(this.levelData.tip);
-			}
-		}
-
-			// ändra detta gridElement till en empty igen
+			// change the gridElement to empty again. 
 			gridElement.resetToEmpty();
 		}
 	},
-	// function that handles click and looks if the element is a goal or not
-	// will also return the element it goes over.
-	elementClick : function(x,y, color) {
+
+	// Function that handles the element that an arrow will activate
+	// Do stuff depending on which element it was. 
+	// return: if the element is the goal and also the element that was clicked on.  
+	walkedOverElement : function(x, y, color) {
 		var element = this.gridSystem[x][y];
 		var reachedGoal;
-		if(element.isGoal()) {
+
+		if(element.isGoal()) { 
 			reachedGoal = true;
 			element.sprite.scale.setTo(1.0);
+
+			return {"goal" : reachedGoal, "element": element};
 		}
+
 		if(element.isStar()){
-			if(playMusic) this.starSound.play(); // oterh sound
+			// only play sound if that setting is set
+			if(playMusic) this.starSound.play();
 			this.points++;
 			this.starPoints.text =  this.points + " / " + this.maxPoints;
-			// change this element to and empty now
+			
+			// if the element was a star, reset it to empty again
 			element.resetToEmpty();
 			element.sprite.scale.setTo(1.0);
 		}
+
+		// activate the element it went over
 		element.setActive(true, color);
 		reachedGoal = false;
 
-		return {"goal" : reachedGoal, "element":element};
+		return {"goal" : reachedGoal, "element": element};
 	},
 
-	// ingen bra funktion överhuvudtaget, utan borde kunna ha + och - helt enkelt
+	// Function that calculates number of available moves on the grid
 	availableMoves : function() {
 		var moves=0;
 
+		// not the optimal solution, but since the grid is not so large, this works. 
+		// if larger grid, this needs to change. 
 		this.gridSystem.forEach(function(itemRow){
 			itemRow.forEach(function(item){
 				if(item.isArrow() && item.isSelected)
@@ -485,46 +500,38 @@ GAME.LevelCreator.prototype = {
 	    }
 	},
 
-/*
-localStorage["names"] = JSON.stringify(names);
-
-//...
-var storedNames = JSON.parse(localStorage["names"]);
-
-*/
-
+	// Function that will be called when the user have clearad a level
 	madeLevel : function(){
-		// only update when another value.. 
+		// only update in the localstorage when another value 
 		if (!madeLevels[this.currentLevel-1]){
 			madeLevels[this.currentLevel-1]=true;
 			localStorage.setItem("arrowMadeLevels", JSON.stringify(madeLevels));
 		}
-		this.sp = (this.click <= this.levelData.best ? 3 :    (this.click > this.levelData.best+2 ? 1 : 2)  ); // kan bara få 3 eller 2 stjärnor än så länge ;) om man får 3 klick över bästa så får man 1 stjärna? 
-		//madeLevels[this.currentLevel-1].stars = this.sp;
+		this.sp = (this.click <= this.levelData.best ? 3 : (this.click > this.levelData.best+2 ? 1 : 2));
 		if (madeLevelsStars[this.currentLevel-1] < this.sp) { // bara spara det nya resultatet om det är bättre
 			madeLevelsStars[this.currentLevel-1] = this.sp;
 			localStorage.setItem("arrowLevelStars", JSON.stringify(madeLevelsStars));
 		}
-
 		// update the local storage with the new record and made the level!!
 	},
- 
-	nextLevel: function() {
-		var next = true;
-		if (next) {
-			this.resetForNextLevel();
-			this.currentLevel++; // the current level is now 1
 
-			// check if you reached the end level, therefore you should go back to the menu instead numberOfLevels
-			if (this.currentLevel <= numberOfLevels) {
-				//console.log("Starting the next level, level" + this.currentLevel);
-				this.state.start('Level', true, false, this.currentLevel);
-			}
-			else { // you have reeached the end level! congratz...
-				this.state.start('Finished');
-			}
+	// Function that will take you to the next level
+	nextLevel: function() {
+		this.currentLevel++;
+
+		// Check if you have more levels to go, or if you done the last levek
+		if (this.currentLevel <= numberOfLevels) {
+			this.state.start('Level', true, false, this.currentLevel);
+		}
+		else { 
+			// you have reeached the end level! congratz
+			this.state.start('Finished');
 		}
 	},
+
+	// Function that will show a modal over the game.
+	// This modal is for when the user have failed a level.
+	// Buttons for restarting the level or go to the menu are visible. 
 	showModal : function() {
 		var modalGroup = this.add.group();
 
@@ -541,31 +548,23 @@ var storedNames = JSON.parse(localStorage["names"]);
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
 
-      /*  var text = this.add.text(this.world.centerX, this.world.centerY-30, "OH noooh! \n No moves left..", generalStyle);
-        text.text = text.text + " \n" + this.gameOver ;
-        text.anchor.set(0.5);
-        modalGroup.add(text);
-*/
-
         // ------- the text inside --------
-        var nStyle = { font: "18px Carter One", fill: "#000" };
+        var nStyle = { font: "16px Carter One", fill: "#000" };
         nStyle.wordWrap = true;
-        nStyle.wordWrapWidth = module.width-30;
-        nStyle.align = "left";
+        nStyle.wordWrapWidth = module.width-50;
+        nStyle.align = "center";
 
         var tStyle = mediumStyle;
         tStyle.wordWrap = true;
         tStyle.wordWrapWidth = module.width-30;
 
         var text = this.add.text(this.world.centerX, this.world.centerY-20, "OH noooh!", tStyle);
-        //text.text = text.text + " \n" + this.gameOver ;
         text.anchor.set(0.5);
         modalGroup.add(text);
-
         
-        var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
+        /*var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
         tipBar.scale.setTo(0.8);
-        modalGroup.add(tipBar);
+        modalGroup.add(tipBar);*/
 
         var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.gameOver, nStyle);
         tip.anchor.set(0.5);
@@ -602,6 +601,9 @@ var storedNames = JSON.parse(localStorage["names"]);
             this.resetThisLevel();
         }, this);*/
 	},
+
+	// Function that show a modal when you have made the level.
+	// Will show number of stars, number of clicks and also a tip text. 
 	showModalWin : function() {
 		var modalGroup = this.add.group();
 
@@ -619,33 +621,30 @@ var storedNames = JSON.parse(localStorage["names"]);
         modalGroup.add(module);
 
         // ------- the text inside --------
-        var nStyle = { font: "18px Carter One", fill: "#000" };
+        var nStyle = { font: "16px Carter One", fill: "#000" };
         nStyle.wordWrap = true;
-        nStyle.wordWrapWidth = module.width-30;
-        nStyle.align = "left";
+        nStyle.wordWrapWidth = module.width-50;
+        nStyle.align = "center";
 
-        var text = this.add.text(this.world.centerX, this.world.centerY-60, "Clicks: " + this.click, mediumStyle);
+    	// draw the right stars according to the points. 
+    	var textureStars = this.sp + "star"; // starPoints
+    	var starSprite = this.add.sprite(this.world.centerX, this.world.centerY-70, textureStars);
+    	starSprite.anchor.set(0.5);
+    	starSprite.scale.setTo(0.7);
+    	modalGroup.add(starSprite);
+
+    	// how many clicks
+    	var text = this.add.text(this.world.centerX, this.world.centerY-10, "Clicks: " + this.click, mediumStyle);
         text.anchor.set(0.5);
         modalGroup.add(text);
 
-        //var starsT = this.add.text(this.world.centerX, this.world.centerY, "Stars: " + this.sp, mediumStyle);
-        for (var i=0; i<3; i++) {
-        	var starsT = this.add.sprite(this.world.centerX-30 + i*30 ,this.world.centerY-30, 'star');
-        	starsT.scale.setTo(0.4);
-        	starsT.anchor.set(0.5);
-        	var a = i+1 <= this.sp ? 1.0 : 0.3; 
-        	starsT.alpha = a;
-        	modalGroup.add(starsT);
-    	}
-
-    	var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
+    	// tips
+/*    	var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
     	tipBar.scale.setTo(0.8);
-        modalGroup.add(tipBar);
-
+        modalGroup.add(tipBar);*/
         var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.levelData.tip, nStyle);
         tip.anchor.set(0.5);
         modalGroup.add(tip);
-
 
         // add menu button, next level and try level again
         var menuBtn = this.add.sprite(this.world.centerX-80, this.world.centerY+180, 'menuBtn');
@@ -685,6 +684,9 @@ var storedNames = JSON.parse(localStorage["names"]);
             this.nextLevel();
         }, this);
 	},
+
+	// When the user have clicked on the reload button, a module will appear
+	// The modal will ask if the user really wants to restart the level. 
 	reloadLevelBtn : function() {
 
 		var modalGroup = this.add.group();
@@ -702,8 +704,8 @@ var storedNames = JSON.parse(localStorage["names"]);
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
 
-        var st = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
-        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Do you want to restart the level?", st);
+        var st = { font: "20px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Do you want to\n restart the level?", st);
         text.anchor.set(0.5);
         modalGroup.add(text);
 
@@ -737,30 +739,26 @@ var storedNames = JSON.parse(localStorage["names"]);
         }, this);
 
        //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
-
-
 	},
+
+	// Function that restarts this current level. 
 	resetThisLevel : function() {
-		this.state.start('Level', true, false, this.currentLevel); // go to the same level!!
+		this.state.start('Level', true, false, this.currentLevel);
 	},
 
-	resetForNextLevel : function() {
-	},
-
+	// Go back to the level selection from the game. 
+	// Determines which page in the levelselction to go to, depending on which level
+	// the user was at. 
     quitGame: function (pointer) {
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
         //  Then let's go back to the main menu.
-        //this.state.start('SelectLevels');
         var pageStart = Math.floor((this.currentLevel-1)/5); //show the page which indicate the chapter you are on. page 2 är chapter 1 vilket är nivå 1-5 etc...
-        
         this.state.start('SelectLevels', true, false, pageStart+2);
-
     }
 };
 
-// help functions with random stuff
 // help function
 function getRandom(min, max) {
 	return Math.floor(Math.random() * (max-min+1) + min);

@@ -7,14 +7,10 @@ function settingsPanel(world, state) {
     // an info button or a reload
     // state, inGame, levelSelect
     var infoIcon = (state == "inGame" ? 'reloadIcon' : 'infoIcon'); // kanske ta bort infoknappen om man är i spelet? 
-
-	//self = world;
 	self = world;
 
     self.base = self.add.sprite(61, self.world.height, "settingsBase");
 
-    console.log("world heigth : " + self.world.height);
-    console.log("base coord : " + self.base.y);
     if (state == "inGame") { 
         self.base.scale.set(1.0, 0.85);
         self.base.y += 30;
@@ -25,9 +21,6 @@ function settingsPanel(world, state) {
 
     self.settingsGroup = self.add.group();
     self.settingsGroup.add(self.base);
-
-
-
 
     if (state == "levelSelect") {
         self.infoBtn = self.add.sprite(61, self.base.y-120, infoIcon);
