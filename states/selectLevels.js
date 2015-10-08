@@ -11,25 +11,25 @@ GAME.SelectLevels.prototype = {
 		this.game.stage.backgroundColor = '#FFF';
 
 		//TESTING swipe. Maybe use or not.. 
-		var element = document.getElementsByTagName('body')[0];
-		var hammer    = new Hammer.Manager(element);
-		var swipe     = new Hammer.Swipe();
+		// var element = document.getElementsByTagName('body')[0];
+		// var hammer    = new Hammer.Manager(element);
+		// var swipe     = new Hammer.Swipe();
 
-		hammer.add(swipe);
+		// hammer.add(swipe);
 
-		hammer.on("swiperight", ((ev) => {    	
-	    	if (this.currentPage >=2) {
-		    	this.showSpecificChapter(this.currentPage-1, true);
-		    	console.log( ev.type +" gesture detected.");
-		    }
-		}));
+		// hammer.on("swiperight", ((ev) => {    	
+	 //    	if (this.currentPage >=2) {
+		//     	this.showSpecificChapter(this.currentPage-1, true);
+		//     	console.log( ev.type +" gesture detected.");
+		//     }
+		// }));
 
-		hammer.on("swipeleft", ((ev) => {    	
-	    	if (this.currentPage<this.pages){
-		    	this.showSpecificChapter(this.currentPage+1, true);
-		    	console.log( ev.type +" gesture detected.");
-		    }
-		}));
+		// hammer.on("swipeleft", ((ev) => {    	
+	 //    	if (this.currentPage<this.pages){
+		//     	this.showSpecificChapter(this.currentPage+1, true);
+		//     	console.log( ev.type +" gesture detected.");
+		//     }
+		// }));
 
 		this.pages = numberOfLevels/5 + 1; // +1 för inforutan först!!
 		this.drawStars = [];
