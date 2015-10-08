@@ -1,92 +1,92 @@
+/*
+	A class that handles the grid elements. Holds what color, type and different attributes.
+	Also holds a reference to the sprite.
+*/
 function GridElement(sprite, type, selected, direction, color) {
-	this.sprite = sprite;
+	this.sprite = sprite; // a reference to the sprite element 
 	this.isSelected = selected || false;
-	this.type = type || "empty"; // kanske typ empty, arrow, goal, hole
+	this.type = type || "empty"; // Can be empty, arrow, goal, hole etc.
 	this.direction = direction || "";
 	this.color = color || "";
+};
 
-	// downpink, down, 
-	this.textureName = function(c) {
-		var color = c || this.color; 
-		// beroende på is selected
-		var name = (this.type == "arrow"? this.direction : this.type);
-		name    += (this.isSelected ?  color : "");
+GridElement.prototype.textureName = function(c) {
+	var color = c || this.color; 
+	var name = (this.type == "arrow"? this.direction : this.type);
+	name += (this.isSelected ?  color : "");
 
-		if (this.type == "star") {
-			name = "star" + this.color;
-		}
-		else if(this.type == "hole") {
-			name = "blackHole";
-		}
-
-		return name;
-	};
-
-	this.setType = function (type, dir) {
-		this.type = type;
-
-		var direction = dir || "";
-		this.direction = direction;
-
-		if(type != "empty")
-			this.setSpriteAlpha(1.0);
+	if (this.type == "star") {
+		name = "star" + this.color;
+	}
+	else if(this.type == "hole") {
+		name = "blackHole";
 	}
 
-	this.isType = function(name) {
-		return this.type==name;
+	return name;
+};
 
-	}
+GridElement.prototype.setType = function (type, dir) {
+	this.type = type;
 
-	this.isGoal = function() {
-		return this.type=="goal";
-	}
+	var direction = dir || "";
+	this.direction = direction;
 
-	this.isHole = function() {
-		return this.type == "hole";
-	}
+	if(type != "empty")
+		this.setSpriteAlpha(1.0);
+};
 
-	this.setSelected = function(s) {
-		this.isSelected = s;
-	}
+GridElement.prototype.isType = function(name) {
+	return this.type==name;
+};
 
-	this.setActive = function (condition, col) {
-		this.color = col || this.color;
-		this.isSelected = condition;
+GridElement.prototype.isGoal = function() {
+	return this.type=="goal";
+};
 
-		var alphaValue = condition ? 1.0 : (this.type=="arrow" || this.type=="hole") ? 1.0 : 0.4;
-		this.setSpriteAlpha(alphaValue);
+GridElement.prototype.isHole = function() {
+	return this.type == "hole";
+};
 
-		this.changeTexture();
-	}
+GridElement.prototype.setSelected = function(s) {
+	this.isSelected = s;
+};
 
-	this.isStar = function() {
-		return this.type == "star";
-	}
+GridElement.prototype.setActive = function (condition, col) {
+	this.color = col || this.color;
+	this.isSelected = condition;
 
-	this.isArrow = function() {
-		return this.type == "arrow";
-	}
+	var alphaValue = condition ? 1.0 : (this.type=="arrow" || this.type=="hole") ? 1.0 : 0.4;
+	this.setSpriteAlpha(alphaValue);
 
-	this.setSpriteAlpha = function(alpha) {
-		var a = alpha || 1.0;
-		this.sprite.alpha = a; 
-	}
+	this.changeTexture();
+};
 
-	this.setColor = function(color) {
-		this.color = color;
-	}
+GridElement.prototype.isStar = function() {
+	return this.type == "star";
+};
 
-	this.resetToEmpty = function() {
-		this.isSelected = false;
-		this.color = "";
-		this.type = "empty";
-		this.setSpriteAlpha(0.4);
-		this.changeTexture();
-	}
+GridElement.prototype.isArrow = function() {
+	return this.type == "arrow";
+};
 
-	this.changeTexture = function(col) {
-		var color = col || this.color;  
-		this.sprite.loadTexture(this.textureName(color),0);
-	}
+GridElement.prototype.setSpriteAlpha = function(alpha) {
+	var a = alpha || 1.0;
+	this.sprite.alpha = a; 
+};
 
-}
+GridElement.prototype.setColor = function(color) {
+	this.color = color;
+};
+
+GridElement.prototype.resetToEmpty = function() {
+	this.isSelected = false;
+	this.color = "";
+	this.type = "empty";
+	this.setSpriteAlpha(0.4);
+	this.changeTexture();
+};
+
+GridElement.prototype.changeTexture = function(col) {
+	var color = col || this.color;  
+	this.sprite.loadTexture(this.textureName(color),0);
+};

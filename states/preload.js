@@ -58,7 +58,6 @@ GAME.Preload.prototype = {
 
 		this.load.setPreloadSprite(this.loader);
 
-
 		/*
 		this.load.image('progressBase', 'assets/game-ui/Base.png');
         this.load.image('progressBack', 'assets/game-ui/Bg.png');
@@ -74,19 +73,26 @@ GAME.Preload.prototype = {
 	    this.load.image('levelSquare', 'assets/square.png');
 
 	    // mascot
-	    
 	    this.load.image('spaceHelmet', 'assets/mascot/space.png');
 
 	    this.load.image('tipBar', 'assets/game-ui/tips.png');
+
+	    // stars levelselct
+	    this.load.image('smallStar', 'assets/star.png');
 
 	    // settings panel
 	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
 	    this.load.image('banSound', 'assets/game-ui/banSound.png');
 	    this.load.image('settingsBase', 'assets/game-ui/baseSettings.png');
 	    this.load.image('infoIcon', 'assets/game-ui/infoIcon.png');
-	    this.load.image('menuIcon', 'assets/game-ui/menuIcon.png');
+	    this.load.image('menuIcon', 'assets/game-ui/menuIcons.png');
 	    this.load.image('musicIcon', 'assets/game-ui/musicIcon.png');
 	    this.load.image('soundIcon', 'assets/game-ui/soundIcon.png');
+
+	    // stars when finished a game
+	    this.load.image('1star', 'assets/game-ui/1star.png');
+	    this.load.image('2star', 'assets/game-ui/2stars.png');
+	    this.load.image('3star', 'assets/game-ui/3stars.png');
 
 	    // for game ui
 	    this.load.image('clearedModule', 'assets/game-ui/LevelCleared.png');
@@ -151,6 +157,14 @@ GAME.Preload.prototype = {
 	    */
 	  allLevelData = [
 	    { // level 1
+		   
+	    	/*"arrows" : [{"x": 0, "y":1, "dir": "down", "selected": true, "color":"blue"}],
+	    	"goalInfo": [{"x":0, "y":6, "color":"blue"}],
+	    	"tip" : "Reach the goal in as few clicks as possible.",
+	    	"best": 1,
+	    	"nrWidth": 1,
+	    	"nrHeight": 8*/
+
 		    "arrows" : [ 
 		        {"x": 1, "y": 2, "dir": "down", "selected": true, "color": "blue"},
 		        {"x": 1, "y": 6, "dir": "right", "selected": false, "color": "blue"}
@@ -159,7 +173,12 @@ GAME.Preload.prototype = {
 		        {"x":4, "y":6, "color": "blue"}
 		    ],
 		    "tip" : "Reach the goal in as few clicks as possible.",
-		    "best": 2
+		    "best": 2,
+		    "nrWidth" :5,
+		    "nrHeight":8
+
+
+
 		},
 		{// level 2
 		    "arrows" : [ 
@@ -172,7 +191,9 @@ GAME.Preload.prototype = {
 		        {"x":1, "y":5, "color": "blue"}
 		    ],
 		    "tip" : "You don't need to click on all arrows to reach the goal.",
-		    "best": 3
+		    "best": 3,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 3
 		    "arrows" : [ 
@@ -188,7 +209,9 @@ GAME.Preload.prototype = {
 		        {"x":4, "y":1, "color": "blue"}
 		    ],
 		    "tip" : "When a arrow is fired, it will activate all arrows in its direction.",
-		    "best": 3
+		    "best": 3,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 4
 		    "arrows" : [ 
@@ -207,7 +230,9 @@ GAME.Preload.prototype = {
 		        {"x": 4, "y": 7, "color": "blue"}
 		    ],
 		    "tip" : "When you have pressed on a arrow, all active arrows on the grid will be deactivated.",
-		    "best": 4
+		    "best": 4,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 
 		{// level 5
@@ -230,7 +255,9 @@ GAME.Preload.prototype = {
 		        {"x": 4, "y": 2, "color": "blue"}
 		    ],
 		    "tip" : "Sometimes it may exist several ways to reach to the goal. Try to take the shortest one.",
-		    "best": 7
+		    "best": 7,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		// black holes !!
 		/* a black hole level to save for later*/
@@ -250,7 +277,9 @@ GAME.Preload.prototype = {
 		    	{"x":1, "y":4}
 		    ],
 		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
-		    "best": 5
+		    "best": 5,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 7
 		    "arrows" : [ 
@@ -274,7 +303,9 @@ GAME.Preload.prototype = {
 		    	{"x":1, "y":5}
 		    ],
 		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
-		    "best": 4
+		    "best": 4,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 8
 		    "arrows" : [ 
@@ -302,7 +333,9 @@ GAME.Preload.prototype = {
 		    	{"x":3, "y":6}
 		    ],
 		    "tip" : "Don't let all the arrows fool you.",
-		    "best": 6
+		    "best": 6,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 9
 		    "arrows" : [ 
@@ -332,7 +365,9 @@ GAME.Preload.prototype = {
 		    	{"x":3, "y":6}
 		    ],
 		    "tip" : "So many arrows and black holes! Gosh",
-		    "best": 5
+		    "best": 5,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 10
 		    "arrows" : [ 
@@ -362,7 +397,9 @@ GAME.Preload.prototype = {
 		    	{"x":3, "y":7}
 		    ],
 		    "tip" : "You rock!",
-		    "best": 7
+		    "best": 7,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		// stars
 		// later level with stars
@@ -382,7 +419,9 @@ GAME.Preload.prototype = {
 		        {"x":0, "y":7, "color": "pink"}
 		    ],
 		    "tip": "Collect all the stars in order to be able to go home.",
-		    "best": 4
+		    "best": 4,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 12
 		    "arrows" : [ 
@@ -410,7 +449,9 @@ GAME.Preload.prototype = {
 		        {"x":0, "y":3, "color": "pink"}
 		    ],
 		    "tip": "Remember to choose the 'right' way.",
-		    "best": 8
+		    "best": 8,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		// lägg till lite black holes on these 3 next levels!!!
 		{// level 13
@@ -445,7 +486,9 @@ GAME.Preload.prototype = {
 		    	{"x":4, "y":5}
 		    ],
 		    "tip": "Oh, black holes appeard when collecting stars. Watch out!",
-		    "best": 10
+		    "best": 10,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 14
 		    "arrows" : [ 
@@ -479,7 +522,9 @@ GAME.Preload.prototype = {
 		    	{"x":4, "y":2}
 		    ],
 		    "tip": "Keep going!",
-		    "best": 9
+		    "best": 9,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		},
 		{// level 15
 		    "arrows" : [ 
@@ -516,7 +561,9 @@ GAME.Preload.prototype = {
 		    	{"x":4, "y":3}
 		    ],
 		    "tip": "Wow, so many black holes to avoid and stars to collect!",
-		    "best": 10
+		    "best": 10,
+		    "nrWidth" :5,
+		    "nrHeight":8
 		}
 	];
 
@@ -536,9 +583,4 @@ GAME.Preload.prototype = {
 		console.log("go to the menu");
 		this.state.start('MainMenu');
 	}
-		
-
-		// add loading baR? 
-
-		
 };
