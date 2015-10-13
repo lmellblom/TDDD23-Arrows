@@ -14,6 +14,7 @@ GAME.Boot.prototype = {
 
 
         this.load.image('mascotIcon', 'assets/mascot/beaver.png');
+        this.load.image('arrowHeader', 'assets/header.png');
 
         this.load.image('progressBase', 'assets/game-ui/Base.png');
         this.load.image('progressBack', 'assets/game-ui/Bg.png');

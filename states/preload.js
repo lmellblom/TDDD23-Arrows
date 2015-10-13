@@ -23,10 +23,9 @@ GAME.Preload.prototype = {
 		this.game.stage.backgroundColor = '#FFF';
 
 		// lägger till rubriken här med!!
-		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", LOGOSTYLE);
+		var header = this.add.sprite(this.world.centerX, this.world.centerY-200, "arrowHeader");
 		header.anchor.set(0.5);
-
-		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		header.scale.setTo(0.6);
 
 /*		// maskoten?
 		var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
@@ -70,8 +69,6 @@ GAME.Preload.prototype = {
 
 	    // level selection
 	    this.load.image('levelSquare', 'assets/square.png');
-
-	    this.load.image('iamhome', 'assets/iamhome.jpg');
 
 	    // mascot
 	    this.load.image('spaceHelmet', 'assets/mascot/space.png');

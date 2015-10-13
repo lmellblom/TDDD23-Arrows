@@ -13,7 +13,7 @@ GAME.MainMenu.prototype = {
 			this.add.sprite(back.width, -(backgroundHeight - this.world.height), 'background');
 		}
 
-		var startGame = this.add.sprite(this.world.centerX, this.world.centerY-10, 'playButton');
+		var startGame = this.add.sprite(this.world.centerX, this.world.centerY+40, 'playButton');
 		startGame.anchor.set(0.5);
 		startGame.scale.setTo(0.8);
 		startGame.inputEnabled = true;
@@ -41,9 +41,9 @@ GAME.MainMenu.prototype = {
 		},4000+Math.random()*4000,Phaser.Easing.Linear.None,true,0,1000,true);
 		*/
 
-		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", LOGOSTYLE);
+		var header = this.add.sprite(this.world.centerX, this.world.centerY-200, "arrowHeader");
 		header.anchor.set(0.5);
-		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		header.scale.setTo(0.6);
 
 		// tween the logo also
 		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);

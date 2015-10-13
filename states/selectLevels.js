@@ -63,9 +63,9 @@ GAME.SelectLevels.prototype = {
         this.modalGroup.add(change);
 		
 		// the logo is here also
-		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", LOGOSTYLE);
+		var header = this.add.sprite(this.world.centerX, this.world.centerY-200, "arrowHeader");
 		header.anchor.set(0.5);
-		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		header.scale.setTo(0.6);
 
 		// tween the logo also
 		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
