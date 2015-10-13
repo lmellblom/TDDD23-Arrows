@@ -69,6 +69,9 @@ GAME.Preload.prototype = {
 
 	    // level selection
 	    this.load.image('levelSquare', 'assets/square.png');
+	    this.load.image('levelSquareInfo', 'assets/squareInfo.png');
+	    this.load.image('levelSquareStar', 'assets/squareStar.png');
+	    
 
 	    // mascot
 	    this.load.image('spaceHelmet', 'assets/mascot/space.png');
@@ -769,9 +772,9 @@ GAME.Preload.prototype = {
 
 	start: function() {    
 		backgroundMusicPlayer.play(); // starts on the whole object now since i add it!! wow :D 
-		console.log("the backgroundmusid " + backCalmMusic);
+		//console.log("the backgroundmusid " + backCalmMusic);
 		if (!backCalmMusic) backgroundMusicPlayer.pause();
-		console.log("go to the menu");
+		//console.log("go to the menu");
 		this.state.start('MainMenu');
 	}
 };

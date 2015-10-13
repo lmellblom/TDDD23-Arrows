@@ -1,6 +1,6 @@
 var GAME = GAME || {};
 
-// Set variables for the width and height to now the ratio
+// Set variables for the width and height to know the ratio
 var gameWidth = 448;
 var gameHeight =  640; 
 var backgroundHeight = 1181;  // the background height of the grass
@@ -30,33 +30,23 @@ var numberOfLevels = 20;
 var madeLevels = [];        // a list that holds if the levels is done or not (t/f)
 var madeLevelsStars = [];   // holds how many stars the player got on the level
 for (var i=0; i<numberOfLevels; i++) {
-    if(i%5)
-        madeLevels[i]=true;
-    else
-        madeLevels[i]=false;
+    madeLevels[i]=false;
     madeLevelsStars[i] = 0;
 }
 if (localStorage.getItem("arrowMadeLevels")!=null) {
     var mL = JSON.parse(localStorage.getItem("arrowMadeLevels"));
     var mLS = JSON.parse(localStorage.getItem("arrowLevelStars"));
     for (var i=0; i<mL.length; i++) {
-        madeLevels[i] = (i+1)%5==0 ? true : mL[i];
-
+        madeLevels[i] =  mL[i];
         madeLevelsStars[i] = mLS[i];
     }
 }
 
 // GÅ igenom dessa och se vilka jag verkligen behöver...
-var menuGroup;
+//var menuGroup;
 var qKey;
 var nKey;
 var cursors;
-var arrowGroup;
-var goal;
-var arrow;
-var obstacleGroup;
-var availableMoves;
-var allLevelData;
 
 // variables that specifies if the background music and the clicks should be played
 var playMusic = true;
