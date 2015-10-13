@@ -5,7 +5,7 @@
 function GridElement(sprite, type, selected, direction, color) {
 	this.sprite = sprite; // a reference to the sprite element 
 	this.isSelected = selected || false;
-	this.type = type || "empty"; // Can be empty, arrow, goal, hole etc.
+	this.type = type || "empty"; // Can be empty, arrow, goal, hole , splash ? etc.
 	this.direction = direction || "";
 	this.color = color || "";
 };
@@ -15,8 +15,8 @@ GridElement.prototype.textureName = function(c) {
 	var name = (this.type == "arrow"? this.direction : this.type);
 	name += (this.isSelected ?  color : "");
 
-	if (this.type == "star") {
-		name = "star" + this.color;
+	if (this.type == "star" || this.type=="goal" || this.type=="bucket") {
+		name = this.type + this.color;
 	}
 	else if(this.type == "hole") {
 		name = "blackHole";

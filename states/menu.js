@@ -7,7 +7,7 @@ GAME.MainMenu.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#969696';
 
-		var back = this.add.sprite(0, -(backgroundHeight - this.world.height), 'background');
+		var back = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 
 		if (this.world.width > back.width) { // add more
 			this.add.sprite(back.width, -(backgroundHeight - this.world.height), 'background');
@@ -21,7 +21,7 @@ GAME.MainMenu.prototype = {
 
 		//bubbleText
 		
-		var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
+/*		var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
 	    mascot.scale.setTo(0.5);
 	  	
 	    // adding text to the mascot, maybe have?
@@ -32,7 +32,7 @@ GAME.MainMenu.prototype = {
 	    var t = "Hello!\n My name is Bernie \n and I am lost :( \nHelp me home!"
 	    var st = { font: "14px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
         var text = this.add.text(this.world.width - 290, this.world.height-250, t, st);
-
+*/
 		// tween the startGame to make it a little bit more good look
 		/*startGame.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
         var playTween = this.add.tween(startGame);
@@ -41,10 +41,8 @@ GAME.MainMenu.prototype = {
 		},4000+Math.random()*4000,Phaser.Easing.Linear.None,true,0,1000,true);
 		*/
 
-		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
-		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
+		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", LOGOSTYLE);
 		header.anchor.set(0.5);
-
 		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 
 		// tween the logo also

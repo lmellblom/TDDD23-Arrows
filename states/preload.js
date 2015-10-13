@@ -16,22 +16,21 @@ GAME.Preload.prototype = {
 		//  Load the Google WebFont Loader script
     	this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 		// loading assets for the game
-		this.preloadBack = this.add.sprite(0, -(backgroundHeight - this.world.height),'background');
+		this.preloadBack = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height),'background');
 		if (this.world.width > this.preloadBack.width) { // add more
 			this.add.sprite(this.preloadBack.width, -(backgroundHeight - this.world.height), 'background');
 		}
 		this.game.stage.backgroundColor = '#FFF';
 
 		// lägger till rubriken här med!!
-		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
-		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
+		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", LOGOSTYLE);
 		header.anchor.set(0.5);
 
 		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 
-		// maskoten?
+/*		// maskoten?
 		var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
-	    mascot.scale.setTo(0.5);
+	    mascot.scale.setTo(0.5);*/
 
 		// tween the logo also
 		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
@@ -72,6 +71,8 @@ GAME.Preload.prototype = {
 	    // level selection
 	    this.load.image('levelSquare', 'assets/square.png');
 
+	    this.load.image('iamhome', 'assets/iamhome.jpg');
+
 	    // mascot
 	    this.load.image('spaceHelmet', 'assets/mascot/space.png');
 
@@ -79,6 +80,9 @@ GAME.Preload.prototype = {
 
 	    // stars levelselct
 	    this.load.image('smallStar', 'assets/star.png');
+	    this.load.image('sparkle', 'assets/sparkle.png');
+
+	    this.load.image('backHouse', 'assets/houseBack.jpg');
 
 	    // settings panel
 	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
@@ -88,6 +92,9 @@ GAME.Preload.prototype = {
 	    this.load.image('menuIcon', 'assets/game-ui/menuIcons.png');
 	    this.load.image('musicIcon', 'assets/game-ui/musicIcon.png');
 	    this.load.image('soundIcon', 'assets/game-ui/soundIcon.png');
+	    this.load.image('backToMenuBtn', 'assets/game-ui/backToMenuBtn.png');
+
+	    
 
 	    // stars when finished a game
 	    this.load.image('1star', 'assets/game-ui/1star.png');
@@ -126,14 +133,22 @@ GAME.Preload.prototype = {
 	    this.load.image('downblue', 'assets/blue/down.png');
 	    this.load.image('upblue', 'assets/blue/up.png');
 	    this.load.image('emptyblue', 'assets/blue/empty.png');
-	    this.load.image('goalblue', 'assets/blue/home.png');
+	    this.load.image('goalblue', 'assets/blue/homeRound.png'); // home elr homeRound
+	    this.load.image('bucketblue', 'assets/blue/bucket.png');
 
 	    this.load.image('rightpink', 'assets/pink/right.png');
 	    this.load.image('leftpink', 'assets/pink/left.png');
 	    this.load.image('downpink', 'assets/pink/down.png');
 	    this.load.image('uppink', 'assets/pink/up.png');
 	    this.load.image('emptypink', 'assets/pink/empty.png');
-	    this.load.image('goalpink', 'assets/pink/home.png');
+	    this.load.image('goalpink', 'assets/pink/homeRound.png'); // home elr homeRound
+	    this.load.image('bucketpink', 'assets/pink/bucket.png');
+
+	    this.load.image('rightgray', 'assets/gray/right.png');
+	    this.load.image('leftgray', 'assets/gray/left.png');
+	    this.load.image('downgray', 'assets/gray/down.png');
+	    this.load.image('upgray', 'assets/gray/up.png');
+	    this.load.image('emptygray', 'assets/gray/empty.png');
 
 	    // all none seleted arrows
 	    this.load.image('right', 'assets/notSelected/right.png');
@@ -564,7 +579,186 @@ GAME.Preload.prototype = {
 		    "best": 10,
 		    "nrWidth" :5,
 		    "nrHeight":8
+		},
+
+		/* Chapter colorful world */
+		{// level 16
+			"arrows" : [
+				{"x":0, "y":1, "dir": "right", "selected":true, "color": "gray"},
+				{"x":1, "y":3, "dir": "down", "selected":false, "color": "gray"},
+				{"x":1, "y":6, "dir": "right", "selected":false, "color": "gray"},
+				{"x":3, "y":1, "dir": "down", "selected":false, "color": "gray"},
+				{"x":4, "y":3, "dir": "left", "selected":true, "color": "gray"}
+			],
+			"goalInfo" : [
+				{"x":3, "y":6, "color": "pink"}
+			],
+			"tip": "You need to make sure the right arrow get to the goal",
+			"best":3,
+		    "nrWidth" :5,
+		    "nrHeight":8,
+		    "bucket" : [
+		    	{"x":2, "y":1 , "color":"blue"},
+		    	{"x":1, "y":4 , "color":"pink"}
+		    ]
+		},
+		{// level 17
+			"arrows" : [
+				{"x":0, "y":0, "dir": "down", "selected":false, "color": "gray"},
+				{"x":0, "y":3, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":6, "dir": "up", "selected":false, "color": "gray"},
+				{"x":1, "y":1, "dir": "down", "selected":false, "color": "gray"},
+				{"x":1, "y":4, "dir": "right", "selected":false, "color": "gray"},
+				{"x":3, "y":0, "dir": "down", "selected":true, "color": "gray"},
+				{"x":3, "y":1, "dir": "left", "selected":false, "color": "gray"},
+				{"x":3, "y":4, "dir": "left", "selected":false, "color": "gray"},
+				{"x":3, "y":6, "dir": "left", "selected":true, "color": "gray"},
+				{"x":4, "y":3, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":4, "dir": "up", "selected":false, "color": "gray"}
+			],
+			"goalInfo" : [
+				{"x":2, "y":3, "color": "blue"}
+			],
+			"tip": "Oh, what a colorful place!",
+			"best":4,
+		    "nrWidth" :5,
+		    "nrHeight":8,
+		    "bucket" : [
+		    	{"x":0, "y":2 , "color":"blue"},
+		    	{"x":1, "y":6 , "color":"pink"},
+		    	{"x":3, "y":2 , "color":"blue"}
+		    ]
+		   
+		},
+		{// level 18
+			"arrows" : [
+				{"x":0, "y":0, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":2, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":4, "dir": "up", "selected":false, "color": "gray"},
+				{"x":1, "y":2, "dir": "right", "selected":false, "color": "gray"},
+				{"x":1, "y":5, "dir": "right", "selected":false, "color": "gray"},
+				{"x":1, "y":7, "dir": "up", "selected":true, "color": "gray"},
+				{"x":2, "y":0, "dir": "down", "selected":false, "color": "gray"},
+				{"x":3, "y":0, "dir": "down", "selected":false, "color": "gray"},
+				{"x":3, "y":5, "dir": "left", "selected":false, "color": "gray"},
+				{"x":3, "y":6, "dir": "up", "selected":true, "color": "gray"},
+				{"x":3, "y":7, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":2, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":4, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":5, "dir": "up", "selected":false, "color": "gray"}
+			],
+			"goalInfo" : [
+				{"x":2, "y":2, "color": "pink"}
+			],
+			"tip": "Paint all over the place!",
+			"best":5,
+		    "nrWidth" :5,
+		    "nrHeight":8,
+		    "bucket" : [
+		    	{"x":0, "y":3 , "color":"blue"},
+		    	{"x":0, "y":1 , "color":"pink"},
+		    	{"x":1, "y":1 , "color":"pink"},
+		    	{"x":3, "y":3 , "color":"pink"}
+		    ]
+		   
+		},
+		{// level 19
+			"arrows" : [
+				{"x":0, "y":0, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":1, "dir": "down", "selected":false, "color": "gray"},
+				{"x":0, "y":3, "dir": "up", "selected":true, "color": "gray"},
+				{"x":0, "y":5, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":7, "dir": "up", "selected":false, "color": "gray"},
+				{"x":1, "y":3, "dir": "left", "selected":false, "color": "gray"},
+				{"x":1, "y":4, "dir": "up", "selected":false, "color": "gray"},
+				{"x":1, "y":7, "dir": "up", "selected":false, "color": "gray"},
+				{"x":2, "y":1, "dir": "down", "selected":false, "color": "gray"},
+				{"x":2, "y":2, "dir": "right", "selected":false, "color": "gray"},
+				{"x":2, "y":6, "dir": "left", "selected":false, "color": "gray"},
+				{"x":3, "y":0, "dir": "down", "selected":false, "color": "gray"},
+				{"x":3, "y":4, "dir": "up", "selected":false, "color": "gray"},
+				{"x":3, "y":7, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":2, "dir": "down", "selected":true, "color": "gray"},
+				{"x":4, "y":4, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":7, "dir": "up", "selected":false, "color": "gray"}
+			],
+			"goalInfo" : [
+				{"x":1, "y":5, "color": "blue"}
+			],
+			"tip": "Woho! Soon done.",
+			"best":6,
+		    "nrWidth" :5,
+		    "nrHeight":8,
+		    "bucket" : [
+		    	{"x":0, "y":6 , "color":"blue"},
+		    	{"x":2, "y":7 , "color":"pink"},
+		    	{"x":3, "y":1 , "color":"blue"},
+		    	{"x":4, "y":5 , "color":"pink"}
+		    ],
+		    "blackHole" : [
+		    	{"x":0, "y":4},
+		    	{"x":1, "y":2},
+		    	{"x":2, "y":3}
+		    ],
+		   
+		},
+		{// level 20
+			"arrows" : [
+				{"x":0, "y":0, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":1, "dir": "down", "selected":false, "color": "gray"},
+				{"x":0, "y":4, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":5, "dir": "right", "selected":false, "color": "gray"},
+				{"x":0, "y":7, "dir": "up", "selected":false, "color": "gray"},
+				{"x":1, "y":0, "dir": "down", "selected":true, "color": "gray"},
+				{"x":1, "y":2, "dir": "right", "selected":false, "color": "gray"},
+				{"x":1, "y":7, "dir": "up", "selected":false, "color": "gray"},
+				{"x":2, "y":2, "dir": "up", "selected":false, "color": "gray"},
+				{"x":2, "y":4, "dir": "right", "selected":false, "color": "gray"},
+				{"x":3, "y":1, "dir": "left", "selected":true, "color": "gray"},
+				{"x":3, "y":5, "dir": "left", "selected":false, "color": "gray"},
+				{"x":3, "y":6, "dir": "up", "selected":false, "color": "gray"},
+				{"x":4, "y":0, "dir": "down", "selected":false, "color": "gray"},
+				{"x":4, "y":2, "dir": "up", "selected":false, "color": "gray"},
+				{"x":4, "y":4, "dir": "down", "selected":false, "color": "gray"},
+				{"x":4, "y":6, "dir": "left", "selected":false, "color": "gray"},
+				{"x":4, "y":7, "dir": "left", "selected":false, "color": "gray"}
+			],
+			"goalInfo" : [
+				{"x":1, "y":5, "color": "pink"}
+			],
+			"tip": "Do not get confused by all the arrows.",
+			"best":6,
+		    "nrWidth" :5,
+		    "nrHeight":8,
+		    "bucket" : [
+		    	{"x":0, "y":3 , "color":"blue"},
+		    	{"x":3, "y":4 , "color":"blue"},
+		    	{"x":4, "y":1 , "color":"pink"}
+		    ],
+		    "blackHole" : [
+		    	{"x":1, "y":3},
+		    	{"x":2, "y":6}
+		    ],
+		   
 		}
+		// another level
+
+		/*
+
+		5 i bredd, 8 i höjd
+
+		pilar, mål, 
+
+		ska jag ha specifik färg som måste in i målet? 
+
+		Colerful world
+		färg har spilts ut, måste åka igenom rätt färg för att kunna komma till målet??
+
+
+
+
+
+		*/
 	];
 
 	},
