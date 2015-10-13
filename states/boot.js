@@ -10,6 +10,7 @@ GAME.Boot.prototype = {
 
         this.load.image('background', 'assets/extraLargeBack.png');
         this.load.image('spaceBackground', 'assets/extraLargeSpace.png');
+        this.load.image('rainbowBackground', 'assets/extraLargeBackRainbow.png');
 
 
         this.load.image('mascotIcon', 'assets/mascot/beaver.png');
@@ -19,6 +20,7 @@ GAME.Boot.prototype = {
         this.load.image('progressGreen', 'assets/game-ui/progressGreen.png');
 
         this.load.image('bubbleText', 'assets/bubble.png');
+        this.load.image('bubbleTextWhite', 'assets/bubbleWhite.png');
 	},
 	create: function() {
         // scales everything!!!

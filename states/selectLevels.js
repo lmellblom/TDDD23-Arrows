@@ -39,8 +39,10 @@ GAME.SelectLevels.prototype = {
 
 		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 		var spaceBack = this.add.sprite(this.game.width, -(1000 - this.world.height), 'spaceBackground'); // different kind of graphics when different stages sort of?
+		var backGreen2 = this.add.sprite(3*this.game.width, -(backgroundHeight - this.world.height), 'rainbowBackground');
 		this.modalGroup.add(backGreen);
 		this.modalGroup.add(spaceBack);
+		this.modalGroup.add(backGreen2);
 
 		// add information about the game here
 		var info = "Game by Linnéa Mellblom. More info will come up shortly! Enjoy.";
@@ -61,8 +63,7 @@ GAME.SelectLevels.prototype = {
         this.modalGroup.add(change);
 		
 		// the logo is here also
-		var style = { font: "60px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
-		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", style);
+		var header = this.add.text(this.world.centerX, this.world.centerY-200, "ARROWS", LOGOSTYLE);
 		header.anchor.set(0.5);
 		header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 
@@ -80,10 +81,10 @@ GAME.SelectLevels.prototype = {
 	    settingsPanel(this, "levelSelect");
 
 	    // the mascot
-	    var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
+	   /* var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
 	    mascot.scale.setTo(0.5);
 	    this.helmet = this.add.sprite(this.world.width - 170, this.world.height-178, 'spaceHelmet');
-	    this.helmet.scale.setTo(0.5);
+	    this.helmet.scale.setTo(0.5);*/
 
 	    // the arrow do not work correctly att the moment!! 
 	    this.rightArrow = this.add.sprite(this.world.centerX + 200, this.world.centerY+10, 'rightArrow');
@@ -127,9 +128,8 @@ GAME.SelectLevels.prototype = {
 	    this.showSpecificChapter(this.currentPage, false);
 	},
 	drawTheLevels : function() {
-		var levelNames = ["Find your way home", "Watch out for black holes!", "The stars are shining"];
+		var levelNames = ["Find your way home", "Watch out for black holes!", "The stars are shining", "Colerful world"];
 		var styleLevelName = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
-
         var numberStyle = { font: "24px Skranji", fill: "#FFF", align: "center", fontWeight: "bold",  stroke: "#000", strokeThickness: 5};
         var levelGroup = this.add.group();
         var levelClick = this.add.group();
@@ -269,7 +269,7 @@ GAME.SelectLevels.prototype = {
 	    	}
 	    }
 
-	    this.helmet.visible = this.currentPage >=3 ? true : false;
+	    //this.helmet.visible = this.currentPage >=3 ? true : false;
 
 	},
 	update: function() {
@@ -281,7 +281,7 @@ GAME.SelectLevels.prototype = {
 		var i = number-1;
 
 		// show helmet or not? depending on the space levels or not
-		this.helmet.visible = number >=3 ? true : false;
+		//this.helmet.visible = number >=3 ? true : false;
 
 		this.allSquares.setAll('alpha', 0.5);
 		// reset all other elemets
@@ -353,9 +353,8 @@ GAME.SelectLevels.prototype = {
         module.scale.setTo(0.9, 0.9);
         module.anchor.set(0.5,0.5);
         modalGroup.add(module);
-        var st = { font: "18px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
 
-        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Are you sure you want \n to clear your progress?", st);
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Are you sure you want \n to clear your progress?", panelTextStyle);
         text.anchor.set(0.5);
         modalGroup.add(text);
 
@@ -384,7 +383,7 @@ GAME.SelectLevels.prototype = {
         	// rensa allt!! 
 
         	for (var i=0; i<numberOfLevels; i++) {
-			  	madeLevels[i]=false;
+			  	madeLevels[i]=(i+1)%5==0 ? true : false;
 			    madeLevelsStars[i] = 0;
 			  }
             // save in the localstorage as well!
