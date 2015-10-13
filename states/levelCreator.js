@@ -78,9 +78,9 @@ GAME.LevelCreator.prototype = {
 			}
 		}
 		else if(this.currentLevel <=20) {
-			var background = this.add.sprite(0, -(backgroundHeight - this.world.height), 'rainbowBackground');
+			var background = this.add.sprite(0, -(1170 - this.world.height), 'rainbowBackground');
 	    	if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width, -(backgroundHeight - this.world.height), 'rainbowBackground');
+				var back = this.add.sprite(background.width, -(1170 - this.world.height), 'rainbowBackground');
 				back.alpha = 0.8;
 			}
 		} 
@@ -469,7 +469,7 @@ GAME.LevelCreator.prototype = {
 
 				// If the element is not a goal and you don't have more active arrows.
 				// Show the fail module and change the game over text depeding on if dissapeared in a hole or not
-				else if (!element.isGoal() && this.availableMoves()==0) {
+				if (!element.isGoal() && this.availableMoves()==0) {
 					if(playMusic) this.gameOverSound.play();
 					if (!element.isType("hole")) this.gameOver = "You run out of active arrows.."
 					this.showModal();
@@ -520,6 +520,7 @@ GAME.LevelCreator.prototype = {
 		}
 		else if(element.isType("bucket")) {
 			newColor = element.color;
+			color = newColor;
 			// bucket
 			element.resetToEmpty();
 			// change color!!!! 
@@ -598,9 +599,18 @@ GAME.LevelCreator.prototype = {
 	nextLevel: function() {
 		this.currentLevel++;
 
+		// sum up how many levels you have made
+		var total = madeLevels.reduce(function(a, b) {
+		  return a + b;
+		});
+
 		// Check if you have more levels to go, or if you done the last levek
 		if (this.currentLevel <= numberOfLevels) {
 			this.state.start('Level', true, false, this.currentLevel);
+		}
+		else if(total != numberOfLevels) { // if you have reached the last level and not done all levels!!
+			this.currentLevel--;
+			this.quitGame();
 		}
 		else { 
 			// you have reeached the end level! congratz

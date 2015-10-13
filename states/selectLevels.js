@@ -39,14 +39,14 @@ GAME.SelectLevels.prototype = {
 
 		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 		var spaceBack = this.add.sprite(this.game.width, -(1000 - this.world.height), 'spaceBackground'); // different kind of graphics when different stages sort of?
-		var backGreen2 = this.add.sprite(3*this.game.width, -(backgroundHeight - this.world.height), 'rainbowBackground');
+		var backGreen2 = this.add.sprite(3*this.game.width, -(1170 - this.world.height), 'rainbowBackground');
 		this.modalGroup.add(backGreen);
 		this.modalGroup.add(spaceBack);
 		this.modalGroup.add(backGreen2);
 
 		// add information about the game here
 		var info = "Game by Linnéa Mellblom. More info will come up shortly! Enjoy.";
-		var infoS = mediumStyle;
+		var infoS = panelTextStyle;//mediumStyle;
 		infoS.wordWrap = true;
         infoS.wordWrapWidth = this.game.width-this.game.width/3;
         infoS.align = "left";
@@ -57,7 +57,7 @@ GAME.SelectLevels.prototype = {
         // button to clear your prograss. 
         var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2 + 50,'clearProgress');
         change.anchor.set(0.5);
-        change.scale.setTo(0.8);
+        change.scale.setTo(0.6);
         change.inputEnabled =true;
         change.events.onInputDown.add(this.clearProgress, this);
         this.modalGroup.add(change);
@@ -112,13 +112,31 @@ GAME.SelectLevels.prototype = {
 		// levelSquare
 		this.allSquares = this.add.group();
 		this.pageSelector = [];
+
+		// sum up the done levels in each chapter
+		var sumOfDoneLevels = Array(numberOfLevels/5).fill(0);
+		for (var i=0; i<numberOfLevels; i++){
+			var index = Math.floor(i/5);
+			sumOfDoneLevels[index] += madeLevels[i];
+		}
+
 		var space = 30;
 		for (var i=0; i<this.pages; i++) {
-			var btnSquare = this.add.sprite(this.world.centerX-space*2 + space*i, this.world.centerY+150, 'levelSquare');
+			var squareName = i==0 ? "levelSquareInfo" : "levelSquare" ;
+			var btnSquare = this.add.sprite(this.world.centerX-space*2 + space*i, this.world.centerY+150, squareName);
 			btnSquare.page = i+1; 
 			this.pageSelector[i]=btnSquare;
 			btnSquare.alpha = (i+1 == this.currentPage ? 1.0 : 0.5);
 			this.allSquares.add(btnSquare);
+
+			// add a star on the square if you have done all the levels in the chapter
+			if(sumOfDoneLevels[i-1]==5) {
+				var addStar = this.add.sprite(this.world.centerX-space*2 + space*i+8 ,this.world.centerY+150+8, 'smallStar');
+		        addStar.anchor.set(0.5);
+		        addStar.scale.setTo(0.65);
+		        addStar.angle = 9;
+		        addStar.alpha = 1.0;
+			}
 
 		}
 		this.allSquares.setAll('inputEnabled', true);
@@ -155,8 +173,7 @@ GAME.SelectLevels.prototype = {
 	        // place the level sprites with the right level number
 	        for (var j=0; j<5; j++) {
 	        	i = nr *5+j;
-
-	        	var isActive = (i==0 ? true : madeLevels[i-1]); //om nivån innan är klarad, då är leveln öppnad
+	        	var isActive = ( i%5==0 ? true : madeLevels[i-1]); //om nivån innan är klarad, då är leveln öppnad
 	        	var textureName = isActive ? "activeLevel" : "inactiveLevel";
 	        	var levelNr = i+1;
 	        	var xPos = startX + 70*j;
@@ -331,7 +348,7 @@ GAME.SelectLevels.prototype = {
 	startLevel : function(sprite){
 		var levelIndex = sprite.level - 1;
 
-		if (levelIndex == 0 || madeLevels[levelIndex-1]){
+		if (levelIndex%5==0  || madeLevels[levelIndex-1]){
 			if (playMusic) this.clickSound.play()
 			this.game.state.start('Level', true, false, sprite.level);
 		}
@@ -383,7 +400,7 @@ GAME.SelectLevels.prototype = {
         	// rensa allt!! 
 
         	for (var i=0; i<numberOfLevels; i++) {
-			  	madeLevels[i]=(i+1)%5==0 ? true : false;
+			  	madeLevels[i]= false;
 			    madeLevelsStars[i] = 0;
 			  }
             // save in the localstorage as well!

@@ -27,12 +27,10 @@ GAME.Boot.prototype = {
         // scales everything!!!
         this.input.maxPointers = 1;
 
-
-          
         // funkar ej på mobiler om jag har såhär men ser snyggare ut i webben!!
         this.scale.pageAlignVertically = true;
         this.scale.setScreenSize=true;
-         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;  
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;  
 
         if (this.game.device.desktop) {
                

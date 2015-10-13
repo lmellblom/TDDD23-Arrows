@@ -2,6 +2,9 @@
 	A class that handles the grid elements. Holds what color, type and different attributes.
 	Also holds a reference to the sprite.
 */
+
+// kanske göra denna klassen att ärva av phaser sprite istället?? hmmm
+
 function GridElement(sprite, type, selected, direction, color) {
 	this.sprite = sprite; // a reference to the sprite element 
 	this.isSelected = selected || false;
