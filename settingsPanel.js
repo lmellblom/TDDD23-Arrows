@@ -1,93 +1,89 @@
 // creates the settingspanel that should appear in the levelselect and in the game
 // state can be either inGame och levelSelect.
 // if levelSelect go back to the start and so on. 
-// TODO : kanske ändra lite upplägg hur jag ska skriva denna..
 
-function settingsPanel(world, state) {
+function settingsPanel(game, state) {
     // an info button or a reload
     // state, inGame, levelSelect
-    var infoIcon = (state == "inGame" ? 'reloadIcon' : 'infoIcon'); // kanske ta bort infoknappen om man är i spelet? 
-	self = world;
+	this.game = game;
+    this.showSettings = false;
 
-    self.base = self.add.sprite(61, self.world.height, "settingsBase");
+    // adding the base
+    var base = this.game.add.sprite(40, this.game.world.height-40, "settingsBase");
+    base.anchor.set(0.5, 1.0);
+    base.scale.setTo(0.7);
 
-    if (state == "inGame") { 
-        self.base.scale.set(1.0, 0.85);
-        self.base.y += 30;
-    }
+    if(state=="inGame")
+        base.scale.y = 0.6;
 
-    var baseCoord = self.world.height-60 - 20; // -20 för den sista biten som ska gömas bakom knappen
-    self.base.y = baseCoord + self.base.height/2;
-
-    self.settingsGroup = self.add.group();
-    self.settingsGroup.add(self.base);
-
+    // group
+    this.settingsGroup = this.game.add.group();
+    this.settingsGroup.add(base);
+    this.allBtns = this.game.add.group();
+   
+    var startY = base.y-3; // change this after screen cast
+ 
+    // adding all the buttons
     if (state == "levelSelect") {
-        self.infoBtn = self.add.sprite(61, self.base.y-120, infoIcon);
-        self.settingsGroup.add(self.infoBtn);
+        this.infoBtn = this.game.add.sprite(55, startY, 'infoIcon');
+        this.allBtns.add(this.infoBtn);
     }
+    this.musicBtn = this.game.add.sprite(55, startY+60, playMusic? "musicIcon" : "banMusic");
+    this.soundBtn = this.game.add.sprite(55, startY+120, backCalmMusic? "soundIcon" : "banSound");
+    this.menuBtn = this.game.add.sprite(55, startY+180, "menuIcon");
 
-    self.musicBtn = self.add.sprite(61, self.base.y -60, playMusic? "musicIcon" : "banMusic");
-    self.soundBtn = self.add.sprite(61, self.base.y, backCalmMusic? "soundIcon" : "banSound");
-    self.menuBtn = self.add.sprite(61, self.base.y+60, "menuIcon");
-    
-    self.settingsGroup.add(self.musicBtn);
-    self.settingsGroup.add(self.soundBtn);
-    self.settingsGroup.add(self.menuBtn);
+    this.allBtns.add(this.musicBtn);
+    this.allBtns.add(this.soundBtn);
+    this.allBtns.add(this.menuBtn);
+    this.allBtns.setAll('anchor.x', 0.5);
+    this.allBtns.setAll('anchor.y', 0.5);
+    this.allBtns.scale.set(0.7);
+    this.allBtns.setAll('inputEnabled', true);
+    this.settingsGroup.add(this.allBtns);
 
-   	self.settingsGroup.setAll('anchor.x', 0.5);
-	self.settingsGroup.setAll('anchor.y', 0.5);
-    self.settingsGroup.scale.set(0.7);
+    // adding the settingsbutton
+    this.game.settingsBtn = this.game.add.sprite(40, this.game.world.height-20, 'settingsBtn');
+    this.game.settingsBtn.anchor.set(0.5, 1.0);
+    this.game.settingsBtn.scale.setTo(0.7);
 
-    // add settings button
-    self.settingsBtn = self.add.sprite(20, self.world.height-60, 'settingsBtn');
-    self.settingsBtn.scale.setTo(0.7);
-    self.settingsBtn.inputEnabled = true;
-    self.settingsBtn.events.onInputDown.add(settingsOpen, self);
-    self.settingsGroup.visible = false;//self.showSettings; // make sure the panel always stays hidden when adding a new one
-    self.settingsGroup.setAll('inputEnabled', true);
+    this.game.settingsBtn.inputEnabled = true;
+    this.game.settingsBtn.events.onInputDown.add(settingsOpen, this);
+    this.settingsGroup.visible = false;     // make sure the panel always stays hidden when adding a new one
 
-
-    // sett events on the settingsbuttons
+    // set events on the settingsbuttons
     if (state == "levelSelect") {
-        self.infoBtn.events.onInputDown.add(function (e,pointer){
-            self.firstSettingsBtn();
-        }, self);
+        this.infoBtn.events.onInputDown.add(function (e,pointer){
+            this.game.firstSettingsBtn();
+        }, this);
     }
-    // the rest
-        self.menuBtn.events.onInputDown.add(function (e,pointer){
-	        self.backOneStep(); // here should it be something else? 
-        	// go back one step
-        }, self);
-        self.musicBtn.events.onInputDown.add(function (e,pointer){
+    this.menuBtn.events.onInputDown.add(function (e,pointer){
+        this.game.backOneStep();  // go back one step, defines in the game
+    }, this);
+    this.musicBtn.events.onInputDown.add(function (e,pointer){
+    	playMusic = !playMusic;
+    	var texure = playMusic? "musicIcon" : "banMusic"; 
+    	this.musicBtn.loadTexture(texure,0);
+    }, this);
+    this.soundBtn.events.onInputDown.add(function (e,pointer){
+    	backCalmMusic = !backCalmMusic;
 
-        	playMusic = !playMusic;
-        	var texure = playMusic? "musicIcon" : "banMusic"; // change to the other
-        	self.musicBtn.loadTexture(texure,0);
-            
-        }, self);
-        self.soundBtn.events.onInputDown.add(function (e,pointer){
+    	if(backCalmMusic) {
+    		backgroundMusicPlayer.resume();
+    	}
+    	else {
+    		backgroundMusicPlayer.pause();
+    	}
 
-        	backCalmMusic = !backCalmMusic;
-
-        	if(backCalmMusic) {
-        		backgroundMusicPlayer.resume();
-        	}
-        	else {
-        		backgroundMusicPlayer.pause();
-        	}
-
-        	var texure = backCalmMusic? "soundIcon" : "banSound"; // change to the other
-        	self.soundBtn.loadTexture(texure,0);
-        }, self);
-
+    	var texure = backCalmMusic? "soundIcon" : "banSound"; 
+    	this.soundBtn.loadTexture(texure,0);
+    }, this);
 }
 
 var settingsOpen = function() {
 		if(playMusic) clickSound.play();
 
-		self.showSettings = !self.showSettings;
-		self.settingsGroup.visible = self.showSettings;
+		this.showSettings = !this.showSettings;
+		this.settingsGroup.visible = this.showSettings;
 
-		self.settingsGroup.z = 1;
-	}
+		this.settingsGroup.z = 1;
+}

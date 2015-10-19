@@ -10,116 +10,125 @@ GAME.SelectLevels.prototype = {
 
 		this.game.stage.backgroundColor = '#FFF';
 
-		//TESTING swipe. Maybe use or not.. 
-		// var element = document.getElementsByTagName('body')[0];
-		// var hammer    = new Hammer.Manager(element);
-		// var swipe     = new Hammer.Swipe();
+		/* TESTING swipe on mobiles. Does not work correctly at the moment. 
+		var element = document.getElementsByTagName('body')[0];
+		var hammer    = new Hammer.Manager(element);
+		var swipe     = new Hammer.Swipe();
 
-		// hammer.add(swipe);
+		hammer.add(swipe);
 
-		// hammer.on("swiperight", ((ev) => {    	
-	 //    	if (this.currentPage >=2) {
-		//     	this.showSpecificChapter(this.currentPage-1, true);
-		//     	console.log( ev.type +" gesture detected.");
-		//     }
-		// }));
+		hammer.on("swiperight", ((ev) => {    	
+	    	if (this.currentPage >=2) {
+		    	this.showSpecificChapter(this.currentPage-1, true);
+		    	console.log( ev.type +" gesture detected.");
+		    }
+		}));
 
-		// hammer.on("swipeleft", ((ev) => {    	
-	 //    	if (this.currentPage<this.pages){
-		//     	this.showSpecificChapter(this.currentPage+1, true);
-		//     	console.log( ev.type +" gesture detected.");
-		//     }
-		// }));
+		hammer.on("swipeleft", ((ev) => {    	
+	    	if (this.currentPage<this.pages){
+		    	this.showSpecificChapter(this.currentPage+1, true);
+		    	console.log( ev.type +" gesture detected.");
+		    }
+		}));
+		*/
 
-		this.pages = numberOfLevels/5 + 1; // +1 för inforutan först!!
+		// How many pages in total to show. It is number of levels / 5 = how many chapters and +1 for the information
+		this.pages = numberOfLevels/5 + 1;
+
+		this.clickSound = this.add.audio('clickSound',0.2);
+
 		this.drawStars = [];
 		this.drawLevels = [];
-		this.clickSound = this.add.audio('clickSound');
-		this.modalGroup = this.add.group();
+		this.modalGroup = this.add.group(); 	// here lies everything that not should be static in the level selection
 
+		// add all the backgrounds
 		var backGreen = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 		var spaceBack = this.add.sprite(this.game.width, -(1000 - this.world.height), 'spaceBackground'); // different kind of graphics when different stages sort of?
 		var backGreen2 = this.add.sprite(3*this.game.width, -(1170 - this.world.height), 'rainbowBackground');
+		
 		this.modalGroup.add(backGreen);
 		this.modalGroup.add(spaceBack);
 		this.modalGroup.add(backGreen2);
 
-		// add information about the game here
-		var info = "Game by Linnéa Mellblom. More info will come up shortly! Enjoy.";
-		var infoS = panelTextStyle;//mediumStyle;
-		infoS.wordWrap = true;
-        infoS.wordWrapWidth = this.game.width-this.game.width/3;
-        infoS.align = "left";
-        var theInfo = this.add.text(-this.game.width+this.game.width/2, this.game.height/2-70, info, infoS);
-        theInfo.anchor.set(0.5);
-        this.modalGroup.add(theInfo);
-
-        // button to clear your prograss. 
-        var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2 + 50,'clearProgress');
-        change.anchor.set(0.5);
-        change.scale.setTo(0.6);
-        change.inputEnabled =true;
-        change.events.onInputDown.add(this.clearProgress, this);
-        this.modalGroup.add(change);
-		
-		// the logo is here also
+		// Add the logo
 		var header = this.add.sprite(this.world.centerX, this.world.centerY-200, "arrowHeader");
 		header.anchor.set(0.5);
 		header.scale.setTo(0.6);
 
-		// tween the logo also
+		// Tween the logo
 		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
           var headerTween = this.add.tween(header);
 		headerTween.to({
 			angle: -header.angle
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
-		// draw stars and levels
+		// ====== The information "page" ======
+		var info = "A game by Linnéa Mellblom.\n \n Thanks for playing. You rock!";
+		var infoS = panelTextStyle;
+		infoS.wordWrap = true;
+        infoS.wordWrapWidth = header.width+20;//this.game.width-this.game.width/3;
+        infoS.align = "center";
+        var theInfo = this.add.text(-this.game.width+this.game.width/2, this.game.height/2-70, info, infoS);
+        theInfo.anchor.set(0.5);
+        this.modalGroup.add(theInfo);
+
+        var credits = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2+90,'creditsBtn');
+        credits.anchor.set(0.5);
+        credits.scale.setTo(0.6);
+        
+        this.modalGroup.add(credits);
+        credits.inputEnabled = true;
+        credits.events.onInputDown.add(function(){
+        	window.open("https://github.com/lmellblom/TDDD23-Arrows", "_blank");
+        }, this);
+
+        // button to clear your prograss. 
+        var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2+40,'clearProgress');
+        change.anchor.set(0.5);
+        change.scale.setTo(0.6);
+        change.inputEnabled =true;
+        change.events.onInputDown.add(this.clearProgress, this);
+        this.modalGroup.add(change);
+		
+		// Draw the stars and the levels
 	    this.drawTheLevels();
 
-	    // add settingspanel
+	    // Add the settingspanel
 	    settingsPanel(this, "levelSelect");
 
-	    // the mascot
-	   /* var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
-	    mascot.scale.setTo(0.5);
-	    this.helmet = this.add.sprite(this.world.width - 170, this.world.height-178, 'spaceHelmet');
-	    this.helmet.scale.setTo(0.5);*/
-
-	    // the arrow do not work correctly att the moment!! 
+	    // Add the arrows to click on in order to go between the chapters
 	    this.rightArrow = this.add.sprite(this.world.centerX + 200, this.world.centerY+10, 'rightArrow');
 	    this.rightArrow.scale.setTo(0.8);
 	    this.rightArrow.anchor.set(0.5);
 	    this.rightArrow.dir = "right";
 
-	    // left arrow, sprite.angle
        	this.leftArrow = this.add.sprite(this.world.centerX - 200, this.world.centerY+10, 'rightArrow');
        	this.leftArrow.angle = 180;
 	    this.leftArrow.scale.setTo(0.8);
 	    this.leftArrow.anchor.set(0.5);
 	    this.leftArrow.dir = "left"; 
-	    this.leftArrow.alpha = 1.0; // since first page and should not be able to go left..
+	    this.leftArrow.alpha = 1.0; // TODO, kan jag ändra detta?
 
-	    this.arrowButtonG = this.add.group();    
-	    this.arrowButtonG.add(this.leftArrow);
-	    this.arrowButtonG.add(this.rightArrow);
+	    this.arrowButtonGroup = this.add.group();    
+	    this.arrowButtonGroup.add(this.leftArrow);
+	    this.arrowButtonGroup.add(this.rightArrow);
 
-	    this.arrowButtonG.setAll('inputEnabled', true);
-	    // using the power of callAll we can add the same input event to all coins in the group:
-	    this.arrowButtonG.callAll('events.onInputDown.add', 'events.onInputDown', this.arrowClicked, this);
+	    this.arrowButtonGroup.setAll('inputEnabled', true);
+	    this.arrowButtonGroup.callAll('events.onInputDown.add', 'events.onInputDown', this.arrowClicked, this);
 
-		// lägga till små rektanglar länst ned för att kunna trycka på, typ gå mellan sidor snabbt.
-		// levelSquare
+		// Adding the squares under the modal of the chapters. Shows which page you are current at
 		this.allSquares = this.add.group();
 		this.pageSelector = [];
 
-		// sum up the done levels in each chapter
+		// sum up the done levels in each chapter, in order to determine if you get a star.
+		// you get a star if you have completed a chapter
 		var sumOfDoneLevels = Array(numberOfLevels/5).fill(0);
 		for (var i=0; i<numberOfLevels; i++){
 			var index = Math.floor(i/5);
 			sumOfDoneLevels[index] += madeLevels[i];
 		}
 
+		// adding all the squares under
 		var space = 30;
 		for (var i=0; i<this.pages; i++) {
 			var squareName = i==0 ? "levelSquareInfo" : "levelSquare" ;
@@ -149,12 +158,14 @@ GAME.SelectLevels.prototype = {
 		var levelNames = ["Find your way home", "Watch out for black holes!", "The stars are shining", "Colerful world"];
 		var styleLevelName = { font: "16px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
         var numberStyle = { font: "24px Skranji", fill: "#FFF", align: "center", fontWeight: "bold",  stroke: "#000", strokeThickness: 5};
+        
         var levelGroup = this.add.group();
         var levelClick = this.add.group();
 
 		for (var nr = 0; nr < numberOfLevels/5 ; nr++) {
         	var xValue = this.world.centerX + nr*this.game.width;
 
+        	// add the module background
 	        var module = this.add.sprite(xValue ,this.world.centerY , 'levelModule');
 	        module.scale.setTo(0.6, 0.6);
 	        module.anchor.set(0.5,0.5);
@@ -165,15 +176,14 @@ GAME.SelectLevels.prototype = {
 	    	levelN.anchor.set(0.5);    	
 	    	this.modalGroup.add(levelN); 
 
-	        // adding the number and background to the levels
-	        // får plats 5 stycken... 
+	        // adding the number and background to the levels. right now it is hard coded to be 5 
 	        var startX = this.world.centerX-140 + nr*this.game.width;
 	        var startY = this.world.centerY - 30;
 
 	        // place the level sprites with the right level number
 	        for (var j=0; j<5; j++) {
 	        	i = nr *5+j;
-	        	var isActive = ( i%5==0 ? true : madeLevels[i-1]); //om nivån innan är klarad, då är leveln öppnad
+	        	var isActive = ( /*i%5==0*/i==0  ? true : madeLevels[i-1]); //om nivån innan är klarad, då är leveln öppnad
 	        	var textureName = isActive ? "activeLevel" : "inactiveLevel";
 	        	var levelNr = i+1;
 	        	var xPos = startX + 70*j;
@@ -192,7 +202,7 @@ GAME.SelectLevels.prototype = {
 	    		levelClick.add(text);    		
 	    		levelGroup.add(levelSprite);
 
-	        	// lägg till stjärnor under beroende på om man klarat eller inte
+	        	// Place stars depending if you have made the level or not
 	        	var spacing = 12;
 	        	var paddY = 16;
 	        	if (madeLevelsStars[i]!= 0) { 
@@ -212,27 +222,26 @@ GAME.SelectLevels.prototype = {
 		        		this.drawStars.push(addStar);
 			        	levelGroup.add(addStar);
 			    	}
-		    	}
-
-	    		 		
+		    	}	    		 		
 	        }
     	}
 
         // add another module with empty for now
         this.modalGroup.visible = true;
 
-        // set input on very level
+        // set input on very level and attach a function to call when input down
 	    levelGroup.setAll('inputEnabled', true);
-	    // using the power of callAll we can add the same input event to all coins in the group:
 	    levelGroup.callAll('events.onInputDown.add', 'events.onInputDown', this.startLevel, this);
 
-	    // add the groups to the whole levels so to tween it!
+	    // add the groups to the whole levels so that we can tween it
 	    this.modalGroup.add(levelGroup);
 	    this.modalGroup.add(levelClick);
 
 	},
 	resetDrawing : function () {
-		// alltsåå.. kommer bli så sämst detta... TODO : ändra till bättreeee
+		// NOT optimal at the moment. But works.. 
+		// will reset the drawn levels and redraw. This when the user have pressed the 
+		// clear the progress.
 		this.drawLevels.forEach(function(level){
 			level.kill();
 		}, this);
@@ -245,49 +254,28 @@ GAME.SelectLevels.prototype = {
 	},
 	arrowClicked : function(button) {
 		if (!this.tweens.isTweening(this.modalGroup)) { // to prevent the module to slide even more if it is already moving!
-
-		if(button.dir==="left" && this.currentPage>1) {
-	    		var slide = '+' + this.world.width; 
-	    		this.rightArrow.alpha = 1;
-	    		this.currentPage--;
-	    		if (this.currentPage==1) {
-	    			button.alpha = 0.0;
-
-	    		}
-
-	    		this.allSquares.setAll('alpha', 0.5);
-				// reset all other elemets
-				this.pageSelector[this.currentPage-1].alpha = 1.0;
-
-	    		var buttonsTween = this.add.tween(this.modalGroup);
-				buttonsTween.to({
-					x: slide
-				}, 500, Phaser.Easing.Cubic.None);
-				buttonsTween.start();
+			if(button.dir==="left" && this.currentPage>1) {
+		    		var slide = '+' + this.world.width; 
+		    		this.rightArrow.alpha = 1;
+		    		this.currentPage--;
+		    		button.alpha = this.currentPage==1 ? 0 : button.alpha;
+		    }
+		    else if(button.dir === "right" && this.currentPage<this.pages){
+		    		var slide = '-' + this.world.width;
+		    		this.leftArrow.alpha = 1;
+		    		this.currentPage++;
+		    		button.alpha = this.currentPage==this.pages ? 0 : button.alpha;
 	    	}
-	    else if(button.dir === "right" && this.currentPage<this.pages){
-	    		var slide = '-' + this.world.width;
-	    		this.leftArrow.alpha = 1;
-	    		this.currentPage++;
-	    		if (this.currentPage==this.pages) {
-	    			button.alpha = 0.0;
 
-	    		}
-
-	    		this.allSquares.setAll('alpha', 0.5);
-				// reset all other elemets
-				this.pageSelector[this.currentPage-1].alpha = 1.0;
-
-	    		var buttonsTween = this.add.tween(this.modalGroup);
-				buttonsTween.to({
-					x: slide
-				}, 500, Phaser.Easing.Cubic.None);
-				buttonsTween.start();
-	    	}
-	    }
-
-	    //this.helmet.visible = this.currentPage >=3 ? true : false;
-
+	    	// this is common for the arrows to do
+		    this.allSquares.setAll('alpha', 0.5);	// resets all the alpha values on the squares // TODO, maybe reset just one??
+			this.pageSelector[this.currentPage-1].alpha = 1.0;
+			var buttonsTween = this.add.tween(this.modalGroup);
+			buttonsTween.to({
+				x: slide
+			}, 500, Phaser.Easing.Cubic.None);
+			buttonsTween.start();
+		}
 	},
 	update: function() {
 
@@ -297,49 +285,36 @@ GAME.SelectLevels.prototype = {
 		var number = number.page || number;
 		var i = number-1;
 
-		// show helmet or not? depending on the space levels or not
-		//this.helmet.visible = number >=3 ? true : false;
-
-		this.allSquares.setAll('alpha', 0.5);
-		// reset all other elemets
+		this.allSquares.setAll('alpha', 0.5); // resets all the alpha values on the squares // TODO, maybe reset just one??
 		this.pageSelector[i].alpha = 1.0;
 		this.currentPage = number; 
 
-		// to be able to use both. 
+		// to be able to use tweening or not!
 		if (!tweening) {
 			this.modalGroup.x = this.world.width-this.world.width*i;
 		}
 		else {
-		// tween to right position.. 
-		this.add.tween(this.modalGroup)
-			.to({
-				x: this.world.width - this.world.width * i
-			}, 500, "Linear")
-			.start();
+			this.add.tween(this.modalGroup)
+				.to({
+					x: this.world.width - this.world.width * i
+				}, 500, "Linear")
+				.start();
 		}
-		this.leftArrow.alpha = 1.0;
-		this.rightArrow.alpha = 1.0;
-		if (this.currentPage==1) {
-	    	this.leftArrow.alpha = 0.0;
 
-	    }
-	    else if (this.currentPage==this.pages) {
-	    	this.rightArrow.alpha = 0.0;
-	    }
-
+		// set the right alpha of the arrows
+		this.leftArrow.alpha = this.currentPage==1 ? 0 : 1;
+		this.rightArrow.alpha = this.currentPage==this.pages ? 0 : 1;
 	},
 	firstSettingsBtn : function() {
-		// går till informationssidan som ligger längst till vänster om alla chapters
-		this.rightArrow.alpha = 1.0;
-		this.add.tween(this.modalGroup)
-			.to({
+		// this function will be calles from the settingsPanel. will go to the first page that is the information
+		this.add.tween(this.modalGroup).to({
 				x: this.world.width
-			}, 500, "Linear")
-			.start();
-		this.currentPage = 1;
+		}, 500, "Linear").start();
+
+		this.rightArrow.alpha = 1.0;
 		this.leftArrow.alpha = 0.0;
+		this.currentPage = 1;
 		this.allSquares.setAll('alpha', 0.5);
-		// reset all other elemets
 		this.pageSelector[0].alpha = 1.0;
 	},
 	backOneStep: function() {
@@ -348,14 +323,13 @@ GAME.SelectLevels.prototype = {
 	startLevel : function(sprite){
 		var levelIndex = sprite.level - 1;
 
-		if (levelIndex%5==0  || madeLevels[levelIndex-1]){
+		if (/*levelIndex%5==0*/levelIndex==0   || madeLevels[levelIndex-1]){
 			if (playMusic) this.clickSound.play()
 			this.game.state.start('Level', true, false, sprite.level);
 		}
 	},
-	// this function should open a module and ask if the user want to go back to menu
+	// this function should open a module and ask if the user wants to clear the progress in the game
 	clearProgress : function () {
-
 		var modalGroup = this.add.group();
 
 		var modal = this.game.add.graphics(this.game.width, this.game.height);

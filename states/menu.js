@@ -9,7 +9,7 @@ GAME.MainMenu.prototype = {
 
 		var back = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 
-		if (this.world.width > back.width) { // add more
+		if (this.world.width > back.width) { // add more background?
 			this.add.sprite(back.width, -(backgroundHeight - this.world.height), 'background');
 		}
 
@@ -32,7 +32,7 @@ GAME.MainMenu.prototype = {
 
 		//backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
 		//this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
-		clickSound = this.add.audio('clickSound');
+		clickSound = this.add.audio('clickSound', 0.2);
 
 	},
 	update: function() {

@@ -30,12 +30,9 @@ GAME.FinishedLevels.prototype = {
 		backBtn.events.onInputDown.add(this.backToMenu, this);
 
 	  	var t = "WOW! You have completed \n all levels. Congratz!"
-	    //var t = "Hello!\n My name is Bernie \n and I am lost :( \nHelp me home!"
 	    var st = { font: "14px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
         var text = this.add.text(this.world.centerX, this.world.centerY+30, t, st);
         text.anchor.set(0.5);
-
-
 	},	
 	update: function() {
 

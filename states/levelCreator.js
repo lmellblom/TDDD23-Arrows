@@ -7,7 +7,7 @@ GAME.LevelCreator.prototype = {
 	init: function(levelId) { 
 		this.currentLevel = levelId; 
 
-		// load the leveldata for this particular level. 
+		// get the leveldata for this particular level. 
 		this.levelData = allLevelData[levelId-1];
 
 	    this.gridInfo = {
@@ -19,8 +19,7 @@ GAME.LevelCreator.prototype = {
 	    this.gridInfo.nrWidth = this.levelData.nrWidth;
 	    this.gridInfo.nrHeight = this.levelData.nrHeight;
 
-	    // If the canvas of the game is larger in width than height, flip
-	    // the grid. 
+	    // If the canvas of the game is larger in width than height, flip the grid. 
 	    if (this.world.width > this.world.height) { 
 	    	var change = this.gridInfo.nrWidth;
 	    	this.gridInfo.nrWidth = this.gridInfo.nrHeight;
@@ -51,50 +50,27 @@ GAME.LevelCreator.prototype = {
 
 	create: function() {
 		// sounds, maybe add this in the main instead as global? TODO
-		this.winSound = this.add.audio('winSound');
-		this.starSound = this.add.audio('starSound');
-		this.arrowSound = this.add.audio('arrowSound');
-		this.gameOverSound = this.add.audio('gameOverSound');
+		this.winSound = this.add.audio('winSound', 0.2, false);
+		this.starSound = this.add.audio('starSound',0.13, false);
+		this.arrowSound = this.add.audio('arrowSound',0.07, false);
+		this.gameOverSound = this.add.audio('gameOverSound',0.2, false);
 
-		// Handles the background and which to place
-		// Also add more background if the world is bigger than the background
-	    this.game.stage.backgroundColor = '#FFF';
+		// Handles the background and which to place	    
 	    if (this.currentLevel <=5) {
 	    	var background = this.add.sprite(0, -(backgroundHeight - this.world.height), 'background');
-	    	if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width, -(backgroundHeight - this.world.height), 'background');
-				back.alpha = 0.8;
-			}
+	    	this.game.stage.backgroundColor = '#000';
+	    	background.alpha = 0.9;
 	    }
 	    else if (this.currentLevel <=15){
-		    var background = this.add.sprite(0, -(1000 - this.world.height), 'spaceBackground');
-		    if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width*2, -(1000 - this.world.height), 'spaceBackground');
-				back.scale.x *= -1;
-				if (this.currentLevel > 10)
-					back.alpha = 0.7;
-				else
-					back.alpha = 0.8;
-			}
+	    	this.game.stage.backgroundColor = '#FFF';
+		    var background = this.add.sprite(0, -(950 - this.world.height), 'spaceBackground');
+		    background.alpha = 0.9;
 		}
 		else if(this.currentLevel <=20) {
-			var background = this.add.sprite(0, -(1170 - this.world.height), 'rainbowBackground');
-	    	if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width, -(1170 - this.world.height), 'rainbowBackground');
-				back.alpha = 0.8;
-			}
+			var background = this.add.sprite(0, -(1170 - this.world.height), 'background');
+			this.game.stage.backgroundColor = '#000';
+			background.alpha = 0.7;
 		} 
-
-	    background.alpha = this.currentLevel > 10 ? 0.7 : 0.8;
-
-	    // setting a white layer over, to easier see the grid
-	    var whiteBack = this.game.add.graphics(this.world.width, this.world.height);
-		whiteBack.beginFill(0x000000, 0.4);
-		var padding = 0;
-        whiteBack.x = padding;
-        whiteBack.y = padding;
-       // whiteBack.z = -1;
-        whiteBack.drawRect(padding, padding, this.world.width-padding*4, this.world.height-padding*4);
 
         // add the level and score text in the top
 	    this.levelText = this.add.text(20, 20, "Level " + this.currentLevel, generalStyle);
@@ -102,7 +78,8 @@ GAME.LevelCreator.prototype = {
 
        	// Add a settingspanel to the level, handles all buttons and functions.
        	settingsPanel(this, "inGame");
-       	this.reloadBtn = self.add.sprite(80, self.world.height-60, 'reloadIcon');
+      	this.reloadBtn = this.add.sprite(100, this.world.height-20, 'reloadIcon');
+    	this.reloadBtn.anchor.set(0.5, 1.0);
        	this.reloadBtn.scale.setTo(0.7);
        	this.reloadBtn.inputEnabled = true;
        	this.reloadBtn.events.onInputDown.add(this.reloadLevelBtn, this);
@@ -117,6 +94,7 @@ GAME.LevelCreator.prototype = {
 	    		
 	    		// create the sprite and place the center in the position
 	    		var gridSprite = theGrid.create(posX,posY,'empty');
+	    		//var gridSprite = new GridElement()
 	    		gridSprite.alpha = 0.4;
 	    		gridSprite.anchor.set(0.5);
 
@@ -194,17 +172,15 @@ GAME.LevelCreator.prototype = {
 
 	    // Add the goal
 	    // Desides if the grid is flipped or not, setting different x and y values depending on this
+	    var goalElement;
 	    if (this.world.width > this.world.height)
-	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].y][this.levelData.goalInfo[0].x];
+	    	goalElement = this.gridSystem[this.levelData.goalInfo[0].y][this.levelData.goalInfo[0].x];
 	   	else
-	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
-	    
+	    	goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
+
 	    goalElement.setColor(this.levelData.goalInfo[0].color);
 	    goalElement.setType("goal");
 		goalElement.changeTexture();
-
-		// Give the goal a little bit of movement
-		//this.add.tween(goalElement.sprite.scale).to( { x: [1.3, 1.0], y: [1.3, 1.0]  }, 3000, "Linear", true, -1, false);
 	
 		// Add all the arrows to the grid
 	    this.arrowGroup = this.add.group();
@@ -245,7 +221,7 @@ GAME.LevelCreator.prototype = {
 	    }, this);
 
 	    // Place 5 random arrows. The function only does this at level 2-5 at each chapter
-	    this.placeRandomArrow(5);
+	    //this.placeRandomArrow(5);
 
 		// ==========================
 	    // debugmodes
@@ -257,7 +233,7 @@ GAME.LevelCreator.prototype = {
 	},
 
 	// Function than randomly places nrRandomArrows on the grid. 
-	// Will only add extra arrows if the level is number 2-5 on each chapter.
+	// Will only add extra arrows if the level is number 3-5 on each chapter.
 	placeRandomArrow : function(nrRandomArrows) {
 		var addExtraArrwos = this.currentLevel%5 > 2 ? true : false;
 		if (addExtraArrwos) {
@@ -273,7 +249,7 @@ GAME.LevelCreator.prototype = {
 		    		var dirIndex = getRandom(0,3);
 		    		
 		    		// make a random new arrow and place it, else go again in the while loop
-		    		element.setColor("blue"); // hur göra här? kanske ha en färg per nivå
+		    		element.setColor("blue");
 		    		element.setType("arrow", directions[dirIndex]);
 			     	element.setSelected(false); // always set to false instead!! 
 			     	element.changeTexture();
@@ -333,14 +309,13 @@ GAME.LevelCreator.prototype = {
             this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
-
-       //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
 	},
 
 	// The user clicked on the grid 
 	// This function will activate all arrows in that direction
 	// Also checks if it has travelled over a star, a black hole or have reached the goal. 
 	clickedGrid : function(item) {
+		//console.log(item);
 		var x = item.indexNr.x, y = item.indexNr.y;
 		var gridElement = this.gridSystem[x][y]; // get the gridElement
 
@@ -348,7 +323,7 @@ GAME.LevelCreator.prototype = {
 
 		// if the element the user clicked on is an arrow and can be clicked on
 		if(gridElement.isArrow() && gridElement.isSelected) {
-			if(playMusic) this.arrowSound.play("",0,0.4); // the attributes tell how loud the sound should be
+			if(playMusic) this.arrowSound.play(); // the attributes tell how loud the sound should be
 			
 			this.click++;
 			this.scoreText.text = "Clicks: " + this.click;
@@ -513,9 +488,7 @@ GAME.LevelCreator.prototype = {
 			element.sprite.scale.setTo(1.0);
 		
 			if(this.points == this.maxPoints) { // if reached max stars
-				//this.createSparkle(element.sprite.x, element.sprite.y, 1500, 100, 30);
-				//this.createSparkle(this.world.centerX, 50, 1500, 100, 30);
-				//blir det för mycket? göra något annat här. typ annat ljud? durrar till när uppe? ngt liknande kanske
+				// maybe do something here?
 			}
 		}
 		else if(element.isType("bucket")) {
@@ -551,7 +524,6 @@ GAME.LevelCreator.prototype = {
 
 	createSparkle : function(x,y, time, width, numbers) { // texture name sparkle
 		// create and emitter
-		// emit from the starposition sort of this.world.centerX, 40
 		var emitter = this.game.add.emitter(x,y,50);
 		emitter.makeParticles('sparkle');
 		emitter.forEach(function(particle) {
@@ -645,13 +617,9 @@ GAME.LevelCreator.prototype = {
         tStyle.wordWrap = true;
         tStyle.wordWrapWidth = module.width-30;
 
-        var text = this.add.text(this.world.centerX, this.world.centerY-20, "OH noooh!", tStyle);
+        var text = this.add.text(this.world.centerX, this.world.centerY-20, "Darn it!", tStyle);
         text.anchor.set(0.5);
         modalGroup.add(text);
-        
-        /*var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
-        tipBar.scale.setTo(0.8);
-        modalGroup.add(tipBar);*/
 
         var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.gameOver, nStyle);
         tip.anchor.set(0.5);
@@ -679,14 +647,6 @@ GAME.LevelCreator.prototype = {
         	modalGroup.visible = false;
             this.quitGame();
         }, this);
-
-       // this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
-
-        // add buttons to click!! 
-        /*modal.events.onInputDown.add(function (e, pointer) {
-            modalGroup.visible = false;
-            this.resetThisLevel();
-        }, this);*/
 	},
 
 	// Function that show a modal when you have made the level.
@@ -723,10 +683,6 @@ GAME.LevelCreator.prototype = {
         text.anchor.set(0.5);
         modalGroup.add(text);
 
-    	// tips
-/*    	var tipBar = this.add.sprite(this.world.centerX-60 ,this.world.centerY -10, 'tipBar');
-    	tipBar.scale.setTo(0.8);
-        modalGroup.add(tipBar);*/
         var tip = this.add.text(this.world.centerX, this.world.centerY+90, this.levelData.tip, nStyle);
         tip.anchor.set(0.5);
         modalGroup.add(tip);
@@ -747,9 +703,6 @@ GAME.LevelCreator.prototype = {
         modalGroup.add(menuBtn);
         modalGroup.add(nextBtn);
         modalGroup.add(tryAgainBtn);
-
-        //game.add.tween(sprite).from( { y: -200 }, 2000, Phaser.Easing.Bounce.Out, true);
-        //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
 
         menuBtn.events.onInputDown.add(function (e,pointer){
         	if(playMusic) clickSound.play();
@@ -821,8 +774,6 @@ GAME.LevelCreator.prototype = {
             this.settingsBtn.inputEnabled = true;
         	modalGroup.visible = false;
         }, this);
-
-       //this.add.tween(modalGroup).from({ y: this.world.height/2 }, 600, Phaser.Easing.Cubic.None, true);
 	},
 
 	// Function that restarts this current level. 
@@ -834,9 +785,6 @@ GAME.LevelCreator.prototype = {
 	// Determines which page in the levelselction to go to, depending on which level
 	// the user was at. 
     quitGame: function (pointer) {
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-
         //  Then let's go back to the main menu.
         var pageStart = Math.floor((this.currentLevel-1)/5); //show the page which indicate the chapter you are on. page 2 är chapter 1 vilket är nivå 1-5 etc...
         this.state.start('SelectLevels', true, false, pageStart+2);
