@@ -7,7 +7,7 @@ GAME.LevelCreator.prototype = {
 	init: function(levelId) { 
 		this.currentLevel = levelId; 
 
-		// load the leveldata for this particular level. 
+		// get the leveldata for this particular level. 
 		this.levelData = allLevelData[levelId-1];
 
 	    this.gridInfo = {
@@ -19,8 +19,7 @@ GAME.LevelCreator.prototype = {
 	    this.gridInfo.nrWidth = this.levelData.nrWidth;
 	    this.gridInfo.nrHeight = this.levelData.nrHeight;
 
-	    // If the canvas of the game is larger in width than height, flip
-	    // the grid. 
+	    // If the canvas of the game is larger in width than height, flip the grid. 
 	    if (this.world.width > this.world.height) { 
 	    	var change = this.gridInfo.nrWidth;
 	    	this.gridInfo.nrWidth = this.gridInfo.nrHeight;
@@ -93,7 +92,6 @@ GAME.LevelCreator.prototype = {
 		var padding = 0;
         whiteBack.x = padding;
         whiteBack.y = padding;
-       // whiteBack.z = -1;
         whiteBack.drawRect(padding, padding, this.world.width-padding*4, this.world.height-padding*4);
 
         // add the level and score text in the top
@@ -117,6 +115,7 @@ GAME.LevelCreator.prototype = {
 	    		
 	    		// create the sprite and place the center in the position
 	    		var gridSprite = theGrid.create(posX,posY,'empty');
+	    		//var gridSprite = new GridElement()
 	    		gridSprite.alpha = 0.4;
 	    		gridSprite.anchor.set(0.5);
 
@@ -194,11 +193,12 @@ GAME.LevelCreator.prototype = {
 
 	    // Add the goal
 	    // Desides if the grid is flipped or not, setting different x and y values depending on this
+	    var goalElement;
 	    if (this.world.width > this.world.height)
-	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].y][this.levelData.goalInfo[0].x];
+	    	goalElement = this.gridSystem[this.levelData.goalInfo[0].y][this.levelData.goalInfo[0].x];
 	   	else
-	    	var goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
-	    
+	    	goalElement = this.gridSystem[this.levelData.goalInfo[0].x][this.levelData.goalInfo[0].y];
+
 	    goalElement.setColor(this.levelData.goalInfo[0].color);
 	    goalElement.setType("goal");
 		goalElement.changeTexture();
@@ -257,7 +257,7 @@ GAME.LevelCreator.prototype = {
 	},
 
 	// Function than randomly places nrRandomArrows on the grid. 
-	// Will only add extra arrows if the level is number 2-5 on each chapter.
+	// Will only add extra arrows if the level is number 3-5 on each chapter.
 	placeRandomArrow : function(nrRandomArrows) {
 		var addExtraArrwos = this.currentLevel%5 > 2 ? true : false;
 		if (addExtraArrwos) {
@@ -341,6 +341,7 @@ GAME.LevelCreator.prototype = {
 	// This function will activate all arrows in that direction
 	// Also checks if it has travelled over a star, a black hole or have reached the goal. 
 	clickedGrid : function(item) {
+		//console.log(item);
 		var x = item.indexNr.x, y = item.indexNr.y;
 		var gridElement = this.gridSystem[x][y]; // get the gridElement
 

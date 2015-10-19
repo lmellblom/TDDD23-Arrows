@@ -3,6 +3,47 @@
 	Also holds a reference to the sprite.
 */
 
+// kanske göra denna klassen att ärva av phaser sprite istället?? hmmm måste ha en reference till game?? whyyy
+
+/*function GridElement(sprite, type, selected, direction, color) {
+
+
+	//Phaser.Sprite.call(this,game,x,y, 'texureName');
+
+	this.sprite = sprite; // a reference to the sprite element 
+	this.isSelected = selected || false;
+	this.type = type || "empty"; // Can be empty, arrow, goal, hole , splash ? etc.
+	this.direction = direction || "";
+	this.color = color || "";
+
+	this.texture=this.textureName();
+
+	Phaser.Sprite.call()
+
+};
+*/
+
+function GridElement(sprite, type, selected, direction, color) {
+	this.isSelected = selected || false;
+	this.type = type || "empty"; // Can be empty, arrow, goal, hole , splash ? etc.
+	this.direction = direction || "";
+	this.color = color || "";
+	this.sprite = sprite;
+
+	//this.texture=this.textureName();
+
+	//Phaser.Sprite.call(this, game, x, y, this.texture);
+
+};
+
+//GridElement.prototype = Object.create(Phaser.Sprite.prototype);
+//GridElement.prototype.constructor = GridElement;
+
+/*
+	A class that handles the grid elements. Holds what color, type and different attributes.
+	Also holds a reference to the sprite.
+*/
+
 // kanske göra denna klassen att ärva av phaser sprite istället?? hmmm
 
 function GridElement(sprite, type, selected, direction, color) {

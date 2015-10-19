@@ -9,7 +9,7 @@ GAME.MainMenu.prototype = {
 
 		var back = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height), 'background');
 
-		if (this.world.width > back.width) { // add more
+		if (this.world.width > back.width) { // add more background?
 			this.add.sprite(back.width, -(backgroundHeight - this.world.height), 'background');
 		}
 
