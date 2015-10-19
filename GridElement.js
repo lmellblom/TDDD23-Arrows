@@ -1,6 +1,6 @@
 /* 	TODO in future: change so that the gridelement inherite from the phaser sprite
-	instead! */
-/*function GridElement(sprite, type, selected, direction, color) {
+	instead! Like this under that I have started.. 
+function GridElement(sprite, type, selected, direction, color) {
 	//Phaser.Sprite.call(this,game,x,y, 'texureName');
 
 	this.sprite = sprite; // a reference to the sprite element 
@@ -13,9 +13,9 @@
 
 	Phaser.Sprite.call()
 };
+GridElement.prototype = Object.create(Phaser.Sprite.prototype);
+GridElement.prototype.constructor = GridElement;
 */
-//GridElement.prototype = Object.create(Phaser.Sprite.prototype);
-//GridElement.prototype.constructor = GridElement;
 
 /*
 	A class that handles the grid elements. Holds what color, type and different attributes.

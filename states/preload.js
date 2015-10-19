@@ -143,7 +143,7 @@ GAME.Preload.prototype = {
 	    this.load.image('blackHole', 'assets/blackHole.png');
 
 
-	    // the level data! maybe store this in another file later!!!!!!! maybe add to the structure a intro message to the level?
+	    // the level data! maybe store this in another file later!!!!!!!
 	    /*
 	    	possible values: 
 	    	arrows, tell where to place an arrow in the grid, if it is clickable and the color of the arrow
