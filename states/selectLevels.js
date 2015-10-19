@@ -79,7 +79,8 @@ GAME.SelectLevels.prototype = {
         this.modalGroup.add(credits);
         credits.inputEnabled = true;
         credits.events.onInputDown.add(function(){
-        	window.open("https://github.com/lmellblom/TDDD23-Arrows", "_blank");
+        	//window.open("https://github.com/lmellblom/TDDD23-Arrows", "_blank");
+        	document.getElementById('creditLink').click();
         }, this);
 
         // button to clear your prograss. 
