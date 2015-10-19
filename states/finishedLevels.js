@@ -33,8 +33,6 @@ GAME.FinishedLevels.prototype = {
 	    var st = { font: "14px Carter One", fill: "#000", align: "center",  stroke: "#000", strokeThickness: 0 };
         var text = this.add.text(this.world.centerX, this.world.centerY+30, t, st);
         text.anchor.set(0.5);
-
-
 	},	
 	update: function() {
 

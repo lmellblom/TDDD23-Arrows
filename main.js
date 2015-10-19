@@ -41,8 +41,6 @@ if (localStorage.getItem("arrowMadeLevels")!=null) {
     }
 }
 
-// GÅ igenom dessa och se vilka jag verkligen behöver...
-//var menuGroup;
 var qKey;
 var nKey;
 var cursors;
@@ -88,5 +86,6 @@ var smallStyle = { font: "14px Carter One", fill: "#FFF", align: "center",
     stroke: "#000", strokeThickness: 3 };
 var modalSmallText = { font: "16px Carter One", fill: "#000", align:"center" };
 modalSmallText.wordWrap = true;
+
 // Begin with the boot state
 GAME.game.state.start('Boot');

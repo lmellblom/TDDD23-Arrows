@@ -32,7 +32,7 @@ GAME.MainMenu.prototype = {
 
 		//backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
 		//this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
-		clickSound = this.add.audio('clickSound');
+		clickSound = this.add.audio('clickSound', 0.2);
 
 	},
 	update: function() {

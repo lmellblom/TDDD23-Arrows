@@ -35,7 +35,7 @@ GAME.SelectLevels.prototype = {
 		// How many pages in total to show. It is number of levels / 5 = how many chapters and +1 for the information
 		this.pages = numberOfLevels/5 + 1;
 
-		this.clickSound = this.add.audio('clickSound');
+		this.clickSound = this.add.audio('clickSound',0.2);
 
 		this.drawStars = [];
 		this.drawLevels = [];
@@ -63,11 +63,11 @@ GAME.SelectLevels.prototype = {
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
 		// ====== The information "page" ======
-		var info = " A game by Linnéa Mellblom done in the course TDDD23 at LiU 2015.";
+		var info = "A game by Linnéa Mellblom.\n \n Thanks for playing. You rock!";
 		var infoS = panelTextStyle;
 		infoS.wordWrap = true;
-        infoS.wordWrapWidth = this.game.width-this.game.width/3;
-        infoS.align = "left";
+        infoS.wordWrapWidth = header.width+20;//this.game.width-this.game.width/3;
+        infoS.align = "center";
         var theInfo = this.add.text(-this.game.width+this.game.width/2, this.game.height/2-70, info, infoS);
         theInfo.anchor.set(0.5);
         this.modalGroup.add(theInfo);

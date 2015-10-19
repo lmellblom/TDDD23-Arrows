@@ -36,13 +36,13 @@ GAME.Preload.prototype = {
 		// add a preload stuff
 		var base = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressBase');
 		var basebg = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressBack');
-		this.loader = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressGreen');
+		this.loader = this.add.sprite(this.world.centerX-165, this.world.centerY + 50, 'progressGreen');
 		base.scale.setTo(0.7);
 		basebg.scale.setTo(0.7);
-		this.loader.scale.setTo(0.7);
+		//this.loader.scale.setTo(0.7);
 		base.anchor.set(0.5);
 		basebg.anchor.set(0.5);
-		this.loader.anchor.set(0.5);
+		this.loader.anchor.set(0,0.5);
 		this.load.setPreloadSprite(this.loader);
 
 	    
@@ -715,7 +715,7 @@ GAME.Preload.prototype = {
 
 	},
 	create: function() {
-		backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
+		backgroundMusicPlayer = this.add.audio('forestSound',0.3, true);   
 		this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
 
 	},
