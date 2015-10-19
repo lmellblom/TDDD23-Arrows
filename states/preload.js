@@ -14,7 +14,8 @@ GAME.Preload.prototype = {
 
 		//  Load the Google WebFont Loader script
     	this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-		// loading assets for the game
+		
+		// setting the preload background and the sprites
 		this.preloadBack = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height),'background');
 		if (this.world.width > this.preloadBack.width) { // add more
 			this.add.sprite(this.preloadBack.width, -(backgroundHeight - this.world.height), 'background');
@@ -39,31 +40,23 @@ GAME.Preload.prototype = {
 		this.loader = this.add.sprite(this.world.centerX-165, this.world.centerY + 50, 'progressGreen');
 		base.scale.setTo(0.7);
 		basebg.scale.setTo(0.7);
-		//this.loader.scale.setTo(0.7);
+
 		base.anchor.set(0.5);
 		basebg.anchor.set(0.5);
 		this.loader.anchor.set(0,0.5);
 		this.load.setPreloadSprite(this.loader);
 
-	    
-	    this.load.image('playButton', 'assets/game-ui/startBtn.png'); 		// ändra denna mellan playBtn och startBtn
+		// ============================================
+
+	    this.load.image('playButton', 'assets/game-ui/startBtn.png');
 
 	    // level selection
 	    this.load.image('levelSquare', 'assets/square.png');
 	    this.load.image('levelSquareInfo', 'assets/squareInfo.png');
-	    this.load.image('levelSquareStar', 'assets/squareStar.png');
-	    
 
-	    // mascot
-	    this.load.image('spaceHelmet', 'assets/mascot/space.png');
-
-	    this.load.image('tipBar', 'assets/game-ui/tips.png');
-
-	    // stars levelselct
+	    // star in menu and the star for the emitter
 	    this.load.image('smallStar', 'assets/star.png');
 	    this.load.image('sparkle', 'assets/sparkle.png');
-
-	    this.load.image('backHouse', 'assets/houseBack.jpg');
 
 	    // settings panel
 	    this.load.image('banMusic', 'assets/game-ui/banMusic.png');
@@ -75,8 +68,6 @@ GAME.Preload.prototype = {
 	    this.load.image('soundIcon', 'assets/game-ui/soundIcon.png');
 	    this.load.image('backToMenuBtn', 'assets/game-ui/backToMenuBtn.png');
 	    this.load.image('creditsBtn', 'assets/game-ui/creditsBtn.png');
-
-	    
 
 	    // stars when finished a game
 	    this.load.image('1star', 'assets/game-ui/1star.png');
@@ -96,10 +87,9 @@ GAME.Preload.prototype = {
 	    this.load.image('yesBtn', 'assets/game-ui/yesBtn.png');
 	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
 
+	    // for the stars leveles
 	    this.load.image('star', 'assets/game-ui/star.png');
-	    this.load.image('starblue', 'assets/game-ui/starBlue.png');
 	    this.load.image('starpink', 'assets/game-ui/starPink.png');
-	    //this.load.image('starPoints', 'assets/points.png');
 	    this.load.image('starPoints', 'assets/game-ui/starPoints.png');
 
 	    // for the levels
@@ -107,6 +97,7 @@ GAME.Preload.prototype = {
 	    this.load.image('inactiveLevel', 'assets/game-ui/levelSelectInactive.png');
 	    this.load.image('activeLevel', 'assets/game-ui/levelBase.png');
 	    
+	    // level selection arrow
 	    this.load.image('rightArrow', 'assets/game-ui/arrowActive.png');
 
 	    // arrows that can be clicked
@@ -126,6 +117,7 @@ GAME.Preload.prototype = {
 	    this.load.image('goalpink', 'assets/pink/homeRound.png'); // home elr homeRound
 	    this.load.image('bucketpink', 'assets/pink/colorsplash.png');
 
+	    // the arrows that are color-less (now yellow)
 	    this.load.image('rightgray', 'assets/gray/right.png');
 	    this.load.image('leftgray', 'assets/gray/left.png');
 	    this.load.image('downgray', 'assets/gray/down.png');
@@ -139,11 +131,10 @@ GAME.Preload.prototype = {
 	    this.load.image('up', 'assets/notSelected/up.png');
 	    this.load.image('empty', 'assets/notSelected/empty.png');
 
-	    this.load.image('goal', 'assets/home.png');
+	    // goal and black hole
 	    this.load.image('blackHole', 'assets/blackHole.png');
 
-
-	    // the level data! maybe store this in another file later!!!!!!! maybe add to the structure a intro message to the level?
+	    // the level data! maybe store this in another file later!!!!!!!
 	    /*
 	    	possible values: 
 	    	arrows, tell where to place an arrow in the grid, if it is clickable and the color of the arrow

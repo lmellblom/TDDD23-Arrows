@@ -2,7 +2,6 @@ var GAME = GAME || {};
 
 GAME.FinishedLevels = function() {};
 
-
 GAME.FinishedLevels.prototype = {
 	create: function() {
 		this.game.stage.backgroundColor = '#969696';
