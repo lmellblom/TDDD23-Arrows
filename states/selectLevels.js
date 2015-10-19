@@ -72,8 +72,18 @@ GAME.SelectLevels.prototype = {
         theInfo.anchor.set(0.5);
         this.modalGroup.add(theInfo);
 
+        var credits = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2+90,'creditsBtn');
+        credits.anchor.set(0.5);
+        credits.scale.setTo(0.6);
+        
+        this.modalGroup.add(credits);
+        credits.inputEnabled = true;
+        credits.events.onInputDown.add(function(){
+        	window.open("https://github.com/lmellblom/TDDD23-Arrows", "_blank");
+        }, this);
+
         // button to clear your prograss. 
-        var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2 + 50,'clearProgress');
+        var change = this.add.sprite(-this.game.width+this.world.centerX, this.game.height/2+40,'clearProgress');
         change.anchor.set(0.5);
         change.scale.setTo(0.6);
         change.inputEnabled =true;

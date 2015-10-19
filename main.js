@@ -22,7 +22,6 @@ if (aspectRatioSafeZone < aspectRatioDevice) {
 // Add the phaser game object
 GAME.game = new Phaser.Game(gameWidth + extraWidth, gameHeight + extraHeight, Phaser.AUTO, '');
 
-
 // ===================== GLOBAL VARIABELS AND SETTINGS =======================================
 var numberOfLevels = 20;
 

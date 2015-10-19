@@ -93,6 +93,7 @@ GAME.Preload.prototype = {
 	    this.load.image('musicIcon', 'assets/game-ui/musicIcon.png');
 	    this.load.image('soundIcon', 'assets/game-ui/soundIcon.png');
 	    this.load.image('backToMenuBtn', 'assets/game-ui/backToMenuBtn.png');
+	    this.load.image('creditsBtn', 'assets/game-ui/creditsBtn.png');
 
 	    
 
@@ -110,7 +111,7 @@ GAME.Preload.prototype = {
 	    this.load.image('reloadBtn', 'assets/game-ui/reload.png');
 	    this.load.image('reloadIcon', 'assets/game-ui/reload.png'); 			
 	    this.load.image('settingsBtn', 'assets/game-ui/settings.png');
-	    this.load.image('clearProgress', 'assets/game-ui/clearProgress.png');
+	    this.load.image('clearProgress', 'assets/game-ui/clearBtn.png');
 	    this.load.image('yesBtn', 'assets/game-ui/yesBtn.png');
 	    this.load.image('noBtn', 'assets/game-ui/xBtn.png');
 

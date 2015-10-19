@@ -100,7 +100,8 @@ GAME.LevelCreator.prototype = {
 
        	// Add a settingspanel to the level, handles all buttons and functions.
        	settingsPanel(this, "inGame");
-       	this.reloadBtn = self.add.sprite(80, self.world.height-60, 'reloadIcon');
+      	this.reloadBtn = this.add.sprite(100, this.world.height-20, 'reloadIcon');
+    	this.reloadBtn.anchor.set(0.5, 1.0);
        	this.reloadBtn.scale.setTo(0.7);
        	this.reloadBtn.inputEnabled = true;
        	this.reloadBtn.events.onInputDown.add(this.reloadLevelBtn, this);
