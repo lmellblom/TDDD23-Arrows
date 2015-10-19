@@ -57,42 +57,22 @@ GAME.LevelCreator.prototype = {
 
 		// Handles the background and which to place
 		// Also add more background if the world is bigger than the background
-	    this.game.stage.backgroundColor = '#FFF';
+	    
 	    if (this.currentLevel <=5) {
 	    	var background = this.add.sprite(0, -(backgroundHeight - this.world.height), 'background');
-	    	if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width, -(backgroundHeight - this.world.height), 'background');
-				back.alpha = 0.8;
-			}
+	    	this.game.stage.backgroundColor = '#000';
+	    	background.alpha = 0.8;
 	    }
 	    else if (this.currentLevel <=15){
-		    var background = this.add.sprite(0, -(1000 - this.world.height), 'spaceBackground');
-		    if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width*2, -(1000 - this.world.height), 'spaceBackground');
-				back.scale.x *= -1;
-				if (this.currentLevel > 10)
-					back.alpha = 0.7;
-				else
-					back.alpha = 0.8;
-			}
+	    	this.game.stage.backgroundColor = '#FFF';
+		    var background = this.add.sprite(0, -(950 - this.world.height), 'spaceBackground');
+		    background.alpha = 0.9;
 		}
 		else if(this.currentLevel <=20) {
-			var background = this.add.sprite(0, -(1170 - this.world.height), 'rainbowBackground');
-	    	if (this.world.width > background.width) { // add more
-				var back = this.add.sprite(background.width, -(1170 - this.world.height), 'rainbowBackground');
-				back.alpha = 0.8;
-			}
+			var background = this.add.sprite(0, -(1170 - this.world.height), 'background');
+			this.game.stage.backgroundColor = '#000';
+			background.alpha = 0.7;
 		} 
-
-	    background.alpha = this.currentLevel > 10 ? 0.7 : 0.8;
-
-	    // setting a white layer over, to easier see the grid
-	    var whiteBack = this.game.add.graphics(this.world.width, this.world.height);
-		whiteBack.beginFill(0x000000, 0.4);
-		var padding = 0;
-        whiteBack.x = padding;
-        whiteBack.y = padding;
-        whiteBack.drawRect(padding, padding, this.world.width-padding*4, this.world.height-padding*4);
 
         // add the level and score text in the top
 	    this.levelText = this.add.text(20, 20, "Level " + this.currentLevel, generalStyle);
@@ -246,7 +226,7 @@ GAME.LevelCreator.prototype = {
 	    }, this);
 
 	    // Place 5 random arrows. The function only does this at level 2-5 at each chapter
-	    this.placeRandomArrow(5);
+	    //this.placeRandomArrow(5);
 
 		// ==========================
 	    // debugmodes

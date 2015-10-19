@@ -4,7 +4,6 @@ GAME.Preload = function() {};
 
 GAME.Preload.prototype = {
 	preload: function() {
-
 		// load sounds
 		this.load.audio("forestSound", "assets/sounds/forest.wav");
 		this.load.audio("clickSound", "assets/sounds/menu-click.wav");
@@ -22,14 +21,10 @@ GAME.Preload.prototype = {
 		}
 		this.game.stage.backgroundColor = '#FFF';
 
-		// lägger till rubriken här med!!
+		// add the arrow name header
 		var header = this.add.sprite(this.world.centerX, this.world.centerY-200, "arrowHeader");
 		header.anchor.set(0.5);
 		header.scale.setTo(0.6);
-
-/*		// maskoten?
-		var mascot = this.add.sprite(this.world.width - 170, this.world.height-180, 'mascotIcon');
-	    mascot.scale.setTo(0.5);*/
 
 		// tween the logo also
 		header.angle = (2+Math.random()*5)*(Math.random()>0.5?1:-1);
@@ -38,12 +33,7 @@ GAME.Preload.prototype = {
 			angle: -header.angle
 		},5000+Math.random()*5000,Phaser.Easing.Linear.None,true,0,1000,true);
 
-		// add a preload stugg
-		//var style = { font: "40px Carter One", fill: "#FFF", align: "center",  stroke: "#000", strokeThickness: 5 };
-		//var header = this.add.text(this.world.centerX, this.world.centerY+200, "Loading", style);
-
-		// fixa detta på ngt sätt!! ? 
-
+		// add a preload stuff
 		var base = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressBase');
 		var basebg = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressBack');
 		this.loader = this.add.sprite(this.world.centerX, this.world.centerY + 50, 'progressGreen');
@@ -53,17 +43,8 @@ GAME.Preload.prototype = {
 		base.anchor.set(0.5);
 		basebg.anchor.set(0.5);
 		this.loader.anchor.set(0.5);
-
 		this.load.setPreloadSprite(this.loader);
 
-		/*
-		this.load.image('progressBase', 'assets/game-ui/Base.png');
-        this.load.image('progressBack', 'assets/game-ui/Bg.png');
-        this.load.image('progressGreen', 'assets/game-ui/progressGreen.png');*/
-
-		//header.anchor.set(0.5);
-		//header.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
-		//this.load.setPreloadSprite(header);
 	    
 	    this.load.image('playButton', 'assets/game-ui/startBtn.png'); 		// ändra denna mellan playBtn och startBtn
 
@@ -135,7 +116,7 @@ GAME.Preload.prototype = {
 	    this.load.image('upblue', 'assets/blue/up.png');
 	    this.load.image('emptyblue', 'assets/blue/empty.png');
 	    this.load.image('goalblue', 'assets/blue/homeRound.png'); // home elr homeRound
-	    this.load.image('bucketblue', 'assets/blue/bucket.png');
+	    this.load.image('bucketblue', 'assets/blue/colorsplash.png');
 
 	    this.load.image('rightpink', 'assets/pink/right.png');
 	    this.load.image('leftpink', 'assets/pink/left.png');
@@ -143,7 +124,7 @@ GAME.Preload.prototype = {
 	    this.load.image('uppink', 'assets/pink/up.png');
 	    this.load.image('emptypink', 'assets/pink/empty.png');
 	    this.load.image('goalpink', 'assets/pink/homeRound.png'); // home elr homeRound
-	    this.load.image('bucketpink', 'assets/pink/bucket.png');
+	    this.load.image('bucketpink', 'assets/pink/colorsplash.png');
 
 	    this.load.image('rightgray', 'assets/gray/right.png');
 	    this.load.image('leftgray', 'assets/gray/left.png');
@@ -172,15 +153,7 @@ GAME.Preload.prototype = {
 
 	    */
 	  allLevelData = [
-	    { // level 1
-		   
-	    	/*"arrows" : [{"x": 0, "y":1, "dir": "down", "selected": true, "color":"blue"}],
-	    	"goalInfo": [{"x":0, "y":6, "color":"blue"}],
-	    	"tip" : "Reach the goal in as few clicks as possible.",
-	    	"best": 1,
-	    	"nrWidth": 1,
-	    	"nrHeight": 8*/
-
+	    { 
 		    "arrows" : [ 
 		        {"x": 1, "y": 2, "dir": "down", "selected": true, "color": "blue"},
 		        {"x": 1, "y": 6, "dir": "right", "selected": false, "color": "blue"}
@@ -188,13 +161,10 @@ GAME.Preload.prototype = {
 		    "goalInfo" : [
 		        {"x":4, "y":6, "color": "blue"}
 		    ],
-		    "tip" : "Reach the goal in as few clicks as possible.",
+		    "tip" : "Reach the goal with as few clicks as possible.",
 		    "best": 2,
 		    "nrWidth" :5,
 		    "nrHeight":8
-
-
-
 		},
 		{// level 2
 		    "arrows" : [ 
@@ -224,7 +194,7 @@ GAME.Preload.prototype = {
 		    "goalInfo" : [
 		        {"x":4, "y":1, "color": "blue"}
 		    ],
-		    "tip" : "When a arrow is fired, it will activate all arrows in its direction.",
+		    "tip" : "When a arrow is fired, it will activate all arrows in that direction.",
 		    "best": 3,
 		    "nrWidth" :5,
 		    "nrHeight":8
@@ -318,7 +288,7 @@ GAME.Preload.prototype = {
 		    	{"x":2, "y":2},
 		    	{"x":1, "y":5}
 		    ],
-		    "tip" : "An arrow will disappear in the black hole. But every arrow before the black hole will be activated.",
+		    "tip" : "You got it!",
 		    "best": 4,
 		    "nrWidth" :5,
 		    "nrHeight":8
@@ -594,7 +564,7 @@ GAME.Preload.prototype = {
 			"goalInfo" : [
 				{"x":3, "y":6, "color": "pink"}
 			],
-			"tip": "You need to make sure the right arrow get to the goal",
+			"tip": "You need to make sure the 'right' arrow hits the goal",
 			"best":3,
 		    "nrWidth" :5,
 		    "nrHeight":8,
@@ -739,43 +709,19 @@ GAME.Preload.prototype = {
 		    "blackHole" : [
 		    	{"x":1, "y":3},
 		    	{"x":2, "y":6}
-		    ],
-		   
+		    ]  
 		}
-		// another level
-
-		/*
-
-		5 i bredd, 8 i höjd
-
-		pilar, mål, 
-
-		ska jag ha specifik färg som måste in i målet? 
-
-		Colerful world
-		färg har spilts ut, måste åka igenom rätt färg för att kunna komma till målet??
-
-
-
-
-
-		*/
 	];
 
 	},
-
-
 	create: function() {
 		backgroundMusicPlayer = this.add.audio('forestSound',1,true);   
 		this.sound.setDecodedCallback(backgroundMusicPlayer, this.start, this);
 
 	},
-
 	start: function() {    
 		backgroundMusicPlayer.play(); // starts on the whole object now since i add it!! wow :D 
-		//console.log("the backgroundmusid " + backCalmMusic);
 		if (!backCalmMusic) backgroundMusicPlayer.pause();
-		//console.log("go to the menu");
 		this.state.start('MainMenu');
 	}
 };
