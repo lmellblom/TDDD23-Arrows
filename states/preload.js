@@ -17,9 +17,6 @@ GAME.Preload.prototype = {
 		
 		// setting the preload background and the sprites
 		this.preloadBack = this.add.sprite(-this.game.width, -(backgroundHeight - this.world.height),'background');
-		if (this.world.width > this.preloadBack.width) { // add more
-			this.add.sprite(this.preloadBack.width, -(backgroundHeight - this.world.height), 'background');
-		}
 		this.game.stage.backgroundColor = '#FFF';
 
 		// add the arrow name header
