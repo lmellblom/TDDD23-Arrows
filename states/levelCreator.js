@@ -221,7 +221,7 @@ GAME.LevelCreator.prototype = {
 	    }, this);
 
 	    // Place 5 random arrows. The function only does this at level 2-5 at each chapter
-	    //this.placeRandomArrow(5);
+	    this.placeRandomArrow(5);
 
 		// ==========================
 	    // debugmodes
