@@ -4,6 +4,9 @@ Arrows is a simple puzzle game :video_game: built with [Phaser](http://phaser.io
 
 >Find your way home :house:, in as few clicks as possible. Sweep trough 4 different chapters with 20 levels of mind teasing puzzels. Do not run out of arrows, and find the right way. Avoid black holes :black_circle:, collect stars :star: and color :art: the world :earth_americas:.
 
+### Trailer / screencast
+A trailer for the game can be found at [YouTube](https://youtu.be/RLhM7SwaRfI).
+
 ### Play the game
 The game is online and hosted on GitHub. [Play](http://lmellblom.github.io/TDDD23-Arrows/)
 
